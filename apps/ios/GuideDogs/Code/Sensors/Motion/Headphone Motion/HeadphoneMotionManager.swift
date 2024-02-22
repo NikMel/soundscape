@@ -33,8 +33,8 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
     let id: UUID
     // `Device`
     let name: String
-    let model = GDLocalizationUnnecessary("Apple AirPods")
-    let type: DeviceType = .apple
+    let model: String // = GDLocalizationUnnecessary("Apple AirPods")
+    let type: DeviceType //= .apple
     var isConnected = false
     var isFirstConnection = false
     weak var deviceDelegate: DeviceDelegate?
@@ -63,9 +63,48 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
     
     // MARK: Initialization
     
-    override init() {
-        id = UUID()
-        name = ""
+    override convenience init() {
+        let newid = UUID()
+        self.init(id: newid, name: "unknown")
+/*        name = "unknown"
+        model = "Generic device"
+        type = .generic
+
+        // Initialize operation queue
+        queue = OperationQueue()
+        queue.name = "HeadphoneMotionUpdatesQueue"
+        queue.qualityOfService = .userInteractive
+        
+        super.init()
+        
+        initializeMotionManager()
+ */
+    }
+    
+    convenience init(id: UUID, name: String) {
+        self.init(id: id, name: name, modelName: "Generic device", deviceType: .generic)
+        /*        self.id = id
+        self.name = name
+        
+        model = "Apple AirPods"
+        type = .generic
+        
+        // Initialize operation queue
+        queue = OperationQueue()
+        queue.name = "HeadphoneMotionUpdatesQueue"
+        queue.qualityOfService = .userInteractive
+        
+        super.init()
+        
+        initializeMotionManager() */
+    }
+    
+    init(id: UUID, name: String, modelName: String, deviceType: DeviceType) {
+        self.id = id
+        self.name = name
+        self.model = modelName
+        self.type = deviceType
+        
         
         // Initialize operation queue
         queue = OperationQueue()
@@ -77,19 +116,6 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
         initializeMotionManager()
     }
     
-    init(id: UUID, name: String) {
-        self.id = id
-        self.name = name
-        
-        // Initialize operation queue
-        queue = OperationQueue()
-        queue.name = "HeadphoneMotionUpdatesQueue"
-        queue.qualityOfService = .userInteractive
-        
-        super.init()
-        
-        initializeMotionManager()
-    }
     
     deinit {
         // Stop headphone motion updates
@@ -109,7 +135,7 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
             //
             // Core Motion authorization is required for app use, so we can assume
             // that authorization status will always be `authorized`
-            
+            GDLogHeadphoneMotionInfo("EARS: Motion är inte tillgänglig!")
             // Update state
             status.value = .unavailable
         }
@@ -181,8 +207,8 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
     
     // MARK: `Device`
     
-    static func setupDevice(callback: @escaping DeviceCompletionHandler) {
-        let device = HeadphoneMotionManager()
+    static func setupDevice(id: UUID, name: String, modelName: String, deviceType: DeviceType, callback: @escaping DeviceCompletionHandler) {
+        let device = HeadphoneMotionManager(id: id, name: name, modelName: modelName, deviceType: deviceType)
         
         if device.status.value == .unavailable {
             // Failure

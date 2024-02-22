@@ -95,7 +95,7 @@ class DevicesViewController: UIViewController {
             case .completedPairing:
                 switch device {
                 case is HeadphoneMotionManagerWrapper:
-                    return GDLocalizedString("devices.connect_headset.completed.airpods")
+                    return GDLocalizedString("devices.connect_headset.completed.airpods", device?.model ?? "'unknown type'")
                 
                 default:
                     return nil
@@ -107,9 +107,9 @@ class DevicesViewController: UIViewController {
                 switch device {
                 case let device as HeadphoneMotionManagerWrapper:
                     if device.status.value == .connected {
-                        return GDLocalizedString("devices.explain_ar.connecting", "AirPods")
+                        return GDLocalizedString("devices.explain_ar.connecting", device.name)
                     } else {
-                        return GDLocalizedString("devices.explain_ar.paired", "AirPods")
+                        return GDLocalizedString("devices.explain_ar.paired", device.name)
                     }
                 
                 default:
@@ -119,7 +119,7 @@ class DevicesViewController: UIViewController {
             case .connected:
                 switch device {
                 case is HeadphoneMotionManagerWrapper:
-                    return GDLocalizedString("devices.explain_ar.connected.airpods")
+                    return GDLocalizedString("devices.explain_ar.connected.airpods", device?.name ?? "'unknown'")
                 
                 default:
                     return nil
@@ -249,7 +249,10 @@ class DevicesViewController: UIViewController {
     /// Central heading for displaying the 3D headset view (in radians)
     private var centerHeading: Double?
     
-    private var selectedDeviceType: Device.Type?
+    private var selectedDeviceManagerType: Device.Type?
+    private var selectedDeviceName: String?
+    private var selectedDeviceModel: String?
+    private var selectedDeviceType: DeviceType?
     
     private var state = State.unknown {
         didSet {
@@ -557,7 +560,7 @@ class DevicesViewController: UIViewController {
     
     @objc func cancelConnection() {
         state = .disconnected
-        selectedDeviceType = nil
+        selectedDeviceManagerType = nil
         
         if let device = connectedDevice as? HeadphoneMotionManagerWrapper {
             device.disconnect()
@@ -585,27 +588,42 @@ class DevicesViewController: UIViewController {
             alert.addAction(UIAlertAction(title: GDLocalizedString("general.alert.cancel"), style: .cancel, handler: nil))
             
             alert.addAction(UIAlertAction(title: GDLocalizedString("devices.airpods.supported_versions"), style: .default, handler: { [weak self] (_) in
-                self?.selectedDeviceType = HeadphoneMotionManagerWrapper.self
+                self?.selectedDeviceManagerType = HeadphoneMotionManagerWrapper.self
+                self?.selectedDeviceModel = "Apple AirPods"
+                self?.selectedDeviceName = "My AirPods"
+                self?.selectedDeviceType = .apple
+                self?.state = .pairingAudio
+            }))
+
+            alert.addAction(UIAlertAction(title: "Sony Linkbuds", style: .default, handler: { [weak self] (_) in
+                self?.selectedDeviceManagerType = HeadphoneMotionManagerWrapper.self
+                self?.selectedDeviceModel = "Sony Linkbuds"
+                self?.selectedDeviceName = "My Linkbuds"
+                self?.selectedDeviceType = .sony
+                self?.state = .pairingAudio
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Generic headtracking thingies", style: .default, handler: { [weak self] (_) in
+                self?.selectedDeviceManagerType = HeadphoneMotionManagerWrapper.self
+                self?.selectedDeviceModel = "Generic device"
+                self?.selectedDeviceName = "unknown"
+                self?.selectedDeviceType = .generic
                 self?.state = .pairingAudio
             }))
             
             present(alert, animated: true, completion: nil)
             
         case .pairingAudio:
-            guard let type = selectedDeviceType else {
+            guard 
+                    let managerType = selectedDeviceManagerType,
+                    let deviceType = selectedDeviceType,
+                    let modelName = selectedDeviceModel,
+                    let deviceName = selectedDeviceName else {
                 return
             }
-            
-            let name: String
-            
-            if type == HeadphoneMotionManagerWrapper.self {
-                name = GDLocalizationUnnecessary("Apple AirPods")
-            } else {
-                name = GDLocalizationUnnecessary("AR Headphones")
-            }
-            
-            selectedDeviceType = nil
-            connectDevice(of: type, name: name)
+                     
+            selectedDeviceManagerType = nil
+            connectDevice(of: managerType, name: deviceName, modelName: modelName, deviceType: deviceType)
             
         case .firstConnection:
             if let device = connectedDevice {
@@ -667,9 +685,11 @@ class DevicesViewController: UIViewController {
         state = .testHeadset
         AppContext.process(HeadsetTestEvent(.start))
     }
-    
-    private func connectDevice(of type: Device.Type, name: String) {
-        type.setupDevice { [weak self] (result) in
+      
+    private func connectDevice(of managerType: Device.Type, name: String, modelName: String, deviceType: DeviceType) {
+        var deviceId = UUID()
+
+        managerType.setupDevice(id: deviceId, name: name, modelName: modelName, deviceType: deviceType) { [weak self] (result) in
             guard let `self` = self else {
                 return
             }
@@ -696,7 +716,7 @@ class DevicesViewController: UIViewController {
                 
             case .failure(let error):
                 let handler: (UIAlertAction) -> Void = { [weak self] (_) in
-                    self?.selectedDeviceType = nil
+                    self?.selectedDeviceManagerType = nil
                     self?.state = .disconnected
                     self?.connectedDevice = nil
                 }
@@ -722,12 +742,15 @@ class DevicesViewController: UIViewController {
                     
                 case DeviceError.unavailable:
                     var message = GDLocalizedString("devices.connect_headset.unavailable")
-                    
-                    if type == HeadphoneMotionManagerWrapper.self {
-                        // Display a custom message for Apple AirPods
+                    switch deviceType {
+                    case .apple:
                         message = GDLocalizedString("devices.airpods_unavailable.alert.description")
+                    case .sony:
+                        message = "Sony linkbuds"
+                    case .generic:
+                        message = "Generic device"
                     }
-                    
+                                        
                     let alert = ErrorAlerts.buildGeneric(title: GDLocalizedString("devices.connect_headset.error_title"),
                                                          message: message,
                                                          dismissHandler: handler)

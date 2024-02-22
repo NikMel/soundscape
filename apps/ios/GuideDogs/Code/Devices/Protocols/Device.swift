@@ -29,6 +29,8 @@ typealias DeviceCompletionHandler = (Result<Device, DeviceError>) -> Void
 
 enum DeviceType: String, Codable, CaseIterable {
     case apple
+    case sony
+    case generic
 }
 
 extension DeviceType {
@@ -42,6 +44,8 @@ extension DeviceType {
     var reachability: DeviceReachability? {
         switch self {
         case .apple: return HeadphoneMotionManagerReachabilityWrapper()
+        case .sony: return HeadphoneMotionManagerReachabilityWrapper()
+        case .generic: return HeadphoneMotionManagerReachabilityWrapper()
         }
     }
     
@@ -57,7 +61,7 @@ protocol Device: AnyObject {
     
     var deviceDelegate: DeviceDelegate? { get set }
     
-    static func setupDevice(callback: @escaping DeviceCompletionHandler)
+    static func setupDevice(id: UUID, name: String, modelName: String, deviceType: DeviceType, callback: @escaping DeviceCompletionHandler)
 
     func connect()
     func disconnect()
@@ -67,6 +71,7 @@ extension Device {
     var dictionaryRepresentation: [String: Any] {
         return ["id": id.uuidString,
                 "name": name,
+                "model": model,
                 "type": type.rawValue]
     }
 }

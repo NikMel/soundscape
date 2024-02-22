@@ -51,11 +51,22 @@ class HeadphoneMotionManagerWrapper {
         }
     }
     
+    convenience init(id: UUID, name: String, modelName: String, deviceType: DeviceType) {
+        if #available(iOS 14.4, *) {
+            let manager = HeadphoneMotionManager(id: id, name: name, modelName: modelName, deviceType: deviceType)
+            self.init(headphoneMotionManager: manager)
+        } else {
+            // `HeaphoneMotionManager` is not available on
+            // iOS < 14.4
+            self.init(headphoneMotionManager: nil)
+        }
+    }
+    
     private init(headphoneMotionManager: UserHeadingDevice?) {
         if #available(iOS 14.4, *), let headphoneMotionManager = headphoneMotionManager as? HeadphoneMotionManager {
             // Initialize headphone motion manager
             self.headphoneMotionManager = headphoneMotionManager
-            
+
             // Initialize status
             let value = headphoneMotionManager.status.value
             self.status = .init(value)
@@ -123,15 +134,15 @@ extension HeadphoneMotionManagerWrapper: Device {
     // MARK: Properties
     
     var name: String {
-        headphoneMotionManager?.name ?? ""
+        headphoneMotionManager?.name ?? "unknown"
     }
     
     var model: String {
-        headphoneMotionManager?.model ?? GDLocalizationUnnecessary("Apple AirPods")
+        headphoneMotionManager?.model ?? GDLocalizationUnnecessary("Generic device") //GDLocalizationUnnecessary("Apple AirPods")
     }
     
     var type: DeviceType {
-        headphoneMotionManager?.type ?? .apple
+        headphoneMotionManager?.type ?? .generic //.apple
     }
     
     var isConnected: Bool {
@@ -144,9 +155,9 @@ extension HeadphoneMotionManagerWrapper: Device {
     
     // MARK: Device
     
-    static func setupDevice(callback: @escaping DeviceCompletionHandler) {
+    static func setupDevice(id: UUID, name: String, modelName: String, deviceType: DeviceType, callback: @escaping DeviceCompletionHandler) {
         if #available(iOS 14.4, *) {
-            HeadphoneMotionManager.setupDevice { (result) in
+            HeadphoneMotionManager.setupDevice(id: id, name: name, modelName: modelName, deviceType: deviceType) { (result) in
                 switch result {
                 case .success(let device):
                     let manager = device as? HeadphoneMotionManager

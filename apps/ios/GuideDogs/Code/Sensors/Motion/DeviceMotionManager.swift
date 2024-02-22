@@ -41,7 +41,7 @@ class DeviceMotionManager: DeviceMotionProvider {
         }
         
         motionManager.deviceMotionUpdateInterval = 0.5
-
+        GDLogMotionVerbose("EARS: Starting the DEVICE_MOTION_MANAGER")
         let operationQueue = OperationQueue()
         operationQueue.name = "DeviceMotionQueue"
         

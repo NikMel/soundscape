@@ -232,10 +232,15 @@ extension DeviceManager {
         guard let type = dictionary["type"] as? String, let deviceType = DeviceType(rawValue: type) else { return nil }
         guard let id = dictionary["id"] as? String, let uuid = UUID(uuidString: id) else { return nil }
         guard let name = dictionary["name"] as? String else { return nil }
+        guard let model = dictionary["model"] as? String else { return nil }
         
         switch deviceType {
         case .apple:
-            return HeadphoneMotionManagerWrapper(id: uuid, name: name)
+            return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
+        case .sony:
+            return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
+        case .generic:
+            return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
         }
     }
 }
