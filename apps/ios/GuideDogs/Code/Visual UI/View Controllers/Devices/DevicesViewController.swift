@@ -11,6 +11,7 @@ import SceneKit
 import SceneKit.ModelIO
 import AVFoundation
 import Combine
+import CoreBluetooth
 
 class DevicesViewController: UIViewController {
 
@@ -106,6 +107,7 @@ class DevicesViewController: UIViewController {
             case .paired:
                 switch device {
                 case let device as HeadphoneMotionManagerWrapper:
+                    GDLogHeadphoneMotionInfo("EARS: UIController.state: \(device.status.value)")
                     if device.status.value == .connected {
                         return GDLocalizedString("devices.explain_ar.connecting", device.name)
                     } else {
@@ -226,6 +228,7 @@ class DevicesViewController: UIViewController {
             }
         }
     }
+   
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var text: UILabel!
@@ -594,7 +597,7 @@ class DevicesViewController: UIViewController {
                 self?.selectedDeviceType = .apple
                 self?.state = .pairingAudio
             }))
-
+/*
             alert.addAction(UIAlertAction(title: "Sony Linkbuds", style: .default, handler: { [weak self] (_) in
                 self?.selectedDeviceManagerType = HeadphoneMotionManagerWrapper.self
                 self?.selectedDeviceModel = "Sony Linkbuds"
@@ -602,8 +605,8 @@ class DevicesViewController: UIViewController {
                 self?.selectedDeviceType = .sony
                 self?.state = .pairingAudio
             }))
-            
-            alert.addAction(UIAlertAction(title: "Generic headtracking thingies", style: .default, handler: { [weak self] (_) in
+*/
+            alert.addAction(UIAlertAction(title: "Testing BLE device (Linkbuds)", style: .default, handler: { [weak self] (_) in
                 self?.selectedDeviceManagerType = HeadphoneMotionManagerWrapper.self
                 self?.selectedDeviceModel = "Generic device"
                 self?.selectedDeviceName = "unknown"
@@ -685,10 +688,25 @@ class DevicesViewController: UIViewController {
         state = .testHeadset
         AppContext.process(HeadsetTestEvent(.start))
     }
-      
+    
+    static let sonyBLEDevice = SonyBLEDevice()
+    
     private func connectDevice(of managerType: Device.Type, name: String, modelName: String, deviceType: DeviceType) {
         var deviceId = UUID()
+        
+        if(deviceType == .generic) {
+            // TODO: Hitta ett sätt att scanna efter peripherals. Kan man filtrera på service "Headtracking", lyssna på updateringar, och koppla in sig på HeadPhoneManager och skjuta events? Förmodlingen skriva en ny Wrapper? Nix, en implementation av UserHeadingProvider som GeoLocationManager kan anropa för att få uppdateringar. shared.deviceManager.add lägger till Device (som impl UserHeadingProvider) som lägger till den i GeoLocationManager
+           /* targetDevice = BaseBLEDevice(peripheral: CBPeripheral, type: .headset) {
+                
+            }
+            AppContext.shared.bleManager.startScan(for: BLEDevice.Type, delegate: T##BLEManagerScanDelegate)
+            */
+            //AppContext.shared.bleManager.EARS_retrieveDevicesWithServices()
 
+            DevicesViewController.sonyBLEDevice.scanBLEDevices()
+            return
+        }
+        
         managerType.setupDevice(id: deviceId, name: name, modelName: modelName, deviceType: deviceType) { [weak self] (result) in
             guard let `self` = self else {
                 return
@@ -696,6 +714,7 @@ class DevicesViewController: UIViewController {
             
             switch result {
             case .success(let device):
+                GDLogHeadphoneMotionInfo("EARS: DeviceViewController.connectDevice: Success connecting device")
                 if let device = device as? HeadphoneMotionManagerWrapper {
                     self.connectedDevice = device
                     
@@ -715,6 +734,7 @@ class DevicesViewController: UIViewController {
                 }
                 
             case .failure(let error):
+                GDLogHeadphoneMotionInfo("EARS: DeviceViewController.connectDevice: FAIL connecting device")
                 let handler: (UIAlertAction) -> Void = { [weak self] (_) in
                     self?.selectedDeviceManagerType = nil
                     self?.state = .disconnected

@@ -160,11 +160,13 @@ extension HeadphoneMotionManagerWrapper: Device {
             HeadphoneMotionManager.setupDevice(id: id, name: name, modelName: modelName, deviceType: deviceType) { (result) in
                 switch result {
                 case .success(let device):
+                    GDLogHeadphoneMotionInfo("EARS: Wrapper.setupDevice received SUCCESS from HeadphoneMotionManger")
                     let manager = device as? HeadphoneMotionManager
                     let wrapper = HeadphoneMotionManagerWrapper(headphoneMotionManager: manager)
                     
                     callback(.success(wrapper))
                 case .failure(let error):
+                    GDLogHeadphoneMotionInfo("EARS: Wrapper.setupDevice received FAIL from HeadphoneMotionManger")
                     callback(.failure(error))
                 }
             }
@@ -188,14 +190,17 @@ extension HeadphoneMotionManagerWrapper: Device {
 extension HeadphoneMotionManagerWrapper: DeviceDelegate {
     
     func didConnectDevice(_ device: Device) {
+        GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManger.didConnectDevice")
         deviceDelegate?.didConnectDevice(self)
     }
     
     func didFailToConnectDevice(_ device: Device, error: DeviceError) {
+        GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManger.didFailToConnectDevice")
         deviceDelegate?.didFailToConnectDevice(self, error: error)
     }
     
     func didDisconnectDevice(_ device: Device) {
+        GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManger.didDisconnectDevice")
         deviceDelegate?.didDisconnectDevice(self)
     }
     

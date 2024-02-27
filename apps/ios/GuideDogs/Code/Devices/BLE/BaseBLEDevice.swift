@@ -61,6 +61,7 @@ class BaseBLEDevice: NSObject, BLEDevice {
     }
 
     func onWasDiscovered(_ peripheral: CBPeripheral, advertisementData: [String: Any]) {
+        //GDLogBLEInfo("EARS: Discovered Peripheral")
         // Always save the peripheral in `onWasDiscovered(_:)` to support reconnecting...
         self.peripheral = peripheral
         self.advertisementData = advertisementData
@@ -71,6 +72,7 @@ class BaseBLEDevice: NSObject, BLEDevice {
     }
 
     func onDidConnect(_ peripheral: CBPeripheral) {
+        GDLogBLEInfo("EARS: Connected Peripheral")
         // Always save the peripheral in `onDidConnect(_:)` to support reconnecting...
         self.peripheral = peripheral
 

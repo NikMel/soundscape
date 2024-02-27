@@ -105,7 +105,7 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
         self.model = modelName
         self.type = deviceType
         
-        
+        GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManger.init, setting up...")
         // Initialize operation queue
         queue = OperationQueue()
         queue.name = "HeadphoneMotionUpdatesQueue"
@@ -135,9 +135,12 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
             //
             // Core Motion authorization is required for app use, so we can assume
             // that authorization status will always be `authorized`
-            GDLogHeadphoneMotionInfo("EARS: Motion är inte tillgänglig!")
+            GDLogHeadphoneMotionInfo("EARS: Motion är INTE tillgänglig!")
             // Update state
             status.value = .unavailable
+        }
+        else {
+            GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManger.initializeMotionManager, SEEMS like motion is available")
         }
     }
     
@@ -150,7 +153,7 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
             return
         }
         
-        GDLogHeadphoneMotionInfo("Starting headphone motion updates...")
+        GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManager.startUserHeadingUpdates")
         
         GDATelemetry.track("headphone_motion.start_updates")
         
@@ -162,13 +165,15 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
             
             if let newValue = newValue, let heading = self.calibrationManager.heading(for: newValue) {
                 self.heading = heading
-                
+               // GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManager.motionupdate callback (status: \(self.status.value))")
                 // `HeadphoneMotionManager` cannot begin acting like a `UserHeadingProvider` until
                 // `CMHeadphoneMotionManager` connects and the first calibration completes
                 //
                 // If `calibrationManager` is returning a value for heading, then one or more calibrations
                 // have completed. Update the device's state (e.g. update device delegate and process event)
                 if self.status.value == .connected {
+                    GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManager.motionupdate callback (status: \(self.status.value)) connected but not calibrated?")
+
                     // If needed, update status
                     self.status.value = .calibrated
                     
@@ -182,9 +187,10 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
                 }
             } else {
                 if let error = error {
-                    DDLogError("Headphone motion updates failed: \(error.localizedDescription)")
+                    GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManager.startUserHeadingUpdates ERROR: \(error.localizedDescription)")
+                    DDLogError("EARS: Headphone motion updates failed: \(error.localizedDescription)")
                 }
-                
+                GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManager.startUserHeadingUpdates FAILED with no error")
                 // Heading is unknown
                 self.heading = nil
             }
@@ -211,9 +217,11 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
         let device = HeadphoneMotionManager(id: id, name: name, modelName: modelName, deviceType: deviceType)
         
         if device.status.value == .unavailable {
+            GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManger.setupDevice, device is not available")
             // Failure
             callback(.failure(.unavailable))
         } else {
+            GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManger.setupDevice, device SEEMS available")
             // Success
             callback(.success(device))
             
@@ -229,13 +237,14 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
             // Updates have already been started
             return
         }
-        
+        GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManager.connect...")
         // Headphone motion is active, but headphones
         // are disconnected
         status.value = .disconnected
         
         // Start updates to connect
         startUserHeadingUpdates()
+        GDLogHeadphoneMotionInfo("EARS: HeadphoneMotionManager.connect FINISHED (\(status.value)...")
     }
     
     func disconnect() {
@@ -257,7 +266,7 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
 extension HeadphoneMotionManager: CMHeadphoneMotionManagerDelegate {
     
     func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
-        GDLogHeadphoneMotionInfo("Headphone Motion Manager did connect...")
+        GDLogHeadphoneMotionInfo("EARS: Headphone Motion Manager did connect...")
         
         GDATelemetry.track("headphone_motion.did_connect")
         
@@ -274,7 +283,7 @@ extension HeadphoneMotionManager: CMHeadphoneMotionManagerDelegate {
     }
     
     func headphoneMotionManagerDidDisconnect(_ manager: CMHeadphoneMotionManager) {
-        GDLogHeadphoneMotionInfo("Headphone Motion Manager did disconnect...")
+        GDLogHeadphoneMotionInfo("EARS: Headphone Motion Manager did disconnect...")
         
         GDATelemetry.track("headphone_motion.did_disconnect")
         

@@ -406,6 +406,7 @@
 		31F12C4222569E9100BDA072 /* StreetSuffixAbbreviations_fr.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31F12C4122569E9100BDA072 /* StreetSuffixAbbreviations_fr.plist */; };
 		31F1370422B867B800FC1860 /* GeolocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F1370322B867B800FC1860 /* GeolocationManager.swift */; };
 		31FE6C78233A7B760098D8C5 /* TelemetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FE6C77233A7B760098D8C5 /* TelemetryHelper.swift */; };
+		3D073BD32B87DFF100A7F108 /* SonyBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D073BD22B87DFF100A7F108 /* SonyBLEDevice.swift */; };
 		568480891CB73F51004B4227 /* main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 568480881CB73F51004B4227 /* main.storyboard */; };
 		568480911CBC9C94004B4227 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480901CBC9C94004B4227 /* HomeViewController.swift */; };
 		568480931CBC9CEE004B4227 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480921CBC9CEE004B4227 /* SettingsViewController.swift */; };
@@ -1306,6 +1307,7 @@
 		31F12C4122569E9100BDA072 /* StreetSuffixAbbreviations_fr.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = StreetSuffixAbbreviations_fr.plist; path = Assets/PropertyLists/StreetSuffixAbbreviations_fr.plist; sourceTree = "<group>"; };
 		31F1370322B867B800FC1860 /* GeolocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GeolocationManager.swift; path = "Code/Sensors/Geolocation/Geolocation Manager/GeolocationManager.swift"; sourceTree = "<group>"; };
 		31FE6C77233A7B760098D8C5 /* TelemetryHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TelemetryHelper.swift; path = Code/App/Logging/TelemetryHelper.swift; sourceTree = "<group>"; };
+		3D073BD22B87DFF100A7F108 /* SonyBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonyBLEDevice.swift; sourceTree = "<group>"; };
 		568480881CB73F51004B4227 /* main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = main.storyboard; sourceTree = "<group>"; };
 		5684808F1CBC975E004B4227 /* Soundscape-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "Soundscape-Bridging-Header.h"; path = "Code/App/Soundscape-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		568480901CBC9C94004B4227 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = HomeViewController.swift; path = "Code/Visual UI/View Controllers/Home/HomeViewController.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -2273,6 +2275,7 @@
 				286A2AE22252B8A300A74724 /* BLEManager.swift */,
 				286A2AE62255432500A74724 /* BLEDevice.swift */,
 				289E2EFA234FE39F00357444 /* BaseBLEDevice.swift */,
+				3D073BD22B87DFF100A7F108 /* SonyBLEDevice.swift */,
 			);
 			name = BLE;
 			sourceTree = "<group>";
@@ -5752,6 +5755,7 @@
 				31F1370422B867B800FC1860 /* GeolocationManager.swift in Sources */,
 				282B62F424EC64A7007E5F8A /* Localizable.swift in Sources */,
 				62C2B7FD28931E5200E7F6B9 /* TitledText.swift in Sources */,
+				3D073BD32B87DFF100A7F108 /* SonyBLEDevice.swift in Sources */,
 				6277B9C925A5354F0022A937 /* HeadphoneCalibrationManager.swift in Sources */,
 				28246D1C21ED373D004C8F09 /* Queue.swift in Sources */,
 				31CA500E21715F7700049ADF /* Array+Extensions.swift in Sources */,

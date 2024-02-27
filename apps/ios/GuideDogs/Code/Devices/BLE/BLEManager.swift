@@ -146,6 +146,10 @@ class BLEManager: NSObject {
         centralManager.scanForPeripherals(withServices: type.filterServiceIDs, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
         
     }
+    func EARS_scanForAllBLEDevices(delegate: BLEManagerScanDelegate){
+        scanDelegate = delegate
+        self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+    }
     
     /// Stops the current BLE scan if one is occurring.
     func stopScan() {
@@ -189,7 +193,7 @@ extension BLEManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        GDLogBLEVerbose("EARS: Did discover to \(peripheral.identifier) (\(peripheral.name ?? "Unnamed Peripheral"))")
+        //GDLogBLEVerbose("EARS: Did discover to \(peripheral.identifier) (\(peripheral.name ?? "Unnamed Peripheral"))")
         
         // If we aren't scanning anymore, then ignore any further peripherals that are delivered
         guard centralManager.isScanning else {
@@ -200,22 +204,22 @@ extension BLEManager: CBCentralManagerDelegate {
         
         // If this is just an update to a known device, then signal the update and be done
         if let device = discoveredDevices.first(where: { $0.peripheral.identifier == id }) {
-            GDLogBLEVerbose("EARS: Discovered peripheral (update): \(peripheral.name ?? id.uuidString)")
-            GDLogBLEVerbose("EARS: Advertisment data: \(advertisementData.debugDescription)")
+//            GDLogBLEVerbose("EARS: Discovered peripheral (update): \(peripheral.name ?? id.uuidString)")
+//            GDLogBLEVerbose("EARS: Advertisment data: \(advertisementData.debugDescription)")
             device.onWasDiscovered(peripheral, advertisementData: advertisementData)
             scanDelegate?.onDevicesChanged(discoveredDevices)
             return
         }
         
-        GDLogBLEVerbose("EARS: Discovered peripheral: \(peripheral.name ?? id.uuidString)")
-        GDLogBLEVerbose("EARS: Advertisment data: \(advertisementData.debugDescription)")
+//        GDLogBLEVerbose("EARS: Discovered peripheral: \(peripheral.name ?? id.uuidString)")
+//        GDLogBLEVerbose("EARS: Advertisment data: \(advertisementData.debugDescription)")
         
         guard let type = scanDeviceType else {
             return
         }
         
-        let device = type.init(peripheral: peripheral, delegate: self)
         
+        let device = type.init(peripheral: peripheral, delegate: self)
         device.onWasDiscovered(peripheral, advertisementData: advertisementData)
         discoveredDevices.append(device)
         scanDelegate?.onDevicesChanged(discoveredDevices)
