@@ -9,16 +9,72 @@
 import Foundation
 import CoreBluetooth
 class SonyBLEDevice : NSObject {
-    private let DEVICE_NAME: String = "le_linkbuds"
+    private let DEVICE_NAME: String = "le-bose frames"//"le_linkbuds" //
     private var discoveredDevices: Set<UUID> = []
 //    private var connectedDevices: [CBPeripheral] = []
     private var centralManager: CBCentralManager!
     private var queue = DispatchQueue(label: "services.soundscape.ble.ears")
     private var pendingConnectHeadPhones: CBPeripheral?
     private var connectedHeadPhones: CBPeripheral?
+    private var isConnecting: Bool
+    
+    class MyDescriptor{
+        var uuid: CBUUID
+        var description: String
+        var debugString: String
+        var extraInfo: String
+        var value: Any
+        init(uuid: CBUUID, description: String, debugString: String, extraInfo: String, value: Any) {
+            self.uuid = uuid
+            self.description = description
+            self.debugString = debugString
+            self.extraInfo = extraInfo
+            self.value = value
+        }
+        
+    }
+    class MyCharacteristic {
+        var descriptors: [String:MyDescriptor] // Key = uuidString for the descriptor
+        var isWritable: Bool
+        var isWriteAndFogetable: Bool
+        var isReadable: Bool
+        var canNotify: Bool
+        var canBroadcast: Bool
+        var uuid: CBUUID
+        var description: String
+        var value: Data
 
+        init(uuid: CBUUID, isWritable: Bool, isWriteAndFogetable: Bool, isReadable: Bool, canNotify: Bool, canBroadcast: Bool, description: String, value: Data) {
+            self.uuid = uuid
+            self.isWritable = isWritable
+            self.isWriteAndFogetable = isWriteAndFogetable
+            self.isReadable = isReadable
+            self.canNotify = canNotify
+            self.canBroadcast = canBroadcast
+            self.description = description
+            self.value = value
+            self.descriptors = [:]
+        }
+        
+    }
+    class MyService {
+        var charateristics: [String:MyCharacteristic] // key = uuidString for the charateristic
+        var isPrimary: Bool
+        var cbuuid: CBUUID
+        var description: String
+        init(isPrimary: Bool, cbuuid: CBUUID, description: String) {
+            self.charateristics = [:]
+            self.isPrimary = isPrimary
+            self.cbuuid = cbuuid
+            self.description = description
+        }
+    }
+    var sonyServices: [String: MyService] = [:]
+    
     override init(){
+        isConnecting = false
         super.init()
+
         centralManager = CBCentralManager(delegate: self, queue: queue, options: [CBCentralManagerOptionShowPowerAlertKey: false])
     }
     deinit {
@@ -30,9 +86,23 @@ class SonyBLEDevice : NSObject {
     func scanBLEDevices() {
 //        AppContext.shared.bleManager.startScan(for: SonyBLEDevice.self, delegate: self)
         //AppContext.shared.bleManager.EARS_scanForAllBLEDevices(delegate: self)
+        guard centralManager.state == .poweredOn else {
+            GDLogBLEInfo("EARS: Not powered on...")
+            isConnecting = true
+            return
+        }
+        
         GDLogBLEInfo("EARS: About to scan for peripherals")
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+        GDLogBLEInfo("EARS: Existing scanBLEDevices...")
+        isConnecting = false
+        //centralManager.scanForPeripherals(withServices: [CBUUID(string: "180A")], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
 
+    }
+    func disconnect() {
+        guard let device = connectedHeadPhones, let cm = centralManager else {return}
+        
+        cm.cancelPeripheralConnection(device)
     }
 }
 
@@ -40,6 +110,9 @@ class SonyBLEDevice : NSObject {
 extension SonyBLEDevice: CBCentralManagerDelegate {
     internal func centralManagerDidUpdateState(_ central: CBCentralManager) {
         GDLogBLEInfo("EARS: BLE central manager state changed to '\(centralManager.state)'. Ignoring...")
+        if(isConnecting) {
+            self.scanBLEDevices()
+        }
     }
     
     
@@ -55,9 +128,9 @@ extension SonyBLEDevice: CBCentralManagerDelegate {
         
         let id = peripheral.identifier
         let name = peripheral.name?.lowercased() ?? "unknown"
-//GDLogBLEInfo("Found: '\(name)'")
+GDLogBLEInfo("Found: '\(name)'")
         // AirPods, connect and stop scanning...
-        if name.contains("airpod") {
+       /* if name.contains("airpod") {
             GDLogBLEInfo("EARS: FOUND headphones (Airpods). Stopping scan and connecting!")
             centralManager.stopScan()
             
@@ -66,16 +139,17 @@ extension SonyBLEDevice: CBCentralManagerDelegate {
             debugPrintAdvertismentData(periferal: peripheral, advData: advertisementData)
             centralManager.connect(pendingConnectHeadPhones!)
             return
-        }
+        }*/
 
         // SONY Linkbuds
         if name == DEVICE_NAME {
-            GDLogBLEInfo("EARS: FOUND headphones (Sony Linkbuds). Stopping scan and connecting!")
+            GDLogBLEInfo("EARS: FOUND headphones \(name). Stopping scan and connecting!")
             centralManager.stopScan()
             
             pendingConnectHeadPhones = peripheral
             pendingConnectHeadPhones!.delegate = self
             debugPrintAdvertismentData(periferal: peripheral, advData: advertisementData)
+            sonyServices = [:]
             centralManager.connect(pendingConnectHeadPhones!, options: [CBConnectPeripheralOptionEnableTransportBridgingKey : true])
             
             return
@@ -152,6 +226,7 @@ extension SonyBLEDevice: CBCentralManagerDelegate {
         connectedHeadPhones!.delegate = self
         pendingConnectHeadPhones = nil
         connectedHeadPhones!.discoverServices(nil)
+        
     }
     
     internal func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -162,6 +237,44 @@ extension SonyBLEDevice: CBCentralManagerDelegate {
     internal func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         GDLogBLEVerbose("EARS: Disconnected from \(peripheral.name ?? "Unnamed peripheral") (\(peripheral.identifier))")
         centralManager.cancelPeripheralConnection(peripheral)
+        printOutPeripheralServices(services: sonyServices)
+    }
+    private func dataToString(data: Data) -> String {
+        return String(data: data, encoding: .utf8) ?? "<nil>"
+    }
+    private func dataToIntArray(data: Data) -> [UInt32] {
+        return data.withUnsafeBytes {
+            Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
+        }
+    }
+    internal func printOutPeripheralServices(services: [String:MyService]){
+        var debugOutput: String
+        var debugServiceList: String = "\nCBUUID\tPrimary\tDesciription\n"
+        var debugCharateristicsList: String = "\nServiceId\tCBUUID\tBroadcast\tNotify\tRead\tWrite\tWwoR\tDescription\tValue(Str)\tValue([UInt32])\n"
+        var debugDescriptorsList: String = "\nServiceId\tCharID\tCBUUID\tType\tValue\tDescription\tDebugString\n"
+        
+        debugOutput = "Discovered Services:"
+        for s in sonyServices.values {
+            debugOutput += "SERVICE: \(s.cbuuid.uuidString) Primary: \(s.isPrimary) Descr: '\(s.description)'\n"
+            
+            debugServiceList += "\(s.cbuuid.uuidString)\t\(s.isPrimary)\t\(s.description)\n"
+            
+            for char in s.charateristics.values {
+                debugOutput += "\tCHARACTERISTIC: Broadcast: \(char.canBroadcast) Notify: \(char.canNotify) Read: \(char.isReadable) Write: \(char.isWritable) WriteAndForg: \(char.isWriteAndFogetable) Descr: '\(char.description)'\n"
+                debugCharateristicsList += "\(s.cbuuid.uuidString)\t\(char.uuid.uuidString)\t\(char.canBroadcast)\t\(char.canNotify)\t\(char.isReadable)\t\(char.isWritable)\t\(char.isWriteAndFogetable)\t\(char.description)\t\(dataToString(data: char.value))\t\(dataToIntArray(data: char.value))\n"
+                
+                
+                for descr  in char.descriptors.values {
+                    debugOutput += "\t\tDESCRIPTOR: \(descr.uuid.uuidString) (\(descr.extraInfo) Value: '\(descr.value)' Descr: '\(descr.description)' Debug: \(descr.debugString)\n"
+                    debugDescriptorsList += "\(s.cbuuid.uuidString)\t\(char.uuid.uuidString)\t\(descr.uuid.uuidString)\t\(descr.extraInfo)\t\(descr.value)\t\(descr.description)\t\(descr.debugString)\n"
+                }
+            }
+        }
+        GDLogBLEInfo(debugOutput)
+        GDLogBLEInfo("---------------SERVICES------------\n\(debugServiceList)")
+        GDLogBLEInfo("---------------CHARATERISTICS------\n\(debugCharateristicsList)")
+        GDLogBLEInfo("---------------DESCRIPTORS---------\n\(debugDescriptorsList)")
+        
     }
 }
 
@@ -183,6 +296,8 @@ extension SonyBLEDevice: CBPeripheralDelegate {
         
         for service in services {
             //GDLogBLEInfo("  EARS: Discovering characteristics for service \(service.uuid.uuidString) \(service.description)")
+            var serv = MyService(isPrimary: service.isPrimary, cbuuid: service.uuid, description: service.description)
+            sonyServices[service.uuid.uuidString] = serv
             connectedHeadPhones!.discoverCharacteristics(nil, for: service)
         }
         //        GDLogBLEInfo("  EARS: Done with discovering services for \(peripheral.name ?? "unknown")")
@@ -203,17 +318,33 @@ extension SonyBLEDevice: CBPeripheralDelegate {
             return
         }
         
+        
         var setOfWritableCharacteristics: Set<CBUUID> = Set()
         var setOfWritableWOResponseCharacteristics: Set<CBUUID> = Set()
         var setOfReadableCharacteristics: Set<CBUUID> = Set()
         var setOfSubscribableCharacteristics: Set<CBUUID> = Set()
         for c in characteristics {
+        
+            var myChar = MyCharacteristic(
+                uuid: c.uuid,
+                isWritable: c.properties.contains(.write),
+                isWriteAndFogetable: c.properties.contains(.writeWithoutResponse),
+                isReadable: c.properties.contains(.read),
+                canNotify: c.properties.contains(.notify),
+                canBroadcast: c.properties.contains(.broadcast),
+                description: c.description,
+                value: Data()
+            )
+            sonyServices[service.uuid.uuidString]?.charateristics[c.uuid.uuidString] = myChar
+            
+            
             if c.properties.contains(.read) {
                 setOfReadableCharacteristics.insert(c.uuid)
                 connectedHeadPhones.readValue(for: c)
             }
             if c.properties.contains(.write) {
                 setOfWritableCharacteristics.insert(c.uuid)
+
             }
             if c.properties.contains(.writeWithoutResponse) {
                 setOfWritableWOResponseCharacteristics.insert(c.uuid)
@@ -243,7 +374,7 @@ extension SonyBLEDevice: CBPeripheralDelegate {
             GDLogBLEError("EARS: Error subscribing to charateristic \(characteristic.uuid.uuidString): \(error)")
             return
         }
-        //        GDLogBLEInfo("      EARS: Subscribing to charatersitc: \(characteristic.uuid.uuidString)")
+               GDLogBLEInfo("      EARS: Subscribing to charatersitc: \(characteristic.uuid.uuidString)")
     }
     
     internal func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?){
@@ -255,6 +386,8 @@ extension SonyBLEDevice: CBPeripheralDelegate {
             GDLogBLEInfo("      EARS: Read value from CHARACTERISTIC \(characteristic.uuid.uuidString) but it was nil")
             return
         }
+        
+        sonyServices[characteristic.service!.uuid.uuidString]?.charateristics[characteristic.uuid.uuidString]?.value = value
         
         let dataDescription = value.debugDescription
         let dataMirrorDescription = value.customMirror.description
@@ -293,22 +426,34 @@ extension SonyBLEDevice: CBPeripheralDelegate {
         
         var debugString = ""
         for d in descriptors {
+            let myDescriptor = MyDescriptor(uuid: d.uuid, description: d.description, debugString: d.debugDescription, extraInfo: descriptorUUIDToDescriptorName(uuid: d.uuid), value: d.value ?? "missing")
             switch d.uuid.uuidString {
             case CBUUIDCharacteristicExtendedPropertiesString:
                 debugString += "\t\t\t\tHas extended property"
+
             case CBUUIDCharacteristicUserDescriptionString:
                 debugString += "\t\t\t\tHas user description"
+
             case CBUUIDClientCharacteristicConfigurationString:
                 debugString += "\t\t\t\tHas client config"
+
             case CBUUIDServerCharacteristicConfigurationString:
                 debugString += "\t\t\t\tHas server config"
+
             case CBUUIDCharacteristicFormatString:
                 debugString += "\t\t\t\tHas format"
+
             case CBUUIDCharacteristicAggregateFormatString:
                 debugString += "\t\t\t\tHas aggregate format"
+
             default:
                 debugString += "\t\t\t\tHas CUSTOM descr (\(d.uuid.uuidString))"
             }
+            
+            sonyServices[characteristic.service!.uuid.uuidString]?
+                .charateristics[characteristic.uuid.uuidString]!
+                .descriptors[d.uuid.uuidString] = myDescriptor
+            
             GDLogBLEInfo("\n\t\t\tEARS: Discovered DESCRIPTORS for characterstic '\(characteristic.uuid.uuidString)', count: \(descriptors.count):\n\(debugString)")
             connectedHeadPhones.readValue(for: d)
         }
@@ -325,22 +470,31 @@ extension SonyBLEDevice: CBPeripheralDelegate {
             return
         }
         var debugString = ""
-        
+        var myDescr = sonyServices[(descriptor.characteristic!.service?.uuid.uuidString)!]!
+            .charateristics[descriptor.characteristic!.uuid.uuidString]?.descriptors[descriptor.uuid.uuidString]
+    
         switch descriptor.uuid.uuidString {
         case CBUUIDCharacteristicExtendedPropertiesString, CBUUIDClientCharacteristicConfigurationString, CBUUIDServerCharacteristicConfigurationString:
             // Value is NSNumber
             let number = value as? NSNumber
             debugString += "\t\t\t\t\(descriptorUUIDToDescriptorName(uuid: descriptor.uuid)) = '\(number ?? -1)'\n"
+            myDescr!.value = number as Any
+            
         case CBUUIDCharacteristicUserDescriptionString, CBUUIDCharacteristicAggregateFormatString:
             // Value is NSString
             let str = value as? NSString
             debugString += "\t\t\t\t\(descriptorUUIDToDescriptorName(uuid: descriptor.uuid)) = '\(str ?? "could not convert")'\n"
+            myDescr!.value = str as Any
+            
         case CBUUIDCharacteristicFormatString:
             // Value is NSData
             let data = value as? NSData
             debugString += "\t\t\t\t\(descriptorUUIDToDescriptorName(uuid: descriptor.uuid)) = '\(data.debugDescription)'\n"
+            myDescr!.value = data as Any
+            
         default:
             debugString += "\t\t\t\t\(descriptorUUIDToDescriptorName(uuid: descriptor.uuid)) = '\(value)')\n"
+            myDescr!.value = value as Any
         }
         GDLogBLEInfo("\n\t\t\tEARS: READ DESCRIPTOR for Charateristic \(descriptor.characteristic?.uuid.uuidString ?? "unknown"):\n\(debugString)")
     }

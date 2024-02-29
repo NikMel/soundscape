@@ -629,6 +629,11 @@ class DevicesViewController: UIViewController {
             connectDevice(of: managerType, name: deviceName, modelName: modelName, deviceType: deviceType)
             
         case .firstConnection:
+            if(self.selectedDeviceType == .generic) {
+                // Disconnect to trigger debug output
+                DevicesViewController.sonyBLEDevice.disconnect()
+            }
+                
             if let device = connectedDevice {
                 // Now that we have given the user instructions for calibrating, add the device (which should start the calibration)
                 AppContext.shared.deviceManager.add(device: device)
@@ -704,6 +709,9 @@ class DevicesViewController: UIViewController {
             //AppContext.shared.bleManager.EARS_retrieveDevicesWithServices()
 
             DevicesViewController.sonyBLEDevice.scanBLEDevices()
+        
+            self.state = .firstConnection
+            self.selectedDeviceType = .generic
             return
         }
         
