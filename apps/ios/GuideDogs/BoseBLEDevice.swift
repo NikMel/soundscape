@@ -164,6 +164,32 @@ extension BoseBLEDevice: CBCentralManagerDelegate {
         return data.withUnsafeBytes {
             Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
         }
+    }    
+    private func dataToByteArray(data: Data) -> [UInt8] {
+        return data.withUnsafeBytes {
+            Array(UnsafeBufferPointer<UInt8>(start: $0, count: data.count/MemoryLayout<UInt8>.stride))
+        }
+    }
+    private func dataToStruct(data: Data) -> BoseHeadTrackingData {
+        do {
+            return try data.withUnsafeBytes<BoseHeadTrackingData> { buffer in
+                buffer.load(as: BoseHeadTrackingData.self)
+            }
+        } catch {
+            GDLogBLEError(error.localizedDescription)
+            return BoseHeadTrackingData(byte1: 0,dataField1: 0,dataField2: 0,dataField3: 0,dataField4: 0,dataField5: 0,dataField6: 0)
+        }
+    }
+    
+    struct BoseHeadTrackingData {
+        var byte1: UInt8
+        var dataField1: UInt16
+        var dataField2: UInt16
+        var dataField3: UInt16
+        var dataField4: UInt16
+        var dataField5: UInt16
+        var dataField6: UInt16
+        
     }
     // MARK: Debug methods
     
@@ -313,10 +339,24 @@ extension BoseBLEDevice: CBPeripheralDelegate {
         }
         
         if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_DATA_CHARACTERISTIC.uuidString {
-            GDLogBLEInfo("READ sensor DATA value: \(String(describing: characteristic.value?.debugDescription))")
+//            GDLogBLEInfo("READ sensor DATA value: \(String(describing: characteristic.value?.debugDescription))")
+            let valueAsArr = dataToByteArray(data: characteristic.value!)
+            GDLogBLEInfo("READ sensor DATA value (arrtest): \(valueAsArr)")
+            let boseData = dataToStruct(data: characteristic.value!)
+            GDLogBLEInfo("""
+                READ sensor DATA:
+                \tbyte: \(boseData.byte1)
+                \tfield 1: \(boseData.dataField1)
+                \tfield 2: \(boseData.dataField2)
+                \tfield 3: \(boseData.dataField3)
+                \tfield 4: \(boseData.dataField4)
+                \tfield 5: \(boseData.dataField5)
+                \tfield 6: \(boseData.dataField6)
+            """)
+            
         } else if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_CONFIG_CHARACTERISTIC.uuidString {
             GDLogBLEInfo("READ sensor CONFIG value: \(String(describing: characteristic.value?.debugDescription))")
-            let valueAsArr = dataToIntArray(data: characteristic.value!)
+            let valueAsArr = dataToByteArray(data: characteristic.value!)
             GDLogBLEInfo("READ sensor CONFIG value (arrtest): \(valueAsArr)")
 
         } else if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_INFO_CHARACTERISTIC.uuidString {
