@@ -9,7 +9,7 @@
 import Foundation
 import CoreBluetooth
 class SonyBLEDevice : NSObject {
-    private let DEVICE_NAME: String = "le-bose frames"//"le_linkbuds" //
+    private let DEVICE_NAME: String = "le_linkbuds" // "le-bose frames"//
     private var discoveredDevices: Set<UUID> = []
 //    private var connectedDevices: [CBPeripheral] = []
     private var centralManager: CBCentralManager!
@@ -247,6 +247,12 @@ GDLogBLEInfo("Found: '\(name)'")
             Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
         }
     }
+    
+    func printDiscoveredServices(){
+        GDLogBLEInfo("EARS: Printing debug info about discovered services")
+        printOutPeripheralServices(services: sonyServices)
+    }
+    
     internal func printOutPeripheralServices(services: [String:MyService]){
         var debugOutput: String
         var debugServiceList: String = "\nCBUUID\tPrimary\tDesciription\n"
@@ -257,6 +263,7 @@ GDLogBLEInfo("Found: '\(name)'")
         for s in sonyServices.values {
             debugOutput += "SERVICE: \(s.cbuuid.uuidString) Primary: \(s.isPrimary) Descr: '\(s.description)'\n"
             
+            debugServiceList += "\(s.cbuuid.uuidString)\t\(s.isPrimary)\t\(s.description)\n"
             debugServiceList += "\(s.cbuuid.uuidString)\t\(s.isPrimary)\t\(s.description)\n"
             
             for char in s.charateristics.values {
@@ -318,6 +325,11 @@ extension SonyBLEDevice: CBPeripheralDelegate {
             return
         }
         
+        /* TODO: Cache charateristics for BOSE:
+         - 56A72AB8-4988-4CC8-A752-FBD1D54A953D: Sensor Data (Subscribe)
+         - 5AF38AF6-000E-404B-9B46-07F77580890B: Sensor config (Writable), 12 bytes (default value: 0x000000010000020000030000
+         - 855CB3E7-98FF-42A6-80FC-40B32A2221C1: Sensor Information (Readable)
+        */
         
         var setOfWritableCharacteristics: Set<CBUUID> = Set()
         var setOfWritableWOResponseCharacteristics: Set<CBUUID> = Set()

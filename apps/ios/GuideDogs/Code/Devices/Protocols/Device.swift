@@ -30,6 +30,7 @@ typealias DeviceCompletionHandler = (Result<Device, DeviceError>) -> Void
 enum DeviceType: String, Codable, CaseIterable {
     case apple
     case sony
+    case bose
     case generic
 }
 
@@ -45,6 +46,7 @@ extension DeviceType {
         switch self {
         case .apple: return HeadphoneMotionManagerReachabilityWrapper()
         case .sony: return HeadphoneMotionManagerReachabilityWrapper()
+        case .bose: return HeadphoneMotionManagerReachabilityWrapper()
         case .generic: return HeadphoneMotionManagerReachabilityWrapper()
         }
     }
