@@ -155,42 +155,7 @@ extension BoseBLEDevice: CBCentralManagerDelegate {
     }
     
     
-    
-    // MARK: Convenience functions
-    private func convertDataToString(data: Data) -> String? {
-        return String(data: data, encoding: .utf8)
-    }
-    private func dataToIntArray(data: Data) -> [UInt32] {
-        return data.withUnsafeBytes {
-            Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
-        }
-    }    
-    private func dataToByteArray(data: Data) -> [UInt8] {
-        return data.withUnsafeBytes {
-            Array(UnsafeBufferPointer<UInt8>(start: $0, count: data.count/MemoryLayout<UInt8>.stride))
-        }
-    }
-    private func dataToStruct(data: Data) -> BoseHeadTrackingData {
-        do {
-            return try data.withUnsafeBytes<BoseHeadTrackingData> { buffer in
-                buffer.load(as: BoseHeadTrackingData.self)
-            }
-        } catch {
-            GDLogBLEError(error.localizedDescription)
-            return BoseHeadTrackingData(byte1: 0,dataField1: 0,dataField2: 0,dataField3: 0,dataField4: 0,dataField5: 0,dataField6: 0)
-        }
-    }
-    
-    struct BoseHeadTrackingData {
-        var byte1: UInt8
-        var dataField1: UInt16
-        var dataField2: UInt16
-        var dataField3: UInt16
-        var dataField4: UInt16
-        var dataField5: UInt16
-        var dataField6: UInt16
-        
-    }
+   
     // MARK: Debug methods
     
     // Debug method to generate a nicer string rep of the advertisment data
@@ -326,6 +291,8 @@ extension BoseBLEDevice: CBPeripheralDelegate {
         }
         GDLogBLEInfo("EARS: Subscribing to charatersitc: \(characteristic.description)")
     }
+
+    
     
     // MARK: READ VALUE
     internal func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?){
@@ -338,20 +305,34 @@ extension BoseBLEDevice: CBPeripheralDelegate {
             return
         }
         
+        
+        
+        // TODO:
+        /*
+            - (KLART) Skriv en manuell rutin som plockar bytes till structen (reverse byte order)
+                - field 2 (normal order) verkarha 0 rakt i söder!)
+            - Kan data från Bose vara två float och en int32 (Float = 4byte)
+            - Testa att skriva 768 och se om det stannar dataströmmen (gör en toggle i UI)
+            - Lista ut om någon av överiga fields kan vara pitch / yaw / roll och accuracy (kan det vara field6; gick från högt nummer till lågt och stabilt)
+            - Hur kan vi skriva en BoseBLEDevice som är kompatibel men HeadphoneMotionManager
+         */
+        
+
         if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_DATA_CHARACTERISTIC.uuidString {
 //            GDLogBLEInfo("READ sensor DATA value: \(String(describing: characteristic.value?.debugDescription))")
             let valueAsArr = dataToByteArray(data: characteristic.value!)
             GDLogBLEInfo("READ sensor DATA value (arrtest): \(valueAsArr)")
-            let boseData = dataToStruct(data: characteristic.value!)
+            let boseData = dataToStruct1(data: characteristic.value!)
+            let boseData_reverse = dataToStruct1_reverseByteOrder(data: characteristic.value!)
             GDLogBLEInfo("""
-                READ sensor DATA:
-                \tbyte: \(boseData.byte1)
-                \tfield 1: \(boseData.dataField1)
-                \tfield 2: \(boseData.dataField2)
-                \tfield 3: \(boseData.dataField3)
-                \tfield 4: \(boseData.dataField4)
-                \tfield 5: \(boseData.dataField5)
-                \tfield 6: \(boseData.dataField6)
+                READ sensor DATA + Reverse:
+                \tbyte:    \(boseData.byte1) \t \(boseData_reverse.byte1)
+                \tfield 1: \(boseData.dataField1) \t \(boseData_reverse.dataField1)
+                \tfield 2: \(boseData.dataField2) \t \(boseData_reverse.dataField2)
+                \tfield 3: \(boseData.dataField3) \t \(boseData_reverse.dataField3)
+                \tfield 4: \(boseData.dataField4) \t \(boseData_reverse.dataField4)
+                \tfield 5: \(boseData.dataField5) \t \(boseData_reverse.dataField5)
+                \tfield 6: \(boseData.dataField6) \t \(boseData_reverse.dataField6)
             """)
             
         } else if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_CONFIG_CHARACTERISTIC.uuidString {
@@ -382,6 +363,55 @@ extension BoseBLEDevice: CBPeripheralDelegate {
         }
         GDLogBLEInfo("EARS: WRITE SUCESS \(dataToIntArray(data: characteristic.value!))")
         bosePeripheral?.readValue(for: boseHeadTrackingConfig!)
+    }
+    
+    
+    // MARK: Convenience functions
+    private func convertDataToString(data: Data) -> String? {
+        return String(data: data, encoding: .utf8)
+    }
+    private func dataToIntArray(data: Data) -> [UInt32] {
+        return data.withUnsafeBytes {
+            Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
+        }
+    }
+    private func dataToByteArray(data: Data) -> [UInt8] {
+        return data.withUnsafeBytes {
+            Array(UnsafeBufferPointer<UInt8>(start: $0, count: data.count/MemoryLayout<UInt8>.stride))
+        }
+    }
+    
+    private func dataToStruct1(data: Data) -> BoseHeadTrackingData1 {
+        let arrData = dataToByteArray(data: data)
+        
+        return BoseHeadTrackingData1(byte1: arrData[0],
+                                     dataField1: UInt16(data[1])*256 + UInt16(data[2]),
+                                     dataField2: UInt16(data[3])*256 + UInt16(data[4]),
+                                     dataField3: UInt16(data[5])*256 + UInt16(data[6]),
+                                     dataField4: UInt16(data[7])*256 + UInt16(data[8]),
+                                     dataField5: UInt16(data[9])*256 + UInt16(data[10]),
+                                     dataField6: UInt16(data[11])*256 + UInt16(data[12]))
+    }
+    private func dataToStruct1_reverseByteOrder(data: Data) -> BoseHeadTrackingData1 {
+        let arrData = dataToByteArray(data: data)
+        
+        return BoseHeadTrackingData1(byte1: arrData[0],
+                                     dataField1: UInt16(data[2])*256 + UInt16(data[1]),
+                                     dataField2: UInt16(data[4])*256 + UInt16(data[3]),
+                                     dataField3: UInt16(data[6])*256 + UInt16(data[5]),
+                                     dataField4: UInt16(data[8])*256 + UInt16(data[7]),
+                                     dataField5: UInt16(data[10])*256 + UInt16(data[9]),
+                                     dataField6: UInt16(data[12])*256 + UInt16(data[11]))
+    }
+    struct BoseHeadTrackingData1 {
+        var byte1: UInt8
+        var dataField1: UInt16
+        var dataField2: UInt16
+        var dataField3: UInt16
+        var dataField4: UInt16
+        var dataField5: UInt16
+        var dataField6: UInt16
+        
     }
 }
     
