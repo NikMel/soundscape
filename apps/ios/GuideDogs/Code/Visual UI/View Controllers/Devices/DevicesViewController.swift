@@ -132,7 +132,8 @@ class DevicesViewController: UIViewController {
                 return "Test sending config data to headset to see if the heading service starts delivering data..."
             }
         }
-        
+
+        // MARK: Visa button text
         func primaryBtnText(for device: Device?) -> String? {
             switch self {
             case .unknown: return GDLocalizationUnnecessary("")
@@ -148,6 +149,9 @@ class DevicesViewController: UIViewController {
                     return GDLocalizedString("settings.bluetooth.forget")
                 }
             case .testBLEConfig:
+                if(device?.type == .bose) {
+                    return "Starta headtracking"
+                }
                 return "Tryck för att skicka nåt.."
             }
         }
@@ -587,7 +591,7 @@ class DevicesViewController: UIViewController {
             self.performPrimaryButtonAction()
         }
     }
-    
+    // MARK: performButtonAction
     private func performPrimaryButtonAction() {
         switch state {
         case .disconnected:
@@ -709,14 +713,35 @@ class DevicesViewController: UIViewController {
             NotificationCenter.default.post(name: Notification.Name.ARHeadsetCalibrationCancelled, object: self)
             if(self.selectedDeviceType == .bose) {
 
-                if boseBLEDevice?.currentConnectionState() != .connected {
+                guard let _boseBLEDevice = self.boseBLEDevice
+                else {
+                    GDLogBLEInfo("EARS: WHOOPSIE! BoseDevice is null!")
+                    return
+                }
+
+                if _boseBLEDevice.currentConnectionState() != .connected {
                     GDLogBLEInfo("EARS: WHOOPSIE! Bose are not connected, trying again....")
-                    boseBLEDevice?.connectToBose()
+
+                    _boseBLEDevice.connectToBose()
                 } else {
-                    GDLogBLEInfo("EARS: TODO send something to some config characteristic...")
+                    
+                    DispatchQueue.main.async {
+                        GDLogBLEInfo("isHeadtrackingStarted: \(_boseBLEDevice.isHeadTrackingStarted())")
+                        self.primaryBtnLabel.text = _boseBLEDevice.isHeadTrackingStarted() ? "Stoppa headtracking" : "Starta headtracking"
+                    }
+//                    UIAccessibility.post(notification: .screenChanged, argument: navigationItem.titleView)
+                    if(_boseBLEDevice.isHeadTrackingStarted()) {
+                        GDLogBLEInfo("EARS: STOPPING headtracking")
+                        _boseBLEDevice.stopHeadTracking()
+                    } else {
+                        GDLogBLEInfo("EARS: STARTING headtracking")
+                        _boseBLEDevice.startHeadTracking()
+                    }
+/*                    GDLogBLEInfo("EARS: TODO send something to some config characteristic...")
                    let buffer: [UInt32] = [a, b, c]
                     var myData = buffer.withUnsafeBufferPointer {Data(buffer: $0)}
                     boseBLEDevice?.writeValueToConfig(value: myData)
+ */
 /*
                     //a=a/2
                     //b=b/2
@@ -738,6 +763,7 @@ class DevicesViewController: UIViewController {
             return
         }
     }
+    
     var a: UInt32 = 16777216
     var b: UInt32 = 131072
     var c: UInt32 = 848//1//768
