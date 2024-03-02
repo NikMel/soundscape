@@ -448,12 +448,12 @@ extension BoseBLEDevice: CBPeripheralDelegate {
     }*/
     struct BoseHeadTrackingData1 {
         var byte1: UInt8
-        var dataField1: Int16
+        var dataField1: Int16 // ?
         var dataField2: Int16 // Yaw (heading, 0=South, 16384=North)
-        var dataField3: Int16
+        var dataField3: Int16 // ?
         var dataField4: Int16 // Pitch
         var dataField5: Int16 // Roll
-        var dataField6: Int16
+        var dataField6: Int16 // accuracy?
         
     }
 }
