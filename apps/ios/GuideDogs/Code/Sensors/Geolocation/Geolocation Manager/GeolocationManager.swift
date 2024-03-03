@@ -425,6 +425,7 @@ extension GeolocationManager: DeviceHeadingProviderDelegate {
 extension GeolocationManager: UserHeadingProviderDelegate {
     
     func userHeadingProvider(_ provider: UserHeadingProvider, didUpdateUserHeading heading: HeadingValue?) {
+        GDLogHeadphoneMotionInfo("userHeading: \(heading?.value ?? 0)")
         userHeading = heading
     }
     

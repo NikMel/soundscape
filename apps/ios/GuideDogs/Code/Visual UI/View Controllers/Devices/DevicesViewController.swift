@@ -733,9 +733,11 @@ class DevicesViewController: UIViewController {
                     if(_boseBLEDevice.isHeadTrackingStarted()) {
                         GDLogBLEInfo("EARS: STOPPING headtracking")
                         _boseBLEDevice.stopHeadTracking()
+                        
                     } else {
                         GDLogBLEInfo("EARS: STARTING headtracking")
                         _boseBLEDevice.startHeadTracking()
+//                        _boseBLEDevice.testVariousStartCodes()
                     }
 /*                    GDLogBLEInfo("EARS: TODO send something to some config characteristic...")
                    let buffer: [UInt32] = [a, b, c]

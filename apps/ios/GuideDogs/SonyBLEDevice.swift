@@ -9,7 +9,7 @@
 import Foundation
 import CoreBluetooth
 class SonyBLEDevice : NSObject {
-    private let DEVICE_NAME: String = "le_linkbuds" // "le-bose frames"//
+    private let DEVICE_NAME: String = "le-bose frames"//"le_linkbuds" // 
     private var discoveredDevices: Set<UUID> = []
 //    private var connectedDevices: [CBPeripheral] = []
     private var centralManager: CBCentralManager!
