@@ -17,7 +17,7 @@ class BoseBLEDevice : NSObject {
         static let CBUUID_HEADTRACKING_INFO_CHARACTERISTIC: CBUUID = CBUUID(string: "855CB3E7-98FF-42A6-80FC-40B32A2221C1")
     }
 //    let BOSE_HEADTRACKING_START_CODE: [UInt32] = [16777216, 131072, 848] Also working: 928
-    internal let BOSE_HEADTRACKING_START_CODE: [UInt32] = [16777216, 131072, 848]
+    internal let BOSE_HEADTRACKING_START_CODE: [UInt32] = [16777216, 131072, 928]
     internal let BOSE_HEADTRACKING_STOP_CODE: [UInt32] = [16777216, 131072, 768]
     
     internal let BOSE_TEST_CODE_SUITE: [UInt32] = [0x310,0x320,0x330,0x340,0x350,0x360,0x370,0x380,0x390,0x3A0]
@@ -49,30 +49,60 @@ class BoseBLEDevice : NSObject {
         
         centralManager = CBCentralManager(delegate: self, queue: queue, options: [CBCentralManagerOptionShowPowerAlertKey: false])
     }
+    
     func currentConnectionState() -> BoseConnectionState {
         return self.state
     }
+    
     func connectToBose(){
         // Scan for Bose headsets. These should offer the service FDD2 which (might) provide headtracking sensor charateristcvs
         centralManager.scanForPeripherals(withServices: [BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_SERVICE])
 //        centralManager.scanForPeripherals(withServices: nil)
         self.state = .connecting
     }
+    
     func disconnect() {
         guard let device = bosePeripheral, let cm = centralManager else {return}
         self.state = .disconnecting
         cm.cancelPeripheralConnection(device)
     }
+    
     func startHeadTracking() {
-        let myData = BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)}
+        guard let config = eventProcessor.currentSensorConfig
+        else {
+            GDLogBLEError("Cannot START headtracking. Bose headphones are not ready")
+            return
+        }
+        
+        config.gyroscopePeriod = 160
+//        config.gamerotationPeriod = 160
+        let myData = config.toConfigToData()
+        let test = BoseEventProcessor.dataToByteArray(data: BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)})
+        GDLogBLEInfo("""
+            Encodingtest: 
+            mydata    \(BoseEventProcessor.dataToIntArray(data: myData))
+            hackarr   \(BOSE_HEADTRACKING_START_CODE)
+            hackBytes \(test)
+            """)
+        
+//        let myData = config.toConfigToData() //BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)}
         self.writeValueToConfig(value: myData)
         self.isHeadtrackingStarted = true
     }
+    
     func stopHeadTracking() {
-        let myData = BOSE_HEADTRACKING_STOP_CODE.withUnsafeBufferPointer {Data(buffer: $0)}
+        guard let config = eventProcessor.currentSensorConfig
+        else {
+            GDLogBLEError("Cannot STOP headtracking. Bose headphones are not ready")
+            return
+        }
+        config.gyroscopePeriod = 0
+        
+        let myData = config.toConfigToData() //BOSE_HEADTRACKING_STOP_CODE.withUnsafeBufferPointer {Data(buffer: $0)}
         self.writeValueToConfig(value: myData)
         self.isHeadtrackingStarted = false
     }
+    
     func isHeadTrackingStarted() -> Bool {
         return self.isHeadtrackingStarted
     }

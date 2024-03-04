@@ -8,7 +8,8 @@
 
 import Foundation
 class BoseEventProcessor {
-    var currentSensorInfo: Data = Data([])
+    var currentSensorConfig: BoseSensorConfiguration?
+    
     struct BoseHeadTrackingData1 {
         var byte1: UInt8
         var dataField1: Int16 // Cyclic sample counter? Seems to count each sample
@@ -180,6 +181,24 @@ class BoseEventProcessor {
         let valueAsArr = BoseEventProcessor.dataToByteArray(data: eventData)
         GDLogBLEInfo("READ sensor DATA value (arrtest): \(valueAsArr)")
 
+        switch valueAsArr[0] {
+        case self.currentSensorConfig?.accelerometerId:
+            GDLogBLEInfo("Got an accellerometer data update, read 10 bytes. UNSUPPORTED")
+            return
+        case self.currentSensorConfig?.gyroscopeId:
+            GDLogBLEInfo("Got an gyroscope data update, read 10 bytes")
+            // TODO: Decode Gyroscope data (x, y, z and accuracy)
+        case self.currentSensorConfig?.rotationId:
+            GDLogBLEInfo("Got an rotation data update, read 12 bytes. UNSUPPORTED")
+            return
+        case self.currentSensorConfig?.gamerotationId:
+            GDLogBLEInfo("Got an gyroscope data update, read 12 bytes. UNSUPPORTED")
+            return
+        default:
+            GDLogBLEError("READ: Unknown sensor!")
+            return
+        }
+        
 //        let yawString = BoseEventProcessor.dataToYawString(boseData.dataField2)
 //        let pitchString = BoseEventProcessor.dataToPitchString(boseData.dataField4)
 //        let rollString = BoseEventProcessor.dataToRollString(boseData.dataField5)
@@ -189,7 +208,6 @@ class BoseEventProcessor {
         
         let boseData = BoseEventProcessor.dataToStruct1(data: eventData)
         GDLogBLEInfo("""
-            INFO: \(BoseEventProcessor.dataToByteArray(data: self.currentSensorInfo))
             READ sensor DATA + Reverse:
             \tbyte:    \(boseData.byte1)
             \tfield 1: \(boseData.dataField1)
@@ -235,3 +253,70 @@ class BoseEventProcessor {
      */
     }
 }
+
+
+class BoseSensorConfiguration {
+    // Period is in millisecond update interval. Valid intervals:    320,    160,    80,    40,    20,
+    let accelerometerId:UInt8 = 0
+    var accelerometerPeriod: UInt16 = 0
+    
+    let gyroscopeId:UInt8 = 1
+    var gyroscopePeriod: UInt16 = 0
+    
+    let rotationId:UInt8 = 2
+    var rotationPeriod: UInt16 = 0
+    
+    let gamerotationId:UInt8 = 3
+    var gamerotationPeriod: UInt16 = 0
+    
+    static func parseValue(data: Data) -> BoseSensorConfiguration {
+        let byteArray: [UInt8] = BoseEventProcessor.dataToByteArray(data: data)
+        var result = BoseSensorConfiguration()
+        result.accelerometerPeriod = BoseEventProcessor.twoBytesToUInt16(byteArray[1], byteArray[2])
+        result.gyroscopePeriod = BoseEventProcessor.twoBytesToUInt16(byteArray[4], byteArray[5])
+        result.rotationPeriod = BoseEventProcessor.twoBytesToUInt16(byteArray[7], byteArray[8])
+        result.gamerotationPeriod = BoseEventProcessor.twoBytesToUInt16(byteArray[10], byteArray[11])
+        return result
+    }
+    
+    private func toByteArr<T: BinaryInteger>(endian: T, count: Int) -> [UInt8] {
+        var _endian = endian
+        let bytePtr = withUnsafePointer(to: &_endian) {
+            $0.withMemoryRebound(to: UInt8.self, capacity: count) {
+                UnsafeBufferPointer(start: $0, count: count)
+            }
+        }
+        return [UInt8](bytePtr)
+    }
+    private func swapEndianess(byteArr: [UInt8]) -> [UInt8] {
+        return [byteArr[1], byteArr[0]]
+    }
+    
+    
+    func toConfigToData() -> Data {
+        var newConfig: Data = Data()
+        
+        var tst = toByteArr(endian: gyroscopePeriod, count: 2)
+        
+        newConfig.append(contentsOf: [accelerometerId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: accelerometerPeriod, count: 2)))
+//        newConfig.append(contentsOf: withUnsafeBytes(of: accelerometerPeriod) { Data($0) })
+
+        newConfig.append(contentsOf: [gyroscopeId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gyroscopePeriod, count: 2)))
+//        newConfig.append(contentsOf: withUnsafeBytes(of: gyroscopePeriod.bigEndian) { Data($0) })
+
+        newConfig.append(contentsOf: [rotationId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: rotationPeriod, count: 2)))
+//        newConfig.append(contentsOf: withUnsafeBytes(of: rotationPeriod) { Data($0) })
+        
+        newConfig.append(contentsOf: [gamerotationId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gamerotationPeriod, count: 2)))
+//        newConfig.append(contentsOf: withUnsafeBytes(of: gamerotationPeriod) { Data($0) })
+
+        GDLogBLEInfo("Encoded new config to: \(BoseEventProcessor.dataToByteArray(data: newConfig))")
+        
+        return newConfig
+    }
+}
+

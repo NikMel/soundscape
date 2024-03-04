@@ -55,11 +55,12 @@ extension BoseBLEDevice: CBPeripheralDelegate {
             GDLogBLEInfo("READ sensor CONFIG value: \(String(describing: characteristic.value?.debugDescription))")
             let valueAsArr = BoseEventProcessor.dataToByteArray(data: characteristic.value!)
             GDLogBLEInfo("READ sensor CONFIG value (arrtest): \(valueAsArr)")
+            eventProcessor.currentSensorConfig = BoseSensorConfiguration.parseValue(data: value)
         } else if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_INFO_CHARACTERISTIC.uuidString {
 //            GDLogBLEInfo("READ sensor INFO value: \(String(describing: characteristic.value?.debugDescription))")
-  //          let valueAsArr = BoseEventProcessor.dataToByteArray(data: characteristic.value!)
-            eventProcessor.currentSensorInfo = value
-//            GDLogBLEInfo("READ sensor INFO value (arrtest): \(valueAsArr)")
+            let valueAsArr = BoseEventProcessor.dataToByteArray(data: characteristic.value!)
+//            eventProcessor.currentSensorInfo = value
+            GDLogBLEInfo("READ sensor INFO value (arrtest): \(valueAsArr)")
         } else {
             GDLogBLEInfo("READ value from unknown charateristic: \(characteristic.debugDescription)")
         }
