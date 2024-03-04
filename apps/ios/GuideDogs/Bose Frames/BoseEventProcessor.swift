@@ -9,6 +9,12 @@
 import Foundation
 class BoseEventProcessor {
     var currentSensorConfig: BoseSensorConfiguration?
+    struct BoseVectorData {
+        var x: UInt16
+        var y: UInt16
+        var z: UInt16
+        var accuracy: UInt8
+    }
     
     struct BoseHeadTrackingData1 {
         var byte1: UInt8
@@ -187,7 +193,7 @@ class BoseEventProcessor {
             return
         case self.currentSensorConfig?.gyroscopeId:
             GDLogBLEInfo("Got an gyroscope data update, read 10 bytes")
-            // TODO: Decode Gyroscope data (x, y, z and accuracy)
+            // TODO: Decode Gyroscope data (x, y, z and accuracy) -> BoseVectorData
         case self.currentSensorConfig?.rotationId:
             GDLogBLEInfo("Got an rotation data update, read 12 bytes. UNSUPPORTED")
             return
