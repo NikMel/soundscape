@@ -76,8 +76,8 @@ class BoseBLEDevice : NSObject {
         
 //        config.gyroscopePeriod = 160
 //        config.accelerometerPeriod = 160
-//        config.gamerotationPeriod=160
-        config.rotationPeriod=160
+//        config.gamerotationPeriod=80
+        config.rotationPeriod = 80
         let myData = config.toConfigToData()
         let test = BitUtils.dataToByteArray(data: BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)})
         GDLogBLEInfo("""

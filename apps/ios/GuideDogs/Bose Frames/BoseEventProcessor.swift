@@ -16,61 +16,7 @@ class BoseEventProcessor {
         var accuracy: UInt8
     }
     private let BOSE_ACCURACY_STRINGS: [String] = ["unrealiable", "low", "medium", "high"]
-    struct BoseHeadTrackingData1 {
-        var byte1: UInt8
-        var dataField1: Int16 // Cyclic sample counter? Seems to count each sample
-
-        /* dataFild2: Yaw with oddities
-         Yaw, this one has its zero-point SOUTH. When rotating passed south, it shows a difference between east and west.
-         Going from south east-ward it rolls over to 65535 and counts down; west-wards it counts up.
-         Rotating towrads north it reaches 16384 (downwards coming in from east and upwards from west).
-         At north it will count down again in either direction, thus it is impossible to determine if it changed direction at north or continued rotating.
-         If rotating a full circle clockwise (S-W-N-E-S), it will come backing in towards south (from E) counting down to 0 and then rolling over to 65535 going back W (thus reversing the situation).
-         Doing another full circle with put it back in the inital state (0 to the south counting up going W and rolling over counting down E)
-         */
-        var dataField2: Int16
-        
-        /* dataField3: Yaw with oddities
-         This one has its zero-point to the NORTH. It behaves pretty much as dataField2 but with NORTH as the rollover point. Counts up rotating W and rolls over to 65535 going E...
-        */
-        var dataField3: Int16
-        
-        /* datafield4: Pitch, some oddities
-         0 is leveled, but sometimes negative is up and sometimes down...
-         It seems that when it has rotated (when the Yaw-fields are sort-of-reveresed) one revolution, direction is flipped!
-         Rotating another revolution, it's back to normal again!
-         */
-        var dataField4: Int16 // Pitch
-        
-        /* dataField5: Roll, some oddities
-         0 is leveled other that that, same oddity as with Pitch; i.e., directions get flipped when rotating...
-         */
-        var dataField5: Int16 // Roll
-        
-        /* dataField6: Accuracy/Precision
-         This decreases as data is collected. Seems to floor out at 546, occasionally increasing and getting back again. Early on it can hover at a much higher value.
-         Use this field to sense is the devices is calibrated
-         
-         */
-        var dataField6: Int16 // accuracy?
-    }
-    struct BoseHeadTrackingData2 {
-        var byte1: UInt8
-        var dataField1: UInt16 // ?
-        var dataField2: UInt16 // Yaw, nope rotation direction?
-        var dataField3: UInt16 // Semms more likely to be Yaw with North = 0
-        var dataField4: Int16 // Pitch
-        var dataField5: Int16 // Roll
-        var dataField6: Int16 // accuracy?
-    }
-    struct BoseHeadTrackingData3 {
-        var byte1: UInt8
-        var dataField1: UInt16 // Sample counter
-        var dataField2: Int32 // Yaw
-        var dataField4: Int16 // Pitch
-        var dataField5: Int16 // Roll
-        var dataField6: Int16 // accuracy?
-    }
+    
     // MARK: Convenience functions
     static func convertDataToString(data: Data) -> String? {
         return String(data: data, encoding: .utf8)
@@ -81,82 +27,58 @@ class BoseEventProcessor {
             Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
         }
     }
-    
-    static func dataToYawString(_ value: Int16) -> String {
-        switch value {
-        case -2000...2000:
+
+    // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
+    static func dataToYawString(_ value: Double) -> String {
+        let absValue = abs(value)
+        let sign = (value < 0 ? -1 : 1)
+
+        switch absValue {
+        case (Double.pi * 0.9)...(Double.pi * 1.1):
             return "S"
-        case 2001...4000:
-            return "SE"
-        case 4000...8000:
-            return "E"
+        case ((Double.pi/2) * 0.9)...((Double.pi/2) * 1.1):
+            return (sign<0) ? "W" : "E"
+        case ((2*Double.pi/3) * 0.9)...((2*Double.pi/3) * 1.1):
+            return (sign<0) ? "SW" : "SE"
+        case ((Double.pi/4) * 0.9)...((Double.pi/3) * 1.1):
+            return (sign<0) ? "NW" : "NE"
+        case (0)...(0.3):
+            return "N"
         default:
             return "Dunno"
         }
     }
-    static func dataToPitchString(_ value: Int16) -> String {
-        if(value > -500 && value < 500) {
+
+    // Pitch: (+/-)pi/2=Levelled: Neg: Down, Pos: Up (-pi/20 < pitch < pi/20 is roughly leveled)
+    static func dataToPitchString(_ value: Double) -> String {
+        if(value > -(Double.pi/20) && value < (Double.pi/20)) {
             return "Straight"
         }
-        else if value <= -500 {
-            return "Looking UP"
-        }
-        else {
+        if value < 0 {
             return "Looking DOWN"
         }
+        
+        return "Looking UP"
+        
     }
-    static func dataToRollString(_ value: Int16) -> String {
-        if(value > -500 && value < 500) {
+    // Roll: 0: Levelled, Neg: Leaning right (-pi/2 vertical-ish), Pos: Leaning left (-pi/10 < roll < pi/10 is roughly leveled)
+    static func dataToRollString(_ value: Double) -> String {
+        if(value > -(Double.pi/10) && value < (Double.pi/10)) {
             return "Straight"
         }
-        else if value <= -500 {
+        if value < 0 {
             return "Leaning RIGHT"
         }
-        else {
-            return "Leaning LEFT"
-        }
+        return "Leaning LEFT"
     }
     
-    
-    static func dataToStruct1(data: Data) -> BoseHeadTrackingData1 {
-        let arrData = BitUtils.dataToByteArray(data: data)
-        
-        return BoseHeadTrackingData1(byte1: arrData[0],
-                                     dataField1: BitUtils.twoBytesToInt16(arrData[1], arrData[2]),
-                                     dataField2: BitUtils.twoBytesToInt16(arrData[3], arrData[4]),
-                                     dataField3: BitUtils.twoBytesToInt16(arrData[5], arrData[6]),
-                                     dataField4: BitUtils.twoBytesToInt16(arrData[7], arrData[8]),
-                                     dataField5: BitUtils.twoBytesToInt16(arrData[9], arrData[10]),
-                                     dataField6: BitUtils.twoBytesToInt16(arrData[11], arrData[12]))
-    }
-    static func dataToStruct2(data: Data) -> BoseHeadTrackingData2 {
-        let arrData = BitUtils.dataToByteArray(data: data)
-        
-        return BoseHeadTrackingData2(byte1: arrData[0],
-                                     dataField1: BitUtils.twoBytesToUInt16(arrData[1], arrData[2]),
-                                     dataField2: BitUtils.twoBytesToUInt16(arrData[3], arrData[4]),
-                                     dataField3: BitUtils.twoBytesToUInt16(arrData[5], arrData[6]),
-                                     dataField4: BitUtils.twoBytesToInt16(arrData[7], arrData[8]),
-                                     dataField5: BitUtils.twoBytesToInt16(arrData[9], arrData[10]),
-                                     dataField6: BitUtils.twoBytesToInt16(arrData[11], arrData[12]))
-    }
-    static func dataToStruct3(data: Data) -> BoseHeadTrackingData3 {
-        let arrData = BitUtils.dataToByteArray(data: data)
-        
-        return BoseHeadTrackingData3(byte1: arrData[0],
-                                     dataField1: BitUtils.twoBytesToUInt16(arrData[1], arrData[2]),
-                                     dataField2: BitUtils.fourBytesToInt32(arrData[3], arrData[4], arrData[5], arrData[6]),
-                                     dataField4: BitUtils.twoBytesToInt16(arrData[7], arrData[8]),
-                                     dataField5: BitUtils.twoBytesToInt16(arrData[9], arrData[10]),
-                                     dataField6: BitUtils.twoBytesToInt16(arrData[11], arrData[12]))
-    }
 
     private func processVectorData(vectorByteArray: [UInt8]) {
         let sensorId: UInt8 = vectorByteArray[0] // 0=Accellerometer 1=Gyroscope 2=Rotation 3=Game-rotation
         let timeStamp:UInt16 = BitUtils.twoBytesToUInt16(vectorByteArray[1], vectorByteArray[2])
-        var x: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[3], vectorByteArray[4])
-        var y: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[5], vectorByteArray[6])
-        var z: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[7], vectorByteArray[8])
+        let x: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[3], vectorByteArray[4])
+        let y: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[5], vectorByteArray[6])
+        let z: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[7], vectorByteArray[8])
         let accuracy: UInt8 = vectorByteArray[9]
         
         // Apply the correlation matrix
@@ -189,9 +111,9 @@ class BoseEventProcessor {
         GDLogBLEInfo("""
             \tsensorId:  \(sensorId)
             \ttimestamp: \(timeStamp)
-            \tx-value:   \(xTrans) \t \(x) \t \(BoseEventProcessor.dataToRollString(xTrans))
-            \ty-value:   \(yTrans) \t \(y) \t \(BoseEventProcessor.dataToPitchString(yTrans))
-            \tz-value:   \(zTrans) \t \(z)
+            \tx-value:   \(xTrans)
+            \ty-value:   \(yTrans)
+            \tz-value:   \(zTrans)
             \taccuracy:  \(BOSE_ACCURACY_STRINGS[Int(accuracy)])
         """)
     }
@@ -206,10 +128,10 @@ class BoseEventProcessor {
         let accuracy: UInt8 = quaternionByteArray[11]
         
         let correctionQ = CorrectionQuaternion.getCorrectionQuaternion()
-        var x: Double = Double(x_raw)
-        var y: Double = Double(y_raw)
-        var z: Double = Double(z_raw)
-        var w: Double = Double(w_raw)
+        var x: Double = Double(x_raw) / pow(2,13)
+        var y: Double = Double(y_raw) / pow(2,13)
+        var z: Double = Double(z_raw) / pow(2,13)
+        var w: Double = Double(w_raw) / pow(2,13)
         // Multiply with the correction quaternion (quaternion.multiply(correctionQuaternion))
         /*
          multiply (a: quaternion, b: correctionQuaternion):
@@ -247,7 +169,7 @@ class BoseEventProcessor {
         let sinp = 2 * (w*x + y*z)
         let cosp = 1 - 2 * (x * x + y * y);
         var pitch = atan2(sinp, cosp) + Double.pi;
-        pitch = (pitch > Double.pi) ? pitch - 2 * Double.pi :  pitch;
+        pitch = ((pitch > Double.pi) ? pitch - 2 * Double.pi :  pitch);
         
         /*
           3. Calculate Roll:
@@ -266,7 +188,15 @@ class BoseEventProcessor {
         let sinr = 2 * (w*y - z*x);
         var roll: Double
         if(abs(sinr) >= 1) {
-            roll = -( ((sinr < 0) ? -1 : 1) * Double.pi/2);
+            var sign = 0
+            if (sinr < 0) {
+                sign = -1
+            }else if ( sinr > 0) {
+                sign = 1
+            } else {
+                sign = 0
+            }
+            roll = -( Double(sign) * Double.pi/2);
         }
         else {
             roll = -asin(sinr);
@@ -287,16 +217,183 @@ class BoseEventProcessor {
 
         let yaw: Double = -atan2(siny, cosy);
         
-  
+        // Roll: 0: Levelled, Neg: Leaning right (-pi/2 vertical-ish), Pos: Leaning left (-pi/10 < roll < pi/10 is roughly leveled)
+        // Pitch: (+/-)pi/2=Levelled: Neg: Down, Pos: Up (-pi/20 < pitch < pi/20 is roughly leveled)
+        // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
         GDLogBLEInfo("""
             \tsensorId:  \(sensorId)
             \ttimestamp: \(timeStamp)
-            \tRoll:      \(roll*100)
-            \tPitch:     \(pitch*100)
-            \tYaw:       \(yaw*100)
+            \tRoll:      \(roll) \t \(BoseEventProcessor.dataToRollString(roll))
+            \tPitch:     \(pitch) \t \(BoseEventProcessor.dataToPitchString(pitch))
+            \tYaw:       \(yaw) \t \(BoseEventProcessor.dataToYawString(yaw))
             \taccuracy:  \(accuracy)
         """)
     }
+
+
+
+    // MARK: Eventhandler
+    func onOrientationEvent(eventData: Data) {
+        //            GDLogBLEInfo("READ sensor DATA value: \(String(describing: characteristic.value?.debugDescription))")
+       let valueAsArr = BitUtils.dataToByteArray(data: eventData)
+//        GDLogBLEInfo("READ sensor DATA value (arrtest): \(valueAsArr)")
+
+        switch valueAsArr[0] {
+        case self.currentSensorConfig?.accelerometerId:
+            GDLogBLEInfo("Got an accellerometer data update, read 10 bytes: \(valueAsArr)")
+            processVectorData(vectorByteArray: valueAsArr)
+            return
+        case self.currentSensorConfig?.gyroscopeId:
+            GDLogBLEInfo("Got an gyroscope data update, read 10 bytes: \(valueAsArr)")
+            processVectorData(vectorByteArray: valueAsArr)
+            return
+        case self.currentSensorConfig?.rotationId:
+            GDLogBLEInfo("Got an rotation data update, read 12 bytes: \(valueAsArr)")
+            processQuaternionData(quaternionByteArray: valueAsArr)
+            return
+        case self.currentSensorConfig?.gamerotationId:
+            GDLogBLEInfo("Got an gameRotation data update, read 12 bytes: \(valueAsArr)")
+            processQuaternionData(quaternionByteArray: valueAsArr)
+            return
+        default:
+            GDLogBLEError("READ: Unknown sensor!")
+            return
+        }
+    }
+}
+
+
+class BoseSensorConfiguration {
+    // Period is in millisecond update interval. Valid intervals:    320, 160, 80, 40, 20
+    let gyroscopeId:UInt8 = 0
+    var gyroscopePeriod: UInt16 = 0
+
+    let accelerometerId:UInt8 = 1
+    var accelerometerPeriod: UInt16 = 0
+        
+    let rotationId:UInt8 = 2
+    var rotationPeriod: UInt16 = 0
+    
+    let gamerotationId:UInt8 = 3
+    var gamerotationPeriod: UInt16 = 0
+    
+    static func parseValue(data: Data) -> BoseSensorConfiguration {
+        let byteArray: [UInt8] = BitUtils.dataToByteArray(data: data)
+        var result = BoseSensorConfiguration()
+        
+        result.accelerometerPeriod = BitUtils.twoBytesToUInt16(byteArray[1], byteArray[2])
+        result.gyroscopePeriod = BitUtils.twoBytesToUInt16(byteArray[4], byteArray[5])
+        result.rotationPeriod = BitUtils.twoBytesToUInt16(byteArray[7], byteArray[8])
+        result.gamerotationPeriod = BitUtils.twoBytesToUInt16(byteArray[10], byteArray[11])
+        
+        return result
+    }
+    
+    private func toByteArr<T: BinaryInteger>(endian: T, count: Int) -> [UInt8] {
+        var _endian = endian
+        let bytePtr = withUnsafePointer(to: &_endian) {
+            $0.withMemoryRebound(to: UInt8.self, capacity: count) {
+                UnsafeBufferPointer(start: $0, count: count)
+            }
+        }
+        return [UInt8](bytePtr)
+    }
+    private func swapEndianess(byteArr: [UInt8]) -> [UInt8] {
+        return [byteArr[1], byteArr[0]]
+    }
+    
+    
+    func toConfigToData() -> Data {
+        var newConfig: Data = Data()
+                
+        newConfig.append(contentsOf: [accelerometerId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: accelerometerPeriod, count: 2)))
+
+        newConfig.append(contentsOf: [gyroscopeId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gyroscopePeriod, count: 2)))
+
+        newConfig.append(contentsOf: [rotationId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: rotationPeriod, count: 2)))
+        
+        newConfig.append(contentsOf: [gamerotationId])
+        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gamerotationPeriod, count: 2)))
+
+        GDLogBLEInfo("Encoded new config to: \(BitUtils.dataToByteArray(data: newConfig))")
+        
+        return newConfig
+    }
+}
+
+struct CorrectionMatrix {
+    static var matrix: CorrectionMatrix?
+    private var elements: [Int16]
+    
+    func getElements() -> [Int16] {
+        return elements
+    }
+    static func getMatrix() -> CorrectionMatrix {
+        if(matrix != nil) {
+            return matrix!
+        }
+
+        var _matrix: CorrectionMatrix = CorrectionMatrix(elements: [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ])
+
+        // Extract basis
+//      I think this one was wrong...
+ /*       var vecX: [Int16] = [_matrix.elements[0], _matrix.elements[4], _matrix.elements[8]]
+        var vecY: [Int16] = [_matrix.elements[1], _matrix.elements[5], _matrix.elements[9]]
+        var vecZ: [Int16] = [_matrix.elements[2], _matrix.elements[6], _matrix.elements[10]]
+  */
+        
+        var vecX: [Int16] = [_matrix.elements[0], _matrix.elements[1], _matrix.elements[2]]
+        var vecY: [Int16] = [_matrix.elements[4], _matrix.elements[5], _matrix.elements[6]]
+        var vecZ: [Int16] = [_matrix.elements[8], _matrix.elements[9], _matrix.elements[10]]
+        
+        // Multiply with reflection vector
+        let reflectionZ: [Int16] = [1, 1, -1]
+        vecX[0] *= reflectionZ[0]
+        vecX[1] *= reflectionZ[1]
+        vecX[2] *= reflectionZ[2]
+        
+        vecY[0] *= reflectionZ[0]
+        vecY[1] *= reflectionZ[1]
+        vecY[2] *= reflectionZ[2]
+        
+        vecZ[0] *= reflectionZ[0]
+        vecZ[1] *= reflectionZ[1]
+        vecZ[2] *= reflectionZ[2]
+                 
+        // MakeBasis
+        // Row 1
+        _matrix.elements[0] = vecX[0]
+        _matrix.elements[1] = vecY[0]
+        _matrix.elements[2] = vecZ[0]
+        _matrix.elements[3] = 0
+        // Row 2
+        _matrix.elements[4] = vecX[1]
+        _matrix.elements[5] = vecY[1]
+        _matrix.elements[6] = vecZ[1]
+        _matrix.elements[7] = 0
+        // Row 3
+        _matrix.elements[8] = vecX[2]
+        _matrix.elements[9] = vecY[2]
+        _matrix.elements[10] = vecZ[2]
+        _matrix.elements[11] = 0
+        // Row 4
+        _matrix.elements[12] = 0
+        _matrix.elements[13] = 0
+        _matrix.elements[14] = 0
+        _matrix.elements[15] = 1
+
+        matrix = _matrix
+        return matrix!
+    }
+}
 
 
 struct CorrectionQuaternion {
@@ -365,171 +462,6 @@ struct CorrectionQuaternion {
         return correctionQuaternion!
     }
 }
-
-    // MARK: Eventhandler
-    func onOrientationEvent(eventData: Data) {
-        //            GDLogBLEInfo("READ sensor DATA value: \(String(describing: characteristic.value?.debugDescription))")
-       let valueAsArr = BitUtils.dataToByteArray(data: eventData)
-//        GDLogBLEInfo("READ sensor DATA value (arrtest): \(valueAsArr)")
-
-        switch valueAsArr[0] {
-        case self.currentSensorConfig?.accelerometerId:
-            GDLogBLEInfo("Got an accellerometer data update, read 10 bytes. UNSUPPORTED: \(valueAsArr)")
-            processVectorData(vectorByteArray: valueAsArr)
-            return
-        case self.currentSensorConfig?.gyroscopeId:
-            GDLogBLEInfo("Got an gyroscope data update, read 10 bytes: \(valueAsArr)")
-            // TODO: Decode Gyroscope data (x, y, z and accuracy) -> BoseVectorData
-            processVectorData(vectorByteArray: valueAsArr)
-            return
-        case self.currentSensorConfig?.rotationId:
-            GDLogBLEInfo("Got an rotation data update, read 12 bytes. UNSUPPORTED: \(valueAsArr)")
-            processQuaternionData(quaternionByteArray: valueAsArr)
-            return
-        case self.currentSensorConfig?.gamerotationId:
-            GDLogBLEInfo("Got an gyroscope data update, read 12 bytes. UNSUPPORTED: \(valueAsArr)")
-            return
-        default:
-            GDLogBLEError("READ: Unknown sensor!")
-            return
-        }
-    }
-}
-
-
-class BoseSensorConfiguration {
-    // Period is in millisecond update interval. Valid intervals:    320, 160, 80, 40, 20
-    let gyroscopeId:UInt8 = 0
-    var gyroscopePeriod: UInt16 = 0
-
-    let accelerometerId:UInt8 = 1
-    var accelerometerPeriod: UInt16 = 0
-        
-    let rotationId:UInt8 = 2
-    var rotationPeriod: UInt16 = 0
-    
-    let gamerotationId:UInt8 = 3
-    var gamerotationPeriod: UInt16 = 0
-    
-    static func parseValue(data: Data) -> BoseSensorConfiguration {
-        let byteArray: [UInt8] = BitUtils.dataToByteArray(data: data)
-        var result = BoseSensorConfiguration()
-        
-        result.accelerometerPeriod = BitUtils.twoBytesToUInt16(byteArray[1], byteArray[2])
-        result.gyroscopePeriod = BitUtils.twoBytesToUInt16(byteArray[4], byteArray[5])
-        result.rotationPeriod = BitUtils.twoBytesToUInt16(byteArray[7], byteArray[8])
-        result.gamerotationPeriod = BitUtils.twoBytesToUInt16(byteArray[10], byteArray[11])
-        
-        return result
-    }
-    
-    private func toByteArr<T: BinaryInteger>(endian: T, count: Int) -> [UInt8] {
-        var _endian = endian
-        let bytePtr = withUnsafePointer(to: &_endian) {
-            $0.withMemoryRebound(to: UInt8.self, capacity: count) {
-                UnsafeBufferPointer(start: $0, count: count)
-            }
-        }
-        return [UInt8](bytePtr)
-    }
-    private func swapEndianess(byteArr: [UInt8]) -> [UInt8] {
-        return [byteArr[1], byteArr[0]]
-    }
-    
-    
-    func toConfigToData() -> Data {
-        var newConfig: Data = Data()
-        
-        var tst = toByteArr(endian: gyroscopePeriod, count: 2)
-        
-        newConfig.append(contentsOf: [accelerometerId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: accelerometerPeriod, count: 2)))
-
-        newConfig.append(contentsOf: [gyroscopeId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gyroscopePeriod, count: 2)))
-
-        newConfig.append(contentsOf: [rotationId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: rotationPeriod, count: 2)))
-        
-        newConfig.append(contentsOf: [gamerotationId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gamerotationPeriod, count: 2)))
-
-        GDLogBLEInfo("Encoded new config to: \(BitUtils.dataToByteArray(data: newConfig))")
-        
-        return newConfig
-    }
-}
-
-struct CorrectionMatrix {
-    static var matrix: CorrectionMatrix?
-    private var elements: [Int16]
-    
-    func getElements() -> [Int16] {
-        return elements
-    }
-    static func getMatrix() -> CorrectionMatrix {
-        if(matrix != nil) {
-            return matrix!
-        }
-
-        var _matrix: CorrectionMatrix = CorrectionMatrix(elements: [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ])
-
-        // Extract basis
-/*      I think this one was wrong...
-        var vecX: [Int16] = [_matrix.elements[0], _matrix.elements[4], _matrix.elements[8]]
-        var vecY: [Int16] = [_matrix.elements[1], _matrix.elements[5], _matrix.elements[9]]
-        var vecZ: [Int16] = [_matrix.elements[2], _matrix.elements[6], _matrix.elements[10]]
-  */
-        var vecX: [Int16] = [_matrix.elements[0], _matrix.elements[1], _matrix.elements[2]]
-        var vecY: [Int16] = [_matrix.elements[4], _matrix.elements[5], _matrix.elements[6]]
-        var vecZ: [Int16] = [_matrix.elements[8], _matrix.elements[9], _matrix.elements[10]]
-        
-        // Multiply with reflection vector
-        let reflectionZ: [Int16] = [1, 1, -1]
-        vecX[0] *= reflectionZ[0]
-        vecX[1] *= reflectionZ[1]
-        vecX[2] *= reflectionZ[2]
-        
-        vecY[0] *= reflectionZ[0]
-        vecY[1] *= reflectionZ[1]
-        vecY[2] *= reflectionZ[2]
-        
-        vecZ[0] *= reflectionZ[0]
-        vecZ[1] *= reflectionZ[1]
-        vecZ[2] *= reflectionZ[2]
-                 
-        // MakeBasis
-        // Row 1
-        _matrix.elements[0] = vecX[0]
-        _matrix.elements[1] = vecY[0]
-        _matrix.elements[2] = vecZ[0]
-        _matrix.elements[3] = 0
-        // Row 2
-        _matrix.elements[4] = vecX[1]
-        _matrix.elements[5] = vecY[1]
-        _matrix.elements[6] = vecZ[1]
-        _matrix.elements[7] = 0
-        // Row 3
-        _matrix.elements[8] = vecX[2]
-        _matrix.elements[9] = vecY[2]
-        _matrix.elements[10] = vecZ[2]
-        _matrix.elements[11] = 0
-        // Row 4
-        _matrix.elements[12] = 0
-        _matrix.elements[13] = 0
-        _matrix.elements[14] = 0
-        _matrix.elements[15] = 1
-
-        matrix = _matrix
-        return matrix!
-    }
-}
-
 
 class BitUtils {
     
