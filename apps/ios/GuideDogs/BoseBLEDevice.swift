@@ -74,10 +74,12 @@ class BoseBLEDevice : NSObject {
             return
         }
         
-        config.gyroscopePeriod = 160
-//        config.gamerotationPeriod = 160
+//        config.gyroscopePeriod = 160
+//        config.accelerometerPeriod = 160
+//        config.gamerotationPeriod=160
+        config.rotationPeriod=160
         let myData = config.toConfigToData()
-        let test = BoseEventProcessor.dataToByteArray(data: BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)})
+        let test = BitUtils.dataToByteArray(data: BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)})
         GDLogBLEInfo("""
             Encodingtest: 
             mydata    \(BoseEventProcessor.dataToIntArray(data: myData))
@@ -96,8 +98,10 @@ class BoseBLEDevice : NSObject {
             GDLogBLEError("Cannot STOP headtracking. Bose headphones are not ready")
             return
         }
-        config.gyroscopePeriod = 0
-        
+//        config.gyroscopePeriod = 0
+//        config.gamerotationPeriod=0
+//        config.accelerometerPeriod = 0
+        config.rotationPeriod=0
         let myData = config.toConfigToData() //BOSE_HEADTRACKING_STOP_CODE.withUnsafeBufferPointer {Data(buffer: $0)}
         self.writeValueToConfig(value: myData)
         self.isHeadtrackingStarted = false
