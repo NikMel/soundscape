@@ -29,6 +29,7 @@ class BoseEventProcessor {
     }
 
     // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
+    // TODO: Improve this one! Make 8 pies of a circle (N, NE, E, SE,...) and figure out nice cutoff points (half a circle is pi and sign shows E/W)
     static func dataToYawString(_ value: Double) -> String {
         let absValue = abs(value)
         let sign = (value < 0 ? -1 : 1)
