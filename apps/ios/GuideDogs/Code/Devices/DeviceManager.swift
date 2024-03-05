@@ -237,12 +237,14 @@ extension DeviceManager {
         switch deviceType {
         case .apple:
             return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
-        case .sony:
-            return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
+//        case .sony:
+//            return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
         case .bose:
             return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
-        case .generic:
+      case .boseBLE:
             return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
+//        case .generic:
+//            return HeadphoneMotionManagerWrapper(id: uuid, name: name, modelName: model, deviceType: deviceType)
         }
     }
 }

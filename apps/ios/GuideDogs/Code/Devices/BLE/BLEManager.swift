@@ -139,7 +139,7 @@ class BLEManager: NSObject {
             return
         }
         GDLogBLEInfo("EARS: i startScan")
-        GDLogBLEVerbose("Scanning for BLE devices...")
+        GDLogBLEVerbose("Scanning for BLE devices with services: \(type.filterServiceIDs)...")
         
         scanDeviceType = type
         scanDelegate = delegate

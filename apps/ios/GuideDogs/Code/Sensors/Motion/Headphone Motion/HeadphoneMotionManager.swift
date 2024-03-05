@@ -82,7 +82,7 @@ class HeadphoneMotionManager: NSObject, UserHeadingProvider, Device {
     }
     
     convenience init(id: UUID, name: String) {
-        self.init(id: id, name: name, modelName: "Generic device", deviceType: .generic)
+        self.init(id: id, name: name, modelName: "Apple AirPods", deviceType: .apple)
         /*        self.id = id
         self.name = name
         

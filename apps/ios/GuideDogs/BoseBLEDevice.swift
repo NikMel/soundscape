@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreBluetooth
-// TODO: Subklassa BaseBLEDevice, implementera Device och UserHeadingProvider
+// TODO: Subklassa BaseBLEDevice, implementera Device (CalibratableDevice istället!) och UserHeadingProvider
 // TODO: Implementera BoseReachability som försöker göra en Connect med timeout (se HeadPhoneReachability)
 class BoseBLEDevice : NSObject {
     internal let DEVICE_NAME: String = "le-bose frames"

@@ -138,11 +138,11 @@ extension HeadphoneMotionManagerWrapper: Device {
     }
     
     var model: String {
-        headphoneMotionManager?.model ?? GDLocalizationUnnecessary("Generic device") //GDLocalizationUnnecessary("Apple AirPods")
+        headphoneMotionManager?.model ?? GDLocalizationUnnecessary("Apple AirPods")
     }
     
     var type: DeviceType {
-        headphoneMotionManager?.type ?? .generic //.apple
+        headphoneMotionManager?.type ?? .apple
     }
     
     var isConnected: Bool {

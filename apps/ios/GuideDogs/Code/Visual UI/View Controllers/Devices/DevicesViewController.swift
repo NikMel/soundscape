@@ -623,7 +623,14 @@ class DevicesViewController: UIViewController {
                 self?.selectedDeviceType = .bose
                 self?.state = .pairingAudio
             }))
-            
+            alert.addAction(UIAlertAction(title: "Testing Bose BLE", style: .default, handler: { [weak self] (_) in
+                self?.selectedDeviceManagerType = HeadphoneMotionManagerWrapper.self
+                self?.selectedDeviceModel = "Bose BLE Test"
+                self?.selectedDeviceName = "Bose BLE"
+                self?.selectedDeviceType = .boseBLE
+                self?.state = .pairingAudio
+            }))
+            /*
             alert.addAction(UIAlertAction(title: "Testing BLE device (Linkbuds)", style: .default, handler: { [weak self] (_) in
                 self?.selectedDeviceManagerType = HeadphoneMotionManagerWrapper.self
                 self?.selectedDeviceModel = "Generic device"
@@ -631,7 +638,7 @@ class DevicesViewController: UIViewController {
                 self?.selectedDeviceType = .generic
                 self?.state = .pairingAudio
             }))
-            
+            */
             present(alert, animated: true, completion: nil)
             
         case .pairingAudio:
@@ -652,13 +659,13 @@ class DevicesViewController: UIViewController {
                 return
             }
             
-            if(self.selectedDeviceType == .generic) {
+ /*           if(self.selectedDeviceType == .generic) {
                 // Disconnect to trigger debug output
                 self.sonyBLEDevice!.printDiscoveredServices()
                 self.state = .testBLEConfig
                 return
             }
-                
+   */
             if let device = connectedDevice {
                 // Now that we have given the user instructions for calibrating, add the device (which should start the calibration)
                 AppContext.shared.deviceManager.add(device: device)
@@ -777,7 +784,19 @@ class DevicesViewController: UIViewController {
     
     var sonyBLEDevice: SonyBLEDevice?
     var boseBLEDevice: BoseBLEDevice?
-    
+    class myScanDelegate: BLEManagerScanDelegate  {
+        func onDeviceStateChanged(_ device: BLEDevice){
+            GDLogBLEInfo("Scan delegate: State changed")
+        }
+        func onDeviceNameChanged(_ device: BLEDevice, _ name: String){
+            GDLogBLEInfo("Scan delegate: Name changed")
+        }
+        func onDevicesChanged(_ discovered: [BLEDevice])            {
+            GDLogBLEInfo("Scan delegate: Device changed")
+            // TODO: Kolla att det är Bose frames (nä behövs inte, den har ju rätt service?). Stoppa scanningen (OBS! Denna kod ska in i den statiska metoden setupDevice och ska returnera <Device, Error> (kolla impl i HeadTrackingManager)
+        }
+    }
+    let test = myScanDelegate()
     private func connectDevice(of managerType: Device.Type, name: String, modelName: String, deviceType: DeviceType) {
         var deviceId = UUID()
 
@@ -793,8 +812,14 @@ class DevicesViewController: UIViewController {
             return
         }
         
+        if(deviceType == .boseBLE) {
+            
+
+            AppContext.shared.bleManager.startScan(for: BoseHeadTrackerTest.self, delegate: test)
+            return
+        }
         
-        if(deviceType == .generic) {
+       /* if(deviceType == .generic) {
             // TODO: Hitta ett sätt att scanna efter peripherals. Kan man filtrera på service "Headtracking", lyssna på updateringar, och koppla in sig på HeadPhoneManager och skjuta events? Förmodlingen skriva en ny Wrapper? Nix, en implementation av UserHeadingProvider som GeoLocationManager kan anropa för att få uppdateringar. shared.deviceManager.add lägger till Device (som impl UserHeadingProvider) som lägger till den i GeoLocationManager
             /* targetDevice = BaseBLEDevice(peripheral: CBPeripheral, type: .headset) {
              
@@ -811,7 +836,7 @@ class DevicesViewController: UIViewController {
             
             self.selectedDeviceType = .generic
             return
-        }
+        }*/
         
         managerType.setupDevice(id: deviceId, name: name, modelName: modelName, deviceType: deviceType) { [weak self] (result) in
             guard let `self` = self else {
@@ -871,12 +896,14 @@ class DevicesViewController: UIViewController {
                     switch deviceType {
                     case .apple:
                         message = GDLocalizedString("devices.airpods_unavailable.alert.description")
-                    case .sony:
-                        message = "Sony linkbuds"
+//                    case .sony:
+//                        message = "Sony linkbuds"
                     case .bose:
                         message = "Bose Frames"
-                    case .generic:
-                        message = "Generic device"
+                    case .boseBLE:
+                        message = "Bose BLE test"
+//                    case .generic:
+//                        message = "Generic device"
                     }
                                         
                     let alert = ErrorAlerts.buildGeneric(title: GDLocalizedString("devices.connect_headset.error_title"),
