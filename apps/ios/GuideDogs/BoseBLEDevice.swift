@@ -78,7 +78,7 @@ class BoseBLEDevice : NSObject {
         let test = BitUtils.dataToByteArray(data: BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)})
         GDLogBLEInfo("""
             Encodingtest: 
-            mydata    \(BoseEventProcessor.dataToIntArray(data: myData))
+            mydata    \(BitUtils.dataToIntArray(data: myData))
             hackarr   \(BOSE_HEADTRACKING_START_CODE)
             hackBytes \(test)
             """)

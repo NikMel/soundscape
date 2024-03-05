@@ -61,7 +61,7 @@ extension BoseBLEDevice: CBPeripheralDelegate {
             GDLogBLEError("Error writing to config: \(error!)")
             return
         }
-        GDLogBLEInfo("EARS: WRITE SUCESS \(BoseEventProcessor.dataToIntArray(data: characteristic.value!))")
+        GDLogBLEInfo("EARS: WRITE SUCESS \(BitUtils.dataToIntArray(data: characteristic.value!))")
         bosePeripheral?.readValue(for: boseHeadTrackingConfig!)
     }
     

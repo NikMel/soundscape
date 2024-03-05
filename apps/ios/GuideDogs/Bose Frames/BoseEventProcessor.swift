@@ -9,26 +9,8 @@
 import Foundation
 class BoseEventProcessor {
     var currentSensorConfig: BoseSensorConfiguration?
-    struct BoseVectorData {
-        var x: Int16
-        var y: Int16
-        var z: Int16
-        var accuracy: UInt8
-    }
-//   private let BOSE_ACCURACY_STRINGS: [String] = ["unrealiable", "low", "medium", "high"]
-    
-    // MARK: Convenience functions
-    static func convertDataToString(data: Data) -> String? {
-        return String(data: data, encoding: .utf8)
-    }
-    static func dataToIntArray(data: Data) -> [UInt32] {
-        
-        return data.withUnsafeBytes {
-            Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
-        }
-    }
 
-    // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
+     // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
     private static func dataToYawString(_ value: Double) -> String {
         let absValue = abs(value)
         let sign = (value < 0 ? -1 : 1)
@@ -70,7 +52,7 @@ class BoseEventProcessor {
         return "Leaning LEFT"
     }
     
-
+    // Processing vector data from: https://github.com/zakaton/Bose-Frames-Web-SDK
     private func processVectorData(vectorByteArray: [UInt8]) {
         let sensorId: UInt8 = vectorByteArray[0] // 0=Accellerometer 1=Gyroscope 2=Rotation 3=Game-rotation
         let timeStamp:UInt16 = BitUtils.twoBytesToUInt16(vectorByteArray[1], vectorByteArray[2])
@@ -90,38 +72,25 @@ class BoseEventProcessor {
         
         let w = 1.0 / ( e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] );
         
-        let xTrans = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] ) * w
-        let yTrans = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] ) * w
-        let zTrans = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * w
+        x = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] ) * w
+        y = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] ) * w
+        y = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * w
 
-        /*
-         m is the CorrelationMatrix
-         applyMatrix4: function ( m ) {
-
-                     var x = this.x, y = this.y, z = this.z;
-                     var e = m.elements;
-
-                     var w = 1 / ( e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] );
-
-                     this.x = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] ) * w;
-                     this.y = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] ) * w;
-                     this.z = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * w;
-
-                     return this;
-         */
-
+        // Done. Log the result
         GDLogBLEInfo("""
             \tsensorId:  \(sensorId)
             \ttimestamp: \(timeStamp)
-            \tx-value:   \(xTrans)
-            \ty-value:   \(yTrans)
-            \tz-value:   \(zTrans)
+            \tx-value:   \(x)
+            \ty-value:   \(y)
+            \tz-value:   \(z)
             \taccuracy:  \(accuracy)
         """)
     }
     private func processQuaternionData(quaternionByteArray: [UInt8]) {
         processQuaternionData(quaternionByteArray: quaternionByteArray, hasAccuracy: true)
     }
+    
+    // Processing quaternion data from: https://github.com/zakaton/Bose-Frames-Web-SDK
     private func processQuaternionData(quaternionByteArray: [UInt8], hasAccuracy: Bool) {
 
         let sensorId: UInt8 = quaternionByteArray[0] // 0=Accellerometer 1=Gyroscope 2=Rotation 3=Game-rotation
@@ -139,17 +108,8 @@ class BoseEventProcessor {
         var w: Double = Double(w_raw) / pow(2,13)
 
         let correctionQ = CorrectionQuaternion.getCorrectionQuaternion()
-        // Multiply with the correction quaternion (quaternion.multiply(correctionQuaternion))
-        /*
-         multiply (a: quaternion, b: correctionQuaternion):
-                var qax = a._x, qay = a._y, qaz = a._z, qaw = a._w;
-                var qbx = b._x, qby = b._y, qbz = b._z, qbw = b._w;
 
-                a._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
-                a._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz;
-                a._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
-                a._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
-         */
+        // Multiply with the correction quaternion (quaternion.multiply(correctionQuaternion))
         let qax = Double(x), qay = Double(y), qaz = Double(z), qaw = Double(w)
         let qbx = correctionQ.x, qby = correctionQ.y, qbz = correctionQ.z, qbw = correctionQ.w;
         x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
@@ -157,41 +117,14 @@ class BoseEventProcessor {
         z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
         w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
         
-        /*
-
-          2. Calculate pitch:
-                 get pitch() {
-                     const {w, x, y, z} = this;
-
-                     let sinp = 2 * (w * x + y * z);
-                     let cosp = 1 - 2 * (x * x + y * y);
-
-                     let pitch = Math.atan2(sinp, cosp) + Math.PI;
-
-                     return (pitch > Math.PI)?
-                         pitch - 2 * Math.PI :
-                         pitch;
-                 }
-         */
+        // Calculate pitch:
         let sinp = 2 * (w*x + y*z)
         let cosp = 1 - 2 * (x * x + y * y);
         var pitch = atan2(sinp, cosp) + Double.pi;
         pitch = ((pitch > Double.pi) ? pitch - 2 * Double.pi :  pitch);
         
-        /*
-          3. Calculate Roll:
-                 get roll() {
-                      const {w, x, y, z} = this;
-
-                      let sinr = 2 * (w*y - z*x);
-                      if(Math.abs(sinr) >= 1) {
-                          return -(Math.sign(sinr) * Math.PI/2);
-                      }
-                      else {
-                          return -Math.asin(sinr);
-                      }
-                  }
-         */
+        
+        // Calculate Roll:
         let sinr = 2 * (w*y - z*x);
         var roll: Double
         if(abs(sinr) >= 1) {
@@ -208,28 +141,23 @@ class BoseEventProcessor {
         else {
             roll = -asin(sinr);
         }
-        /*
-            4. Calculate yaw:
-                 get yaw() {
-                     const {w, x, y, z} = this;
-
-                     const siny = 2 * (w*z + x*y);
-                     const cosy = 1 - 2 * (y*y + z*z);
-
-                     return -Math.atan2(siny, cosy);
-                 }
-         */
+        
+        // Calculate yaw:
         let siny = 2 * (w*z + x*y);
         let cosy = 1 - 2 * (y*y + z*z);
-
         let yaw: Double = -atan2(siny, cosy);
         
+        // Done, log the result
         if(hasAccuracy && accuracy > 5){
             GDLogBLEInfo("""
                         Calibrating, move you head (accuracy = \(accuracy)
                         """)
         } else {
             let accurcyString = (hasAccuracy ? String(accuracy) : "unsupported")
+            // UserHeadingDelegate updates with bearing...
+            var bearing: Double
+            bearing = abs(180 - (((yaw + Double.pi) / (2 * Double.pi)) * 360))
+
             // Roll: 0: Levelled, Neg: Leaning right (-pi/2 vertical-ish), Pos: Leaning left (-pi/10 < roll < pi/10 is roughly leveled)
             // Pitch: (+/-)pi/2=Levelled: Neg: Down, Pos: Up (-pi/20 < pitch < pi/20 is roughly leveled)
             // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
@@ -238,7 +166,7 @@ class BoseEventProcessor {
                 \ttimestamp: \(timeStamp)
                 \tRoll:      \(roll)  \t \(BoseEventProcessor.dataToRollString(roll))
                 \tPitch:     \(pitch) \t \(BoseEventProcessor.dataToPitchString(pitch))
-                \tYaw:       \(yaw)   \t \(BoseEventProcessor.dataToYawString(yaw))
+                \tYaw:       \(yaw) | \(bearing)  \t \(BoseEventProcessor.dataToYawString(yaw))
                 \taccuracy:  \(accurcyString)
             """)
         }
@@ -278,7 +206,7 @@ class BoseEventProcessor {
     }
 }
 
-
+// From: https://github.com/zakaton/Bose-Frames-Web-SDK
 fileprivate struct CorrectionMatrix {
     static var matrix: CorrectionMatrix?
     private var elements: [Double]
@@ -350,7 +278,7 @@ fileprivate struct CorrectionMatrix {
     }
 }
 
-
+// From: https://github.com/zakaton/Bose-Frames-Web-SDK
 fileprivate struct CorrectionQuaternion {
     static var correctionQuaternion: CorrectionQuaternion?
     let x: Double
@@ -419,6 +347,15 @@ fileprivate struct CorrectionQuaternion {
 }
 
 class BitUtils {
+    static func convertDataToString(data: Data) -> String? {
+        return String(data: data, encoding: .utf8)
+    }
+    
+    static func dataToIntArray(data: Data) -> [UInt32] {
+        return data.withUnsafeBytes {
+            Array(UnsafeBufferPointer<UInt32>(start: $0, count: data.count/MemoryLayout<UInt32>.stride))
+        }
+    }
     
     static func dataToByteArray(data: Data) -> [UInt8] {
         return data.withUnsafeBytes {
