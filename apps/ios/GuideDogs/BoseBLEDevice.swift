@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreBluetooth
+// TODO: Subklassa BaseBLEDevice, implementera Device och UserHeadingProvider
 class BoseBLEDevice : NSObject {
     internal let DEVICE_NAME: String = "le-bose frames"
     struct BOSE_SERVICE_CONSTANTS {
@@ -16,13 +17,7 @@ class BoseBLEDevice : NSObject {
         static let CBUUID_HEADTRACKING_DATA_CHARACTERISTIC: CBUUID = CBUUID(string: "56A72AB8-4988-4CC8-A752-FBD1D54A953D")
         static let CBUUID_HEADTRACKING_INFO_CHARACTERISTIC: CBUUID = CBUUID(string: "855CB3E7-98FF-42A6-80FC-40B32A2221C1")
     }
-//    let BOSE_HEADTRACKING_START_CODE: [UInt32] = [16777216, 131072, 848] Also working: 928
-    internal let BOSE_HEADTRACKING_START_CODE: [UInt32] = [16777216, 131072, 928]
-    internal let BOSE_HEADTRACKING_STOP_CODE: [UInt32] = [16777216, 131072, 768]
-    
-    internal let BOSE_TEST_CODE_SUITE: [UInt32] = [0x310,0x320,0x330,0x340,0x350,0x360,0x370,0x380,0x390,0x3A0]
-    internal var nextTestIndex = 0
-    
+
     internal var centralManager: CBCentralManager!
     internal var bosePeripheral: CBPeripheral?
     internal var boseHeadTrackingService: CBService?
@@ -75,14 +70,6 @@ class BoseBLEDevice : NSObject {
         
         config.rotationPeriod = 80
         let myData = config.toConfigToData()
-        let test = BitUtils.dataToByteArray(data: BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)})
-        GDLogBLEInfo("""
-            Encodingtest: 
-            mydata    \(BitUtils.dataToIntArray(data: myData))
-            hackarr   \(BOSE_HEADTRACKING_START_CODE)
-            hackBytes \(test)
-            """)
-
         self.writeValueToConfig(value: myData)
         self.isHeadtrackingStarted = true
     }
