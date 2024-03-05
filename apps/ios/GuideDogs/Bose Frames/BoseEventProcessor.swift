@@ -15,7 +15,7 @@ class BoseEventProcessor {
         var z: Int16
         var accuracy: UInt8
     }
-    private let BOSE_ACCURACY_STRINGS: [String] = ["unrealiable", "low", "medium", "high"]
+//   private let BOSE_ACCURACY_STRINGS: [String] = ["unrealiable", "low", "medium", "high"]
     
     // MARK: Convenience functions
     static func convertDataToString(data: Data) -> String? {
@@ -29,29 +29,26 @@ class BoseEventProcessor {
     }
 
     // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
-    // TODO: Improve this one! Make 8 pies of a circle (N, NE, E, SE,...) and figure out nice cutoff points (half a circle is pi and sign shows E/W)
-    static func dataToYawString(_ value: Double) -> String {
+    private static func dataToYawString(_ value: Double) -> String {
         let absValue = abs(value)
         let sign = (value < 0 ? -1 : 1)
 
-        switch absValue {
-        case (Double.pi * 0.9)...(Double.pi * 1.1):
-            return "S"
-        case ((Double.pi/2) * 0.9)...((Double.pi/2) * 1.1):
-            return (sign<0) ? "W" : "E"
-        case ((2*Double.pi/3) * 0.9)...((2*Double.pi/3) * 1.1):
-            return (sign<0) ? "SW" : "SE"
-        case ((Double.pi/4) * 0.9)...((Double.pi/3) * 1.1):
-            return (sign<0) ? "NW" : "NE"
-        case (0)...(0.3):
+        if( absValue < (Double.pi / 8) ) {
             return "N"
-        default:
-            return "Dunno"
+        } else if ( absValue < (3 * Double.pi / 8)) {
+            return (sign<0) ? "NW" : "NE"
+        } else if ( absValue < (5 * Double.pi / 8)) {
+            return (sign<0) ? "W" : "E"
+        } else if ( absValue < (7 * Double.pi / 8)) {
+            return (sign<0) ? "SW" : "SE"
+        } else {
+            return "S"
         }
+        
     }
 
     // Pitch: (+/-)pi/2=Levelled: Neg: Down, Pos: Up (-pi/20 < pitch < pi/20 is roughly leveled)
-    static func dataToPitchString(_ value: Double) -> String {
+    private static func dataToPitchString(_ value: Double) -> String {
         if(value > -(Double.pi/20) && value < (Double.pi/20)) {
             return "Straight"
         }
@@ -63,7 +60,7 @@ class BoseEventProcessor {
         
     }
     // Roll: 0: Levelled, Neg: Leaning right (-pi/2 vertical-ish), Pos: Leaning left (-pi/10 < roll < pi/10 is roughly leveled)
-    static func dataToRollString(_ value: Double) -> String {
+    private static func dataToRollString(_ value: Double) -> String {
         if(value > -(Double.pi/10) && value < (Double.pi/10)) {
             return "Straight"
         }
@@ -106,7 +103,6 @@ class BoseEventProcessor {
                      this.z = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * w;
 
                      return this;
-         
          */
 
         GDLogBLEInfo("""
@@ -115,7 +111,7 @@ class BoseEventProcessor {
             \tx-value:   \(xTrans)
             \ty-value:   \(yTrans)
             \tz-value:   \(zTrans)
-            \taccuracy:  \(BOSE_ACCURACY_STRINGS[Int(accuracy)])
+            \taccuracy:  \(accuracy)
         """)
     }
     
@@ -128,11 +124,13 @@ class BoseEventProcessor {
         let w_raw: Int16 = BitUtils.twoBytesToInt16(quaternionByteArray[9], quaternionByteArray[10])
         let accuracy: UInt8 = quaternionByteArray[11]
         
-        let correctionQ = CorrectionQuaternion.getCorrectionQuaternion()
+        // Normalize the quartenion vectors
         var x: Double = Double(x_raw) / pow(2,13)
         var y: Double = Double(y_raw) / pow(2,13)
         var z: Double = Double(z_raw) / pow(2,13)
         var w: Double = Double(w_raw) / pow(2,13)
+
+        let correctionQ = CorrectionQuaternion.getCorrectionQuaternion()
         // Multiply with the correction quaternion (quaternion.multiply(correctionQuaternion))
         /*
          multiply (a: quaternion, b: correctionQuaternion):
@@ -224,9 +222,9 @@ class BoseEventProcessor {
         GDLogBLEInfo("""
             \tsensorId:  \(sensorId)
             \ttimestamp: \(timeStamp)
-            \tRoll:      \(roll) \t \(BoseEventProcessor.dataToRollString(roll))
+            \tRoll:      \(roll)  \t \(BoseEventProcessor.dataToRollString(roll))
             \tPitch:     \(pitch) \t \(BoseEventProcessor.dataToPitchString(pitch))
-            \tYaw:       \(yaw) \t \(BoseEventProcessor.dataToYawString(yaw))
+            \tYaw:       \(yaw)   \t \(BoseEventProcessor.dataToYawString(yaw))
             \taccuracy:  \(accuracy)
         """)
     }
