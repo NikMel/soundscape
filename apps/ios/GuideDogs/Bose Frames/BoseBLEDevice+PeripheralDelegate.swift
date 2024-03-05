@@ -9,16 +9,6 @@
 import Foundation
 import CoreBluetooth
 
-// TODO:
-/*
- - (KLART) Skriv en manuell rutin som plockar bytes till structen (reverse byte order)
- - field 2 (normal order) verkar ha 0 rakt i söder!)
- - (SKIP?) Kan data från Bose vara två float och en int32 (Float = 4byte)
- - (TEST) Testa att skriva 768 och se om det stannar dataströmmen (gör en toggle i UI)
- - Lista ut om någon av överiga fields kan vara pitch / yaw / roll och accuracy (kan det vara field6; gick från högt nummer till lågt och stabilt)
- - Hur kan vi skriva en BoseBLEDevice som är kompatibel men HeadphoneMotionManager
- */
-
 extension BoseBLEDevice: CBPeripheralDelegate {
     
     internal func writeValueToConfig(value: Data){
@@ -36,7 +26,7 @@ extension BoseBLEDevice: CBPeripheralDelegate {
         device.writeValue(value, for: configCharacteristic, type: .withResponse)
     }
     
-    // MARK: READ VALUE
+    // MARK: VALUE WAS READ
     internal func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?){
         if let error = error {
             GDLogBLEError("EARS: Error reading value from charateristic \(characteristic.uuid.uuidString): \(error)")
@@ -49,24 +39,23 @@ extension BoseBLEDevice: CBPeripheralDelegate {
         
         if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_DATA_CHARACTERISTIC.uuidString {
             eventProcessor.onOrientationEvent(eventData: value)
-            // Also request read from INFO
-//            peripheral.readValue(for: boseHeadTrackingInfo!)
+
         } else if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_CONFIG_CHARACTERISTIC.uuidString {
             GDLogBLEInfo("READ sensor CONFIG value: \(String(describing: characteristic.value?.debugDescription))")
             let valueAsArr = BitUtils.dataToByteArray(data: characteristic.value!)
             GDLogBLEInfo("READ sensor CONFIG value (arrtest): \(valueAsArr)")
             eventProcessor.currentSensorConfig = BoseSensorConfiguration.parseValue(data: value)
+
         } else if characteristic.uuid.uuidString == BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_INFO_CHARACTERISTIC.uuidString {
-//            GDLogBLEInfo("READ sensor INFO value: \(String(describing: characteristic.value?.debugDescription))")
             let valueAsArr = BitUtils.dataToByteArray(data: characteristic.value!)
-//            eventProcessor.currentSensorInfo = value
             GDLogBLEInfo("READ sensor INFO value (arrtest): \(valueAsArr)")
+
         } else {
             GDLogBLEInfo("READ value from unknown charateristic: \(characteristic.debugDescription)")
         }
     }
     
-    // TODO: Write-to-characterisctic-method (and getting the reply)
+    // MARK: VALUE WAS WRITTEN
     internal func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error? ){
         if error != nil {
             GDLogBLEError("Error writing to config: \(error!)")

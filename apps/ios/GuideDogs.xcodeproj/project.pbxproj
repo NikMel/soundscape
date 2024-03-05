@@ -407,6 +407,7 @@
 		31F1370422B867B800FC1860 /* GeolocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F1370322B867B800FC1860 /* GeolocationManager.swift */; };
 		31FE6C78233A7B760098D8C5 /* TelemetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FE6C77233A7B760098D8C5 /* TelemetryHelper.swift */; };
 		3D073BD32B87DFF100A7F108 /* SonyBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D073BD22B87DFF100A7F108 /* SonyBLEDevice.swift */; };
+		3D55C90C2B96E65B003CF8E6 /* BoseConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55C90B2B96E65B003CF8E6 /* BoseConfiguration.swift */; };
 		3DEBB3D52B90E0E4008F107F /* BoseBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEBB3D42B90E0E4008F107F /* BoseBLEDevice.swift */; };
 		3DF07E232B939BBE0039BA5F /* BoseBLEDevice+CentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07E222B939BBE0039BA5F /* BoseBLEDevice+CentralManagerDelegate.swift */; };
 		3DF07E252B939EB20039BA5F /* BoseBLEDevice+PeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07E242B939EB20039BA5F /* BoseBLEDevice+PeripheralDelegate.swift */; };
@@ -1312,6 +1313,7 @@
 		31F1370322B867B800FC1860 /* GeolocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GeolocationManager.swift; path = "Code/Sensors/Geolocation/Geolocation Manager/GeolocationManager.swift"; sourceTree = "<group>"; };
 		31FE6C77233A7B760098D8C5 /* TelemetryHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TelemetryHelper.swift; path = Code/App/Logging/TelemetryHelper.swift; sourceTree = "<group>"; };
 		3D073BD22B87DFF100A7F108 /* SonyBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonyBLEDevice.swift; sourceTree = "<group>"; };
+		3D55C90B2B96E65B003CF8E6 /* BoseConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoseConfiguration.swift; sourceTree = "<group>"; };
 		3DEBB3D42B90E0E4008F107F /* BoseBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoseBLEDevice.swift; sourceTree = "<group>"; };
 		3DF07E222B939BBE0039BA5F /* BoseBLEDevice+CentralManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoseBLEDevice+CentralManagerDelegate.swift"; sourceTree = "<group>"; };
 		3DF07E242B939EB20039BA5F /* BoseBLEDevice+PeripheralDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BoseBLEDevice+PeripheralDelegate.swift"; sourceTree = "<group>"; };
@@ -3035,6 +3037,7 @@
 				3DF07E222B939BBE0039BA5F /* BoseBLEDevice+CentralManagerDelegate.swift */,
 				3DF07E242B939EB20039BA5F /* BoseBLEDevice+PeripheralDelegate.swift */,
 				3DF07E262B93A2BE0039BA5F /* BoseEventProcessor.swift */,
+				3D55C90B2B96E65B003CF8E6 /* BoseConfiguration.swift */,
 			);
 			path = "Bose Frames";
 			sourceTree = "<group>";
@@ -5871,6 +5874,7 @@
 				288E5FE4269FA7B500F7D4CD /* PreferenceKeyHelpers.swift in Sources */,
 				283C057E23DB6D990086C01F /* DynamicSound.swift in Sources */,
 				6267899526EC05D60007E566 /* RecommenderViewModel.swift in Sources */,
+				3D55C90C2B96E65B003CF8E6 /* BoseConfiguration.swift in Sources */,
 				281D59D31F4765880090F23A /* FirstLaunchTermsStepViewController.swift in Sources */,
 				624C96B428528433001F84F8 /* BeaconMapView.swift in Sources */,
 				284C9AFB23886DD000CBA392 /* DynamicAudioEngineAsset.swift in Sources */,

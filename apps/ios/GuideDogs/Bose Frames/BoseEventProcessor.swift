@@ -74,16 +74,21 @@ class BoseEventProcessor {
     private func processVectorData(vectorByteArray: [UInt8]) {
         let sensorId: UInt8 = vectorByteArray[0] // 0=Accellerometer 1=Gyroscope 2=Rotation 3=Game-rotation
         let timeStamp:UInt16 = BitUtils.twoBytesToUInt16(vectorByteArray[1], vectorByteArray[2])
-        let x: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[3], vectorByteArray[4])
-        let y: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[5], vectorByteArray[6])
-        let z: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[7], vectorByteArray[8])
+        let x_raw: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[3], vectorByteArray[4])
+        let y_raw: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[5], vectorByteArray[6])
+        let z_raw: Int16 = BitUtils.twoBytesToInt16(vectorByteArray[7], vectorByteArray[8])
         let accuracy: UInt8 = vectorByteArray[9]
+        
+        // Normalize the vectors
+        var x: Double = Double(x_raw) / pow(2,13)
+        var y: Double = Double(y_raw) / pow(2,13)
+        var z: Double = Double(z_raw) / pow(2,13)
         
         // Apply the correlation matrix
         let m = CorrectionMatrix.getMatrix()
         let e = m.getElements()
         
-        let w = 1 / ( e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] );
+        let w = 1.0 / ( e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] );
         
         let xTrans = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ] * z + e[ 12 ] ) * w
         let yTrans = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ] * z + e[ 13 ] ) * w
@@ -114,15 +119,18 @@ class BoseEventProcessor {
             \taccuracy:  \(accuracy)
         """)
     }
-    
     private func processQuaternionData(quaternionByteArray: [UInt8]) {
+        processQuaternionData(quaternionByteArray: quaternionByteArray, hasAccuracy: true)
+    }
+    private func processQuaternionData(quaternionByteArray: [UInt8], hasAccuracy: Bool) {
+
         let sensorId: UInt8 = quaternionByteArray[0] // 0=Accellerometer 1=Gyroscope 2=Rotation 3=Game-rotation
         let timeStamp:UInt16 = BitUtils.twoBytesToUInt16(quaternionByteArray[1], quaternionByteArray[2])
         let x_raw: Int16 = BitUtils.twoBytesToInt16(quaternionByteArray[3], quaternionByteArray[4])
         let y_raw: Int16 = BitUtils.twoBytesToInt16(quaternionByteArray[5], quaternionByteArray[6])
         let z_raw: Int16 = BitUtils.twoBytesToInt16(quaternionByteArray[7], quaternionByteArray[8])
         let w_raw: Int16 = BitUtils.twoBytesToInt16(quaternionByteArray[9], quaternionByteArray[10])
-        let accuracy: UInt8 = quaternionByteArray[11]
+        let accuracy: UInt8 = hasAccuracy ? quaternionByteArray[11] : 0
         
         // Normalize the quartenion vectors
         var x: Double = Double(x_raw) / pow(2,13)
@@ -216,44 +224,53 @@ class BoseEventProcessor {
 
         let yaw: Double = -atan2(siny, cosy);
         
-        // Roll: 0: Levelled, Neg: Leaning right (-pi/2 vertical-ish), Pos: Leaning left (-pi/10 < roll < pi/10 is roughly leveled)
-        // Pitch: (+/-)pi/2=Levelled: Neg: Down, Pos: Up (-pi/20 < pitch < pi/20 is roughly leveled)
-        // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
-        GDLogBLEInfo("""
-            \tsensorId:  \(sensorId)
-            \ttimestamp: \(timeStamp)
-            \tRoll:      \(roll)  \t \(BoseEventProcessor.dataToRollString(roll))
-            \tPitch:     \(pitch) \t \(BoseEventProcessor.dataToPitchString(pitch))
-            \tYaw:       \(yaw)   \t \(BoseEventProcessor.dataToYawString(yaw))
-            \taccuracy:  \(accuracy)
-        """)
+        if(hasAccuracy && accuracy > 5){
+            GDLogBLEInfo("""
+                        Calibrating, move you head (accuracy = \(accuracy)
+                        """)
+        } else {
+            let accurcyString = (hasAccuracy ? String(accuracy) : "unsupported")
+            // Roll: 0: Levelled, Neg: Leaning right (-pi/2 vertical-ish), Pos: Leaning left (-pi/10 < roll < pi/10 is roughly leveled)
+            // Pitch: (+/-)pi/2=Levelled: Neg: Down, Pos: Up (-pi/20 < pitch < pi/20 is roughly leveled)
+            // Yaw: 0: North=0 (+/- 10% of pi), South = abs(pi +/10%), Neg: W (-pi/2), Pos: E (pi/2)
+            GDLogBLEInfo("""
+                \tsensorId:  \(sensorId)
+                \ttimestamp: \(timeStamp)
+                \tRoll:      \(roll)  \t \(BoseEventProcessor.dataToRollString(roll))
+                \tPitch:     \(pitch) \t \(BoseEventProcessor.dataToPitchString(pitch))
+                \tYaw:       \(yaw)   \t \(BoseEventProcessor.dataToYawString(yaw))
+                \taccuracy:  \(accurcyString)
+            """)
+        }
     }
 
 
 
     // MARK: Eventhandler
     func onOrientationEvent(eventData: Data) {
-        //            GDLogBLEInfo("READ sensor DATA value: \(String(describing: characteristic.value?.debugDescription))")
        let valueAsArr = BitUtils.dataToByteArray(data: eventData)
-//        GDLogBLEInfo("READ sensor DATA value (arrtest): \(valueAsArr)")
 
         switch valueAsArr[0] {
         case self.currentSensorConfig?.accelerometerId:
             GDLogBLEInfo("Got an accellerometer data update, read 10 bytes: \(valueAsArr)")
             processVectorData(vectorByteArray: valueAsArr)
             return
+            
         case self.currentSensorConfig?.gyroscopeId:
             GDLogBLEInfo("Got an gyroscope data update, read 10 bytes: \(valueAsArr)")
             processVectorData(vectorByteArray: valueAsArr)
             return
+            
         case self.currentSensorConfig?.rotationId:
             GDLogBLEInfo("Got an rotation data update, read 12 bytes: \(valueAsArr)")
             processQuaternionData(quaternionByteArray: valueAsArr)
             return
+            
         case self.currentSensorConfig?.gamerotationId:
-            GDLogBLEInfo("Got an gameRotation data update, read 12 bytes: \(valueAsArr)")
-            processQuaternionData(quaternionByteArray: valueAsArr)
+            GDLogBLEInfo("Got an gameRotation data update, read 11(!) bytes: \(valueAsArr)")
+            processQuaternionData(quaternionByteArray: valueAsArr, hasAccuracy: false)
             return
+            
         default:
             GDLogBLEError("READ: Unknown sensor!")
             return
@@ -262,72 +279,11 @@ class BoseEventProcessor {
 }
 
 
-class BoseSensorConfiguration {
-    // Period is in millisecond update interval. Valid intervals:    320, 160, 80, 40, 20
-    let gyroscopeId:UInt8 = 0
-    var gyroscopePeriod: UInt16 = 0
-
-    let accelerometerId:UInt8 = 1
-    var accelerometerPeriod: UInt16 = 0
-        
-    let rotationId:UInt8 = 2
-    var rotationPeriod: UInt16 = 0
-    
-    let gamerotationId:UInt8 = 3
-    var gamerotationPeriod: UInt16 = 0
-    
-    static func parseValue(data: Data) -> BoseSensorConfiguration {
-        let byteArray: [UInt8] = BitUtils.dataToByteArray(data: data)
-        var result = BoseSensorConfiguration()
-        
-        result.accelerometerPeriod = BitUtils.twoBytesToUInt16(byteArray[1], byteArray[2])
-        result.gyroscopePeriod = BitUtils.twoBytesToUInt16(byteArray[4], byteArray[5])
-        result.rotationPeriod = BitUtils.twoBytesToUInt16(byteArray[7], byteArray[8])
-        result.gamerotationPeriod = BitUtils.twoBytesToUInt16(byteArray[10], byteArray[11])
-        
-        return result
-    }
-    
-    private func toByteArr<T: BinaryInteger>(endian: T, count: Int) -> [UInt8] {
-        var _endian = endian
-        let bytePtr = withUnsafePointer(to: &_endian) {
-            $0.withMemoryRebound(to: UInt8.self, capacity: count) {
-                UnsafeBufferPointer(start: $0, count: count)
-            }
-        }
-        return [UInt8](bytePtr)
-    }
-    private func swapEndianess(byteArr: [UInt8]) -> [UInt8] {
-        return [byteArr[1], byteArr[0]]
-    }
-    
-    
-    func toConfigToData() -> Data {
-        var newConfig: Data = Data()
-                
-        newConfig.append(contentsOf: [accelerometerId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: accelerometerPeriod, count: 2)))
-
-        newConfig.append(contentsOf: [gyroscopeId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gyroscopePeriod, count: 2)))
-
-        newConfig.append(contentsOf: [rotationId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: rotationPeriod, count: 2)))
-        
-        newConfig.append(contentsOf: [gamerotationId])
-        newConfig.append(contentsOf: swapEndianess(byteArr: toByteArr(endian: gamerotationPeriod, count: 2)))
-
-        GDLogBLEInfo("Encoded new config to: \(BitUtils.dataToByteArray(data: newConfig))")
-        
-        return newConfig
-    }
-}
-
-struct CorrectionMatrix {
+fileprivate struct CorrectionMatrix {
     static var matrix: CorrectionMatrix?
-    private var elements: [Int16]
+    private var elements: [Double]
     
-    func getElements() -> [Int16] {
+    func getElements() -> [Double] {
         return elements
     }
     static func getMatrix() -> CorrectionMatrix {
@@ -349,12 +305,12 @@ struct CorrectionMatrix {
         var vecZ: [Int16] = [_matrix.elements[2], _matrix.elements[6], _matrix.elements[10]]
   */
         
-        var vecX: [Int16] = [_matrix.elements[0], _matrix.elements[1], _matrix.elements[2]]
-        var vecY: [Int16] = [_matrix.elements[4], _matrix.elements[5], _matrix.elements[6]]
-        var vecZ: [Int16] = [_matrix.elements[8], _matrix.elements[9], _matrix.elements[10]]
+        var vecX: [Double] = [_matrix.elements[0], _matrix.elements[1], _matrix.elements[2]]
+        var vecY: [Double] = [_matrix.elements[4], _matrix.elements[5], _matrix.elements[6]]
+        var vecZ: [Double] = [_matrix.elements[8], _matrix.elements[9], _matrix.elements[10]]
         
         // Multiply with reflection vector
-        let reflectionZ: [Int16] = [1, 1, -1]
+        let reflectionZ: [Double] = [1, 1, -1]
         vecX[0] *= reflectionZ[0]
         vecX[1] *= reflectionZ[1]
         vecX[2] *= reflectionZ[2]
@@ -395,7 +351,7 @@ struct CorrectionMatrix {
 }
 
 
-struct CorrectionQuaternion {
+fileprivate struct CorrectionQuaternion {
     static var correctionQuaternion: CorrectionQuaternion?
     let x: Double
     let y: Double
@@ -412,7 +368,7 @@ struct CorrectionQuaternion {
         var _w: Double
         
         let correctionMatrix = CorrectionMatrix.getMatrix()
-        /* this = quaternion, m=correctionMatrix*/
+
         let te = correctionMatrix.getElements(),
             m11 = te[ 0 ], m12 = te[ 4 ], m13 = te[ 8 ],
             m21 = te[ 1 ], m22 = te[ 5 ], m23 = te[ 9 ],

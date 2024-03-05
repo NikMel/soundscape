@@ -57,7 +57,6 @@ class BoseBLEDevice : NSObject {
     func connectToBose(){
         // Scan for Bose headsets. These should offer the service FDD2 which (might) provide headtracking sensor charateristcvs
         centralManager.scanForPeripherals(withServices: [BOSE_SERVICE_CONSTANTS.CBUUID_HEADTRACKING_SERVICE])
-//        centralManager.scanForPeripherals(withServices: nil)
         self.state = .connecting
     }
     
@@ -74,9 +73,6 @@ class BoseBLEDevice : NSObject {
             return
         }
         
-//        config.gyroscopePeriod = 160
-//        config.accelerometerPeriod = 160
-//        config.gamerotationPeriod=80
         config.rotationPeriod = 80
         let myData = config.toConfigToData()
         let test = BitUtils.dataToByteArray(data: BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)})
@@ -86,8 +82,7 @@ class BoseBLEDevice : NSObject {
             hackarr   \(BOSE_HEADTRACKING_START_CODE)
             hackBytes \(test)
             """)
-        
-//        let myData = config.toConfigToData() //BOSE_HEADTRACKING_START_CODE.withUnsafeBufferPointer {Data(buffer: $0)}
+
         self.writeValueToConfig(value: myData)
         self.isHeadtrackingStarted = true
     }
@@ -98,29 +93,15 @@ class BoseBLEDevice : NSObject {
             GDLogBLEError("Cannot STOP headtracking. Bose headphones are not ready")
             return
         }
-//        config.gyroscopePeriod = 0
-//        config.gamerotationPeriod=0
-//        config.accelerometerPeriod = 0
-        config.rotationPeriod=0
-        let myData = config.toConfigToData() //BOSE_HEADTRACKING_STOP_CODE.withUnsafeBufferPointer {Data(buffer: $0)}
+
+        config.rotationPeriod = 0
+        let myData = config.toConfigToData()
         self.writeValueToConfig(value: myData)
         self.isHeadtrackingStarted = false
     }
     
     func isHeadTrackingStarted() -> Bool {
         return self.isHeadtrackingStarted
-    }
-    func testVariousStartCodes () {
-        if nextTestIndex <= 9 {
-            GDLogBLEInfo("EARS: ABOUT TO SEND \(BOSE_TEST_CODE_SUITE[nextTestIndex])")
-            let myData = [BOSE_HEADTRACKING_START_CODE[0], BOSE_HEADTRACKING_START_CODE[1], BOSE_TEST_CODE_SUITE[nextTestIndex]].withUnsafeBufferPointer {Data(buffer: $0)}
-            self.writeValueToConfig(value: myData)
-            self.isHeadtrackingStarted = true
-            nextTestIndex += 1
-        }
-        else {
-            GDLogBLEInfo("EARS: END OF TEST RANGE!")
-        }
     }
 }
 
