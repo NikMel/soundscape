@@ -654,6 +654,24 @@
 /* Name of a beacon style. "Mallet" is used in the same way here as in the string with key 'beacon.styles.mallet'. The difference here is that this version is a much slower version of the beacon audio. */
 "beacon.styles.mallet.very_slow" = "Mallet (Very Slow)";
 
+/* Name of a beacon style. */
+"beacon.styles.follow_the_music" = "Follow The Music";
+
+/* Name of a beacon style. */
+"beacon.styles.walk_a_mile_in_my_shoes" = "Walk A Mile In My Shoes";
+
+/* Name of a beacon style. */
+"beacon.styles.no_tones_please" = "No Tones Please";
+
+/* Name of a beacon style. */
+"beacon.styles.silence_is_golden_1" = "Silence Is Golden 1";
+
+/* Name of a beacon style. */
+"beacon.styles.silence_is_golden_2" = "Silence Is Golden 2";
+
+/* Name of a beacon style. */
+"beacon.styles.the_new_noise" = "The New Noise";
+
 /* Name of a beacon style. Unlike the other beacon styles, this style include haptic feedback (e.g. vibration feedback from the iPhone). The term "wand" is used to refer to a pointing device. Together, this name is intended to convey that this beacon style provides haptic feedback to the user when they hold their phone in front of them and point it around. */
 "beacon.styles.haptic.wand" = "Haptic Wand";
 

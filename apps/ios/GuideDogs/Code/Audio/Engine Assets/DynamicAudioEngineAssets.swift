@@ -132,6 +132,66 @@ enum MalletVerySlowBeacon: String, DynamicAudioEngineAsset {
     static let beatsInPhrase: Int = 18
 }
 
+enum FollowTheMusicBeacon: String, DynamicAudioEngineAsset {
+    case center = "FollowTheMusic_A+"
+    case offset = "FollowTheMusic_A"
+    case side   = "FollowTheMusic_B"
+    case behind = "FollowTheMusic_Behind"
+    
+    static var selector: AssetSelector? = FollowTheMusicBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum WalkAMileInMyShoesBeacon: String, DynamicAudioEngineAsset {
+    case center = "WalkAMileInMyShoes_A+"
+    case offset = "WalkAMileInMyShoes_A"
+    case side   = "WalkAMileInMyShoes_B"
+    case behind = "WalkAMileInMyShoes_Behind"
+    
+    static var selector: AssetSelector? = WalkAMileInMyShoesBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum NoTonesPleaseBeacon: String, DynamicAudioEngineAsset {
+    case center = "NoTonesPlease_A+"
+    case offset = "NoTonesPlease_A"
+    case side   = "NoTonesPlease_B"
+    case behind = "NoTonesPlease_Behind"
+    
+    static var selector: AssetSelector? = NoTonesPleaseBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum SilenceIsGolden1Beacon: String, DynamicAudioEngineAsset {
+    case center = "SilenceIsGolden1_A+"
+    case offset = "SilenceIsGolden1_A"
+    case side   = "SilenceIsGolden1_B"
+    case behind = "SilenceIsGolden1_Behind"
+    
+    static var selector: AssetSelector? = SilenceIsGolden1Beacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum SilenceIsGolden2Beacon: String, DynamicAudioEngineAsset {
+    case center = "SilenceIsGolden2_A+"
+    case offset = "SilenceIsGolden2_A"
+    case side   = "SilenceIsGolden2_B"
+    case behind = "SilenceIsGolden2_Behind"
+    
+    static var selector: AssetSelector? = SilenceIsGolden2Beacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum TheNewNoiseBeacon: String, DynamicAudioEngineAsset {
+    case center = "TheNewNoise_A+"
+    case offset = "TheNewNoise_A"
+    case side   = "TheNewNoise_B"
+    case behind = "TheNewNoise_Behind"
+    
+    static var selector: AssetSelector? = TheNewNoiseBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
 // MARK: - Distance-Based Beacons
 
 enum ProximityBeacon: String, DynamicAudioEngineAsset {

@@ -411,6 +411,30 @@
 		3DD63B5F2B9906E800E4A159 /* BoseFramesBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD63B5E2B9906E800E4A159 /* BoseFramesBLEDevice.swift */; };
 		3DD63B652B9906FB00E4A159 /* BoseSensorDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD63B602B9906FA00E4A159 /* BoseSensorDataProcessor.swift */; };
 		3DD63B662B9906FB00E4A159 /* BoseSensorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD63B612B9906FA00E4A159 /* BoseSensorConfiguration.swift */; };
+		4E2ACDB72BECF14C007A53AE /* FollowTheMusic_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDB32BECF14C007A53AE /* FollowTheMusic_A.wav */; };
+		4E2ACDB82BECF14C007A53AE /* FollowTheMusic_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDB42BECF14C007A53AE /* FollowTheMusic_A+.wav */; };
+		4E2ACDB92BECF14C007A53AE /* FollowTheMusic_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDB52BECF14C007A53AE /* FollowTheMusic_B.wav */; };
+		4E2ACDBA2BECF14C007A53AE /* FollowTheMusic_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDB62BECF14C007A53AE /* FollowTheMusic_Behind.wav */; };
+		4E2ACDBF2BECF582007A53AE /* WalkAMileInMyShoes_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDBB2BECF582007A53AE /* WalkAMileInMyShoes_B.wav */; };
+		4E2ACDC02BECF582007A53AE /* WalkAMileInMyShoes_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDBC2BECF582007A53AE /* WalkAMileInMyShoes_A+.wav */; };
+		4E2ACDC12BECF582007A53AE /* WalkAMileInMyShoes_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDBD2BECF582007A53AE /* WalkAMileInMyShoes_A.wav */; };
+		4E2ACDC22BECF582007A53AE /* WalkAMileInMyShoes_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDBE2BECF582007A53AE /* WalkAMileInMyShoes_Behind.wav */; };
+		4E2ACDC42BEFDE0B007A53AE /* TheNewNoise_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDC32BEFDE0B007A53AE /* TheNewNoise_A.wav */; };
+		4E2ACDC62BEFDE2B007A53AE /* TheNewNoise_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDC52BEFDE2B007A53AE /* TheNewNoise_A+.wav */; };
+		4E2ACDC82BEFDE54007A53AE /* TheNewNoise_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDC72BEFDE54007A53AE /* TheNewNoise_B.wav */; };
+		4E2ACDCA2BEFDE58007A53AE /* TheNewNoise_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDC92BEFDE58007A53AE /* TheNewNoise_Behind.wav */; };
+		4E2ACDCF2BEFDEBC007A53AE /* SilenceIsGolden2_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDCB2BEFDEBC007A53AE /* SilenceIsGolden2_Behind.wav */; };
+		4E2ACDD02BEFDEBC007A53AE /* SilenceIsGolden2_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDCC2BEFDEBC007A53AE /* SilenceIsGolden2_A.wav */; };
+		4E2ACDD12BEFDEBC007A53AE /* SilenceIsGolden2_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDCD2BEFDEBC007A53AE /* SilenceIsGolden2_A+.wav */; };
+		4E2ACDD22BEFDEBC007A53AE /* SilenceIsGolden2_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDCE2BEFDEBC007A53AE /* SilenceIsGolden2_B.wav */; };
+		4E2ACDD72BEFDEC7007A53AE /* SilenceIsGolden1_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDD32BEFDEC7007A53AE /* SilenceIsGolden1_B.wav */; };
+		4E2ACDD82BEFDEC7007A53AE /* SilenceIsGolden1_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDD42BEFDEC7007A53AE /* SilenceIsGolden1_A.wav */; };
+		4E2ACDD92BEFDEC7007A53AE /* SilenceIsGolden1_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDD52BEFDEC7007A53AE /* SilenceIsGolden1_A+.wav */; };
+		4E2ACDDA2BEFDEC7007A53AE /* SilenceIsGolden1_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDD62BEFDEC7007A53AE /* SilenceIsGolden1_Behind.wav */; };
+		4E2ACDDF2BEFDF11007A53AE /* NoTonesPlease_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDDB2BEFDF10007A53AE /* NoTonesPlease_A+.wav */; };
+		4E2ACDE02BEFDF11007A53AE /* NoTonesPlease_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDDC2BEFDF10007A53AE /* NoTonesPlease_A.wav */; };
+		4E2ACDE12BEFDF11007A53AE /* NoTonesPlease_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDDD2BEFDF10007A53AE /* NoTonesPlease_B.wav */; };
+		4E2ACDE22BEFDF11007A53AE /* NoTonesPlease_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDDE2BEFDF10007A53AE /* NoTonesPlease_Behind.wav */; };
 		568480891CB73F51004B4227 /* main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 568480881CB73F51004B4227 /* main.storyboard */; };
 		568480911CBC9C94004B4227 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480901CBC9C94004B4227 /* HomeViewController.swift */; };
 		568480931CBC9CEE004B4227 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480921CBC9CEE004B4227 /* SettingsViewController.swift */; };
@@ -1318,6 +1342,30 @@
 		3DD63B5E2B9906E800E4A159 /* BoseFramesBLEDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoseFramesBLEDevice.swift; sourceTree = "<group>"; };
 		3DD63B602B9906FA00E4A159 /* BoseSensorDataProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoseSensorDataProcessor.swift; sourceTree = "<group>"; };
 		3DD63B612B9906FA00E4A159 /* BoseSensorConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoseSensorConfiguration.swift; sourceTree = "<group>"; };
+		4E2ACDB32BECF14C007A53AE /* FollowTheMusic_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = FollowTheMusic_A.wav; path = GuideDogs/Assets/Sounds/Beacons/FollowTheMusic/FollowTheMusic_A.wav; sourceTree = "<group>"; };
+		4E2ACDB42BECF14C007A53AE /* FollowTheMusic_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "FollowTheMusic_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/FollowTheMusic/FollowTheMusic_A+.wav"; sourceTree = "<group>"; };
+		4E2ACDB52BECF14C007A53AE /* FollowTheMusic_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = FollowTheMusic_B.wav; path = GuideDogs/Assets/Sounds/Beacons/FollowTheMusic/FollowTheMusic_B.wav; sourceTree = "<group>"; };
+		4E2ACDB62BECF14C007A53AE /* FollowTheMusic_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = FollowTheMusic_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/FollowTheMusic/FollowTheMusic_Behind.wav; sourceTree = "<group>"; };
+		4E2ACDBB2BECF582007A53AE /* WalkAMileInMyShoes_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = WalkAMileInMyShoes_B.wav; path = GuideDogs/Assets/Sounds/Beacons/WalkAMileInMyShoes/WalkAMileInMyShoes_B.wav; sourceTree = "<group>"; };
+		4E2ACDBC2BECF582007A53AE /* WalkAMileInMyShoes_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "WalkAMileInMyShoes_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/WalkAMileInMyShoes/WalkAMileInMyShoes_A+.wav"; sourceTree = "<group>"; };
+		4E2ACDBD2BECF582007A53AE /* WalkAMileInMyShoes_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = WalkAMileInMyShoes_A.wav; path = GuideDogs/Assets/Sounds/Beacons/WalkAMileInMyShoes/WalkAMileInMyShoes_A.wav; sourceTree = "<group>"; };
+		4E2ACDBE2BECF582007A53AE /* WalkAMileInMyShoes_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = WalkAMileInMyShoes_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/WalkAMileInMyShoes/WalkAMileInMyShoes_Behind.wav; sourceTree = "<group>"; };
+		4E2ACDC32BEFDE0B007A53AE /* TheNewNoise_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = TheNewNoise_A.wav; path = GuideDogs/Assets/Sounds/Beacons/TheNewNoise/TheNewNoise_A.wav; sourceTree = "<group>"; };
+		4E2ACDC52BEFDE2B007A53AE /* TheNewNoise_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "TheNewNoise_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/TheNewNoise/TheNewNoise_A+.wav"; sourceTree = "<group>"; };
+		4E2ACDC72BEFDE54007A53AE /* TheNewNoise_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = TheNewNoise_B.wav; path = GuideDogs/Assets/Sounds/Beacons/TheNewNoise/TheNewNoise_B.wav; sourceTree = "<group>"; };
+		4E2ACDC92BEFDE58007A53AE /* TheNewNoise_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = TheNewNoise_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/TheNewNoise/TheNewNoise_Behind.wav; sourceTree = "<group>"; };
+		4E2ACDCB2BEFDEBC007A53AE /* SilenceIsGolden2_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = SilenceIsGolden2_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden2/SilenceIsGolden2_Behind.wav; sourceTree = "<group>"; };
+		4E2ACDCC2BEFDEBC007A53AE /* SilenceIsGolden2_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = SilenceIsGolden2_A.wav; path = GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden2/SilenceIsGolden2_A.wav; sourceTree = "<group>"; };
+		4E2ACDCD2BEFDEBC007A53AE /* SilenceIsGolden2_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "SilenceIsGolden2_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden2/SilenceIsGolden2_A+.wav"; sourceTree = "<group>"; };
+		4E2ACDCE2BEFDEBC007A53AE /* SilenceIsGolden2_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = SilenceIsGolden2_B.wav; path = GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden2/SilenceIsGolden2_B.wav; sourceTree = "<group>"; };
+		4E2ACDD32BEFDEC7007A53AE /* SilenceIsGolden1_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = SilenceIsGolden1_B.wav; path = GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden1/SilenceIsGolden1_B.wav; sourceTree = "<group>"; };
+		4E2ACDD42BEFDEC7007A53AE /* SilenceIsGolden1_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = SilenceIsGolden1_A.wav; path = GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden1/SilenceIsGolden1_A.wav; sourceTree = "<group>"; };
+		4E2ACDD52BEFDEC7007A53AE /* SilenceIsGolden1_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "SilenceIsGolden1_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden1/SilenceIsGolden1_A+.wav"; sourceTree = "<group>"; };
+		4E2ACDD62BEFDEC7007A53AE /* SilenceIsGolden1_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = SilenceIsGolden1_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/SilenceIsGolden1/SilenceIsGolden1_Behind.wav; sourceTree = "<group>"; };
+		4E2ACDDB2BEFDF10007A53AE /* NoTonesPlease_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "NoTonesPlease_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/NoTonesPlease/NoTonesPlease_A+.wav"; sourceTree = "<group>"; };
+		4E2ACDDC2BEFDF10007A53AE /* NoTonesPlease_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NoTonesPlease_A.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesPlease/NoTonesPlease_A.wav; sourceTree = "<group>"; };
+		4E2ACDDD2BEFDF10007A53AE /* NoTonesPlease_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NoTonesPlease_B.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesPlease/NoTonesPlease_B.wav; sourceTree = "<group>"; };
+		4E2ACDDE2BEFDF10007A53AE /* NoTonesPlease_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NoTonesPlease_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesPlease/NoTonesPlease_Behind.wav; sourceTree = "<group>"; };
 		568480881CB73F51004B4227 /* main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = main.storyboard; sourceTree = "<group>"; };
 		5684808F1CBC975E004B4227 /* Soundscape-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "Soundscape-Bridging-Header.h"; path = "Code/App/Soundscape-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		568480901CBC9C94004B4227 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = HomeViewController.swift; path = "Code/Visual UI/View Controllers/Home/HomeViewController.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -5282,6 +5330,30 @@
 		D3D7CFBF1B3D96460020B5E9 = {
 			isa = PBXGroup;
 			children = (
+				4E2ACDDC2BEFDF10007A53AE /* NoTonesPlease_A.wav */,
+				4E2ACDDB2BEFDF10007A53AE /* NoTonesPlease_A+.wav */,
+				4E2ACDDD2BEFDF10007A53AE /* NoTonesPlease_B.wav */,
+				4E2ACDDE2BEFDF10007A53AE /* NoTonesPlease_Behind.wav */,
+				4E2ACDD42BEFDEC7007A53AE /* SilenceIsGolden1_A.wav */,
+				4E2ACDD52BEFDEC7007A53AE /* SilenceIsGolden1_A+.wav */,
+				4E2ACDD32BEFDEC7007A53AE /* SilenceIsGolden1_B.wav */,
+				4E2ACDD62BEFDEC7007A53AE /* SilenceIsGolden1_Behind.wav */,
+				4E2ACDCC2BEFDEBC007A53AE /* SilenceIsGolden2_A.wav */,
+				4E2ACDCD2BEFDEBC007A53AE /* SilenceIsGolden2_A+.wav */,
+				4E2ACDCE2BEFDEBC007A53AE /* SilenceIsGolden2_B.wav */,
+				4E2ACDCB2BEFDEBC007A53AE /* SilenceIsGolden2_Behind.wav */,
+				4E2ACDC92BEFDE58007A53AE /* TheNewNoise_Behind.wav */,
+				4E2ACDC72BEFDE54007A53AE /* TheNewNoise_B.wav */,
+				4E2ACDC52BEFDE2B007A53AE /* TheNewNoise_A+.wav */,
+				4E2ACDC32BEFDE0B007A53AE /* TheNewNoise_A.wav */,
+				4E2ACDBD2BECF582007A53AE /* WalkAMileInMyShoes_A.wav */,
+				4E2ACDBC2BECF582007A53AE /* WalkAMileInMyShoes_A+.wav */,
+				4E2ACDBB2BECF582007A53AE /* WalkAMileInMyShoes_B.wav */,
+				4E2ACDBE2BECF582007A53AE /* WalkAMileInMyShoes_Behind.wav */,
+				4E2ACDB32BECF14C007A53AE /* FollowTheMusic_A.wav */,
+				4E2ACDB42BECF14C007A53AE /* FollowTheMusic_A+.wav */,
+				4E2ACDB52BECF14C007A53AE /* FollowTheMusic_B.wav */,
+				4E2ACDB62BECF14C007A53AE /* FollowTheMusic_Behind.wav */,
 				D3D7CFCA1B3D96470020B5E9 /* Soundscape */,
 				B9E5F4CE2891DBAC0019DEED /* Packages */,
 				914DEBCE2A3CE6B9007B161C /* UnitTests */,
@@ -5463,17 +5535,37 @@
 				C378BE8222458AE7007489B2 /* OnlineBanner.xib in Resources */,
 				C3BB6C121EE08FC500C8D66D /* Launch-Dynamic.storyboard in Resources */,
 				28952D28228DBC1200FC91B4 /* hunt_complete.wav in Resources */,
+				4E2ACDBF2BECF582007A53AE /* WalkAMileInMyShoes_B.wav in Resources */,
+				4E2ACDC02BECF582007A53AE /* WalkAMileInMyShoes_A+.wav in Resources */,
+				4E2ACDC12BECF582007A53AE /* WalkAMileInMyShoes_A.wav in Resources */,
+				4E2ACDC22BECF582007A53AE /* WalkAMileInMyShoes_Behind.wav in Resources */,
 				28906BE623E4B31A00F729E6 /* Current_Behind.wav in Resources */,
 				314CB35B1DD6EDC600D12C75 /* Launch-Static.storyboard in Resources */,
 				DCAAD87F2BC1E95F0018D135 /* PrivacyInfo.xcprivacy in Resources */,
 				282B62EC24EC4FA6007E5F8A /* Travel_reverse_v2_spatial_48k.wav in Resources */,
 				2872D13E26D80C59000BE465 /* Mallet_Slow_A.wav in Resources */,
 				28906BE923E4B31A00F729E6 /* Current_A.wav in Resources */,
+				4E2ACDDF2BEFDF11007A53AE /* NoTonesPlease_A+.wav in Resources */,
+				4E2ACDE02BEFDF11007A53AE /* NoTonesPlease_A.wav in Resources */,
+				4E2ACDE12BEFDF11007A53AE /* NoTonesPlease_B.wav in Resources */,
+				4E2ACDE22BEFDF11007A53AE /* NoTonesPlease_Behind.wav in Resources */,
+				4E2ACDCF2BEFDEBC007A53AE /* SilenceIsGolden2_Behind.wav in Resources */,
+				4E2ACDD72BEFDEC7007A53AE /* SilenceIsGolden1_B.wav in Resources */,
+				4E2ACDD82BEFDEC7007A53AE /* SilenceIsGolden1_A.wav in Resources */,
+				4E2ACDD92BEFDEC7007A53AE /* SilenceIsGolden1_A+.wav in Resources */,
+				4E2ACDDA2BEFDEC7007A53AE /* SilenceIsGolden1_Behind.wav in Resources */,
+				4E2ACDD02BEFDEBC007A53AE /* SilenceIsGolden2_A.wav in Resources */,
+				4E2ACDD12BEFDEBC007A53AE /* SilenceIsGolden2_A+.wav in Resources */,
+				4E2ACDD22BEFDEBC007A53AE /* SilenceIsGolden2_B.wav in Resources */,
 				2880BBF61F22B2EC00E25DC3 /* RequiredPermission.storyboard in Resources */,
+				4E2ACDC42BEFDE0B007A53AE /* TheNewNoise_A.wav in Resources */,
 				28952D2E228DBC1200FC91B4 /* virtual_remote_click_down.wav in Resources */,
 				28952D33228DBC1200FC91B4 /* callouts_off.wav in Resources */,
 				28CD232B275ABFD2006C9901 /* sense_location.wav in Resources */,
+				4E2ACDC62BEFDE2B007A53AE /* TheNewNoise_A+.wav in Resources */,
 				2809B80E2379E9A000F6C9AC /* connection_success.wav in Resources */,
+				4E2ACDC82BEFDE54007A53AE /* TheNewNoise_B.wav in Resources */,
+				4E2ACDCA2BEFDE58007A53AE /* TheNewNoise_Behind.wav in Resources */,
 				B9B47657240DBB6800C5EC09 /* Current_A+.wav in Resources */,
 				280AFCD62295C77000012BEA /* offline.wav in Resources */,
 				2872D12E26D80B6C000BE465 /* Signal_Slow_A+.wav in Resources */,
@@ -5546,6 +5638,10 @@
 				281738A222BD32A400EFDD62 /* Devices.storyboard in Resources */,
 				C36BAD5C224EBE2500182747 /* OfflineHelpBanner.xib in Resources */,
 				2896377D26D70123001694C0 /* Drop_A.wav in Resources */,
+				4E2ACDB72BECF14C007A53AE /* FollowTheMusic_A.wav in Resources */,
+				4E2ACDB82BECF14C007A53AE /* FollowTheMusic_A+.wav in Resources */,
+				4E2ACDB92BECF14C007A53AE /* FollowTheMusic_B.wav in Resources */,
+				4E2ACDBA2BECF14C007A53AE /* FollowTheMusic_Behind.wav in Resources */,
 				2896377726D70036001694C0 /* Ping_B.wav in Resources */,
 				284749C22511751000E430CC /* 2.4_roadFinder_loop_rev2_wFades.wav in Resources */,
 				287D3E9122DE897C0084B92B /* UnitsOfMeasureTableViewCell.xib in Resources */,
