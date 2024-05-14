@@ -82,6 +82,12 @@ class HeadsetTestGenerator: ManualGenerator {
         case MalletBeacon.description: playBeacon(MalletBeacon.self, at: beaconLocation)
         case MalletSlowBeacon.description: playBeacon(MalletSlowBeacon.self, at: beaconLocation)
         case MalletVerySlowBeacon.description: playBeacon(MalletVerySlowBeacon.self, at: beaconLocation)
+        case FollowTheMusicBeacon.description: playBeacon(FollowTheMusicBeacon.self, at: beaconLocation)
+        case WalkAMileInMyShoesBeacon.description: playBeacon(WalkAMileInMyShoesBeacon.self, at: beaconLocation)
+        case NoTonesPleaseBeacon.description: playBeacon(NoTonesPleaseBeacon.self, at: beaconLocation)
+        case SilenceIsGolden1Beacon.description: playBeacon(SilenceIsGolden1Beacon.self, at: beaconLocation)
+        case SilenceIsGolden2Beacon.description: playBeacon(SilenceIsGolden2Beacon.self, at: beaconLocation)
+        case TheNewNoiseBeacon.description: playBeacon(TheNewNoiseBeacon.self, at: beaconLocation)
         default:
             // Always default to the V1 beacon
             playBeacon(ClassicBeacon.self, at: beaconLocation)
