@@ -501,6 +501,12 @@ class DestinationManager: DestinationManagerProtocol {
         case SilenceIsGolden1Beacon.description: playBeacon(SilenceIsGolden1Beacon.self, args: args)
         case SilenceIsGolden2Beacon.description: playBeacon(SilenceIsGolden2Beacon.self, args: args)
         case TheNewNoiseBeacon.description: playBeacon(TheNewNoiseBeacon.self, args: args)
+        case AfricaBeacon.description: playBeacon(AfricaBeacon.self, args: args)
+        case NoTonesV2Beacon.description: playBeacon(NoTonesV2Beacon.self, args: args)
+        case SoundcloudBeacon.description: playBeacon(SoundcloudBeacon.self, args: args)
+        case TheNewerNoiseBeacon.description: playBeacon(TheNewerNoiseBeacon.self, args: args)
+        case VolvoBeacon.description: playBeacon(VolvoBeacon.self, args: args)
+        case Volvo2Beacon.description: playBeacon(Volvo2Beacon.self, args: args)
         case HapticWandBeacon.description:
             hapticBeacon = HapticWandBeacon(at: args.loc)
             hapticBeacon?.start()

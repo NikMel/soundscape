@@ -192,6 +192,66 @@ enum TheNewNoiseBeacon: String, DynamicAudioEngineAsset {
     static let beatsInPhrase: Int = 6
 }
 
+enum AfricaBeacon: String, DynamicAudioEngineAsset {
+    case center = "Africa_A+"
+    case offset = "Africa_A"
+    case side   = "Africa_B"
+    case behind = "Africa_Behind"
+    
+    static var selector: AssetSelector? = AfricaBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum NoTonesV2Beacon: String, DynamicAudioEngineAsset {
+    case center = "NTPV2_A+"
+    case offset = "NTPV2_A"
+    case side   = "NTPV2_B"
+    case behind = "NTPV2_Behind"
+    
+    static var selector: AssetSelector? = NoTonesV2Beacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum SoundcloudBeacon: String, DynamicAudioEngineAsset {
+    case center = "Soundcloud_A+"
+    case offset = "Soundcloud_A"
+    case side   = "Soundcloud_B"
+    case behind = "Soundcloud_Behind"
+    
+    static var selector: AssetSelector? = SoundcloudBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum TheNewerNoiseBeacon: String, DynamicAudioEngineAsset {
+    case center = "NewerNoise_A+"
+    case offset = "NewerNoise_A"
+    case side   = "NewerNoise_B"
+    case behind = "NewerNoise_Behind"
+    
+    static var selector: AssetSelector? = TheNewerNoiseBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum VolvoBeacon: String, DynamicAudioEngineAsset {
+    case center = "Volvo_A+"
+    case offset = "Volvo_A"
+    case side   = "Volvo_B"
+    case behind = "Volvo_Behind"
+    
+    static var selector: AssetSelector? = VolvoBeacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
+enum Volvo2Beacon: String, DynamicAudioEngineAsset {
+    case center = "Volvo2_A+"
+    case offset = "Volvo2_A"
+    case side   = "Volvo2_B"
+    case behind = "Volvo2_Behind"
+    
+    static var selector: AssetSelector? = Volvo2Beacon.defaultSelector()
+    static let beatsInPhrase: Int = 6
+}
+
 // MARK: - Distance-Based Beacons
 
 enum ProximityBeacon: String, DynamicAudioEngineAsset {

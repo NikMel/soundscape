@@ -31,6 +31,12 @@ extension BeaconOption {
         case .silenceIsGolden1: return GDLocalizedString("beacon.styles.silence_is_golden_1")
         case .silenceIsGolden2: return GDLocalizedString("beacon.styles.silence_is_golden_2")
         case .theNewNoise: return GDLocalizedString("beacon.styles.the_new_noise")
+        case .africa: return GDLocalizedString("beacon.styles.africa")
+        case .noTonesV2: return GDLocalizedString("beacon.styles.no_tones_v2")
+        case .soundcloud: return GDLocalizedString("beacon.styles.soundcloud")
+        case .theNewerNoise: return GDLocalizedString("beacon.styles.the_newer_noise")
+        case .volvo: return GDLocalizedString("beacon.styles.volvo")
+        case .volvo2: return GDLocalizedString("beacon.styles.volvo_2")
         case .wand: return GDLocalizedString("beacon.styles.haptic.wand")
         case .pulse: return GDLocalizedString("beacon.styles.haptic.pulse")
         }
