@@ -28,6 +28,12 @@ enum BeaconOption: String, CaseIterable, Identifiable {
     case silenceIsGolden1
     case silenceIsGolden2
     case theNewNoise
+    case africa
+    case noTonesV2
+    case soundcloud
+    case theNewerNoise
+    case volvo
+    case volvo2
     // Update `style` (see "Beacon+Style") when adding a new
     // haptic beacon
     case wand
@@ -54,6 +60,12 @@ enum BeaconOption: String, CaseIterable, Identifiable {
         case .silenceIsGolden1: return SilenceIsGolden1Beacon.description
         case .silenceIsGolden2: return SilenceIsGolden2Beacon.description
         case .theNewNoise: return TheNewNoiseBeacon.description
+        case .africa: return AfricaBeacon.description
+        case .noTonesV2: return NoTonesV2Beacon.description
+        case .soundcloud: return SoundcloudBeacon.description
+        case .theNewerNoise: return TheNewerNoiseBeacon.description
+        case .volvo: return VolvoBeacon.description
+        case .volvo2: return Volvo2Beacon.description
         case .wand: return HapticWandBeacon.description
         case .pulse: return HapticPulseBeacon.description
         }

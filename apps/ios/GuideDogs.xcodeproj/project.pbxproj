@@ -435,6 +435,38 @@
 		4E2ACDE02BEFDF11007A53AE /* NoTonesPlease_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDDC2BEFDF10007A53AE /* NoTonesPlease_A.wav */; };
 		4E2ACDE12BEFDF11007A53AE /* NoTonesPlease_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDDD2BEFDF10007A53AE /* NoTonesPlease_B.wav */; };
 		4E2ACDE22BEFDF11007A53AE /* NoTonesPlease_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDDE2BEFDF10007A53AE /* NoTonesPlease_Behind.wav */; };
+		4EC1DF362CE10C920065792D /* Africa_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF322CE10C910065792D /* Africa_Behind.wav */; };
+		4EC1DF372CE10C920065792D /* Africa_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF332CE10C910065792D /* Africa_B.wav */; };
+		4EC1DF382CE10C920065792D /* Africa_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF342CE10C920065792D /* Africa_A+.wav */; };
+		4EC1DF392CE10C920065792D /* Africa_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF352CE10C920065792D /* Africa_A.wav */; };
+		4EC1DF3E2CE10CAE0065792D /* NTPV2_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF3A2CE10CAE0065792D /* NTPV2_A.wav */; };
+		4EC1DF3F2CE10CAE0065792D /* NTPV2_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF3B2CE10CAE0065792D /* NTPV2_B.wav */; };
+		4EC1DF402CE10CAE0065792D /* NTPV2_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF3C2CE10CAE0065792D /* NTPV2_Behind.wav */; };
+		4EC1DF412CE10CAE0065792D /* NTPV2_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF3D2CE10CAE0065792D /* NTPV2_A+.wav */; };
+		4EC1DF462CE10CBA0065792D /* Soundcloud_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF422CE10CBA0065792D /* Soundcloud_Behind.wav */; };
+		4EC1DF472CE10CBA0065792D /* Soundcloud_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF432CE10CBA0065792D /* Soundcloud_A+.wav */; };
+		4EC1DF482CE10CBA0065792D /* Soundcloud_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF442CE10CBA0065792D /* Soundcloud_B.wav */; };
+		4EC1DF492CE10CBA0065792D /* Soundcloud_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF452CE10CBA0065792D /* Soundcloud_A.wav */; };
+		4EC1DF4E2CE10CC30065792D /* NewerNoise_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF4A2CE10CC30065792D /* NewerNoise_A.wav */; };
+		4EC1DF4F2CE10CC30065792D /* NewerNoise_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF4B2CE10CC30065792D /* NewerNoise_B.wav */; };
+		4EC1DF502CE10CC30065792D /* NewerNoise_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF4C2CE10CC30065792D /* NewerNoise_Behind.wav */; };
+		4EC1DF512CE10CC30065792D /* NewerNoise_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF4D2CE10CC30065792D /* NewerNoise_A+.wav */; };
+		4EC1DF5A2CE10CCD0065792D /* Volvo_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF522CE10CCC0065792D /* Volvo_B.wav */; };
+		4EC1DF5B2CE10CCD0065792D /* Volvo_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF532CE10CCD0065792D /* Volvo_A.wav */; };
+		4EC1DF5C2CE10CCD0065792D /* Volvo_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF542CE10CCD0065792D /* Volvo_Behind.wav */; };
+		4EC1DF5D2CE10CCD0065792D /* Volvo_Route_Start.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF552CE10CCD0065792D /* Volvo_Route_Start.wav */; };
+		4EC1DF5E2CE10CCD0065792D /* Volvo_Route_End.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF562CE10CCD0065792D /* Volvo_Route_End.wav */; };
+		4EC1DF5F2CE10CCD0065792D /* Volvo_Proximity_Far.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF572CE10CCD0065792D /* Volvo_Proximity_Far.wav */; };
+		4EC1DF602CE10CCD0065792D /* Volvo_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF582CE10CCD0065792D /* Volvo_A+.wav */; };
+		4EC1DF612CE10CCD0065792D /* Volvo_Proximity_Close.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF592CE10CCD0065792D /* Volvo_Proximity_Close.wav */; };
+		4EC1DF6A2CE10CD70065792D /* Volvo2_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF622CE10CD60065792D /* Volvo2_A+.wav */; };
+		4EC1DF6B2CE10CD70065792D /* Volvo2_Route_Start.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF632CE10CD60065792D /* Volvo2_Route_Start.wav */; };
+		4EC1DF6C2CE10CD70065792D /* Volvo2_Proximity_Far.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF642CE10CD60065792D /* Volvo2_Proximity_Far.wav */; };
+		4EC1DF6D2CE10CD70065792D /* Volvo2_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF652CE10CD60065792D /* Volvo2_B.wav */; };
+		4EC1DF6E2CE10CD70065792D /* Volvo2_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF662CE10CD60065792D /* Volvo2_A.wav */; };
+		4EC1DF6F2CE10CD70065792D /* Volvo2_Route_End.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF672CE10CD60065792D /* Volvo2_Route_End.wav */; };
+		4EC1DF702CE10CD70065792D /* Volvo2_Proximity_Close.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF682CE10CD60065792D /* Volvo2_Proximity_Close.wav */; };
+		4EC1DF712CE10CD70065792D /* Volvo2_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF692CE10CD70065792D /* Volvo2_Behind.wav */; };
 		568480891CB73F51004B4227 /* main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 568480881CB73F51004B4227 /* main.storyboard */; };
 		568480911CBC9C94004B4227 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480901CBC9C94004B4227 /* HomeViewController.swift */; };
 		568480931CBC9CEE004B4227 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480921CBC9CEE004B4227 /* SettingsViewController.swift */; };
@@ -1366,6 +1398,43 @@
 		4E2ACDDC2BEFDF10007A53AE /* NoTonesPlease_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NoTonesPlease_A.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesPlease/NoTonesPlease_A.wav; sourceTree = "<group>"; };
 		4E2ACDDD2BEFDF10007A53AE /* NoTonesPlease_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NoTonesPlease_B.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesPlease/NoTonesPlease_B.wav; sourceTree = "<group>"; };
 		4E2ACDDE2BEFDF10007A53AE /* NoTonesPlease_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NoTonesPlease_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesPlease/NoTonesPlease_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF282CE10BEB0065792D /* Africa_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Africa_Behind.wav; path = ../../../../../Downloads/ASX_SoundscapeDesigns_v20241023/ASX_Africa/Africa_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF292CE10BEB0065792D /* Africa_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Africa_A.wav; path = ../../../../../Downloads/ASX_SoundscapeDesigns_v20241023/ASX_Africa/Africa_A.wav; sourceTree = "<group>"; };
+		4EC1DF2A2CE10BEB0065792D /* Africa_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "Africa_A+.wav"; path = "../../../../../Downloads/ASX_SoundscapeDesigns_v20241023/ASX_Africa/Africa_A+.wav"; sourceTree = "<group>"; };
+		4EC1DF2B2CE10BEB0065792D /* Africa_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Africa_B.wav; path = ../../../../../Downloads/ASX_SoundscapeDesigns_v20241023/ASX_Africa/Africa_B.wav; sourceTree = "<group>"; };
+		4EC1DF302CE10C590065792D /* Africa_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Africa_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/Africa/Africa_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF322CE10C910065792D /* Africa_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Africa_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/Africa/Africa_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF332CE10C910065792D /* Africa_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Africa_B.wav; path = GuideDogs/Assets/Sounds/Beacons/Africa/Africa_B.wav; sourceTree = "<group>"; };
+		4EC1DF342CE10C920065792D /* Africa_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "Africa_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/Africa/Africa_A+.wav"; sourceTree = "<group>"; };
+		4EC1DF352CE10C920065792D /* Africa_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Africa_A.wav; path = GuideDogs/Assets/Sounds/Beacons/Africa/Africa_A.wav; sourceTree = "<group>"; };
+		4EC1DF3A2CE10CAE0065792D /* NTPV2_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NTPV2_A.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesV2/NTPV2_A.wav; sourceTree = "<group>"; };
+		4EC1DF3B2CE10CAE0065792D /* NTPV2_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NTPV2_B.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesV2/NTPV2_B.wav; sourceTree = "<group>"; };
+		4EC1DF3C2CE10CAE0065792D /* NTPV2_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NTPV2_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/NoTonesV2/NTPV2_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF3D2CE10CAE0065792D /* NTPV2_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "NTPV2_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/NoTonesV2/NTPV2_A+.wav"; sourceTree = "<group>"; };
+		4EC1DF422CE10CBA0065792D /* Soundcloud_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Soundcloud_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/Soundcloud/Soundcloud_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF432CE10CBA0065792D /* Soundcloud_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "Soundcloud_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/Soundcloud/Soundcloud_A+.wav"; sourceTree = "<group>"; };
+		4EC1DF442CE10CBA0065792D /* Soundcloud_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Soundcloud_B.wav; path = GuideDogs/Assets/Sounds/Beacons/Soundcloud/Soundcloud_B.wav; sourceTree = "<group>"; };
+		4EC1DF452CE10CBA0065792D /* Soundcloud_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Soundcloud_A.wav; path = GuideDogs/Assets/Sounds/Beacons/Soundcloud/Soundcloud_A.wav; sourceTree = "<group>"; };
+		4EC1DF4A2CE10CC30065792D /* NewerNoise_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NewerNoise_A.wav; path = GuideDogs/Assets/Sounds/Beacons/TheNewerNoise/NewerNoise_A.wav; sourceTree = "<group>"; };
+		4EC1DF4B2CE10CC30065792D /* NewerNoise_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NewerNoise_B.wav; path = GuideDogs/Assets/Sounds/Beacons/TheNewerNoise/NewerNoise_B.wav; sourceTree = "<group>"; };
+		4EC1DF4C2CE10CC30065792D /* NewerNoise_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = NewerNoise_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/TheNewerNoise/NewerNoise_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF4D2CE10CC30065792D /* NewerNoise_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "NewerNoise_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/TheNewerNoise/NewerNoise_A+.wav"; sourceTree = "<group>"; };
+		4EC1DF522CE10CCC0065792D /* Volvo_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo_B.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_B.wav; sourceTree = "<group>"; };
+		4EC1DF532CE10CCD0065792D /* Volvo_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo_A.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_A.wav; sourceTree = "<group>"; };
+		4EC1DF542CE10CCD0065792D /* Volvo_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_Behind.wav; sourceTree = "<group>"; };
+		4EC1DF552CE10CCD0065792D /* Volvo_Route_Start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo_Route_Start.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_Route_Start.wav; sourceTree = "<group>"; };
+		4EC1DF562CE10CCD0065792D /* Volvo_Route_End.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo_Route_End.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_Route_End.wav; sourceTree = "<group>"; };
+		4EC1DF572CE10CCD0065792D /* Volvo_Proximity_Far.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo_Proximity_Far.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_Proximity_Far.wav; sourceTree = "<group>"; };
+		4EC1DF582CE10CCD0065792D /* Volvo_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "Volvo_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_A+.wav"; sourceTree = "<group>"; };
+		4EC1DF592CE10CCD0065792D /* Volvo_Proximity_Close.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo_Proximity_Close.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo/Volvo_Proximity_Close.wav; sourceTree = "<group>"; };
+		4EC1DF622CE10CD60065792D /* Volvo2_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "Volvo2_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_A+.wav"; sourceTree = "<group>"; };
+		4EC1DF632CE10CD60065792D /* Volvo2_Route_Start.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Route_Start.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Route_Start.wav; sourceTree = "<group>"; };
+		4EC1DF642CE10CD60065792D /* Volvo2_Proximity_Far.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Proximity_Far.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Proximity_Far.wav; sourceTree = "<group>"; };
+		4EC1DF652CE10CD60065792D /* Volvo2_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_B.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_B.wav; sourceTree = "<group>"; };
+		4EC1DF662CE10CD60065792D /* Volvo2_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_A.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_A.wav; sourceTree = "<group>"; };
+		4EC1DF672CE10CD60065792D /* Volvo2_Route_End.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Route_End.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Route_End.wav; sourceTree = "<group>"; };
+		4EC1DF682CE10CD60065792D /* Volvo2_Proximity_Close.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Proximity_Close.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Proximity_Close.wav; sourceTree = "<group>"; };
+		4EC1DF692CE10CD70065792D /* Volvo2_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Behind.wav; sourceTree = "<group>"; };
 		568480881CB73F51004B4227 /* main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = main.storyboard; sourceTree = "<group>"; };
 		5684808F1CBC975E004B4227 /* Soundscape-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "Soundscape-Bridging-Header.h"; path = "Code/App/Soundscape-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		568480901CBC9C94004B4227 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = HomeViewController.swift; path = "Code/Visual UI/View Controllers/Home/HomeViewController.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -5330,6 +5399,43 @@
 		D3D7CFBF1B3D96460020B5E9 = {
 			isa = PBXGroup;
 			children = (
+				4EC1DF662CE10CD60065792D /* Volvo2_A.wav */,
+				4EC1DF622CE10CD60065792D /* Volvo2_A+.wav */,
+				4EC1DF652CE10CD60065792D /* Volvo2_B.wav */,
+				4EC1DF692CE10CD70065792D /* Volvo2_Behind.wav */,
+				4EC1DF682CE10CD60065792D /* Volvo2_Proximity_Close.wav */,
+				4EC1DF642CE10CD60065792D /* Volvo2_Proximity_Far.wav */,
+				4EC1DF672CE10CD60065792D /* Volvo2_Route_End.wav */,
+				4EC1DF632CE10CD60065792D /* Volvo2_Route_Start.wav */,
+				4EC1DF532CE10CCD0065792D /* Volvo_A.wav */,
+				4EC1DF582CE10CCD0065792D /* Volvo_A+.wav */,
+				4EC1DF522CE10CCC0065792D /* Volvo_B.wav */,
+				4EC1DF542CE10CCD0065792D /* Volvo_Behind.wav */,
+				4EC1DF592CE10CCD0065792D /* Volvo_Proximity_Close.wav */,
+				4EC1DF572CE10CCD0065792D /* Volvo_Proximity_Far.wav */,
+				4EC1DF562CE10CCD0065792D /* Volvo_Route_End.wav */,
+				4EC1DF552CE10CCD0065792D /* Volvo_Route_Start.wav */,
+				4EC1DF4A2CE10CC30065792D /* NewerNoise_A.wav */,
+				4EC1DF4D2CE10CC30065792D /* NewerNoise_A+.wav */,
+				4EC1DF4B2CE10CC30065792D /* NewerNoise_B.wav */,
+				4EC1DF4C2CE10CC30065792D /* NewerNoise_Behind.wav */,
+				4EC1DF452CE10CBA0065792D /* Soundcloud_A.wav */,
+				4EC1DF432CE10CBA0065792D /* Soundcloud_A+.wav */,
+				4EC1DF442CE10CBA0065792D /* Soundcloud_B.wav */,
+				4EC1DF422CE10CBA0065792D /* Soundcloud_Behind.wav */,
+				4EC1DF3A2CE10CAE0065792D /* NTPV2_A.wav */,
+				4EC1DF3D2CE10CAE0065792D /* NTPV2_A+.wav */,
+				4EC1DF3B2CE10CAE0065792D /* NTPV2_B.wav */,
+				4EC1DF3C2CE10CAE0065792D /* NTPV2_Behind.wav */,
+				4EC1DF352CE10C920065792D /* Africa_A.wav */,
+				4EC1DF342CE10C920065792D /* Africa_A+.wav */,
+				4EC1DF332CE10C910065792D /* Africa_B.wav */,
+				4EC1DF302CE10C590065792D /* Africa_Behind.wav */,
+				4EC1DF292CE10BEB0065792D /* Africa_A.wav */,
+				4EC1DF2A2CE10BEB0065792D /* Africa_A+.wav */,
+				4EC1DF2B2CE10BEB0065792D /* Africa_B.wav */,
+				4EC1DF282CE10BEB0065792D /* Africa_Behind.wav */,
+				4EC1DF322CE10C910065792D /* Africa_Behind.wav */,
 				4E2ACDDC2BEFDF10007A53AE /* NoTonesPlease_A.wav */,
 				4E2ACDDB2BEFDF10007A53AE /* NoTonesPlease_A+.wav */,
 				4E2ACDDD2BEFDF10007A53AE /* NoTonesPlease_B.wav */,
@@ -5534,6 +5640,38 @@
 				28467F07264365B700FB4C9F /* Route_Start.wav in Resources */,
 				C378BE8222458AE7007489B2 /* OnlineBanner.xib in Resources */,
 				C3BB6C121EE08FC500C8D66D /* Launch-Dynamic.storyboard in Resources */,
+				4EC1DF362CE10C920065792D /* Africa_Behind.wav in Resources */,
+				4EC1DF372CE10C920065792D /* Africa_B.wav in Resources */,
+				4EC1DF382CE10C920065792D /* Africa_A+.wav in Resources */,
+				4EC1DF6A2CE10CD70065792D /* Volvo2_A+.wav in Resources */,
+				4EC1DF6B2CE10CD70065792D /* Volvo2_Route_Start.wav in Resources */,
+				4EC1DF6C2CE10CD70065792D /* Volvo2_Proximity_Far.wav in Resources */,
+				4EC1DF6D2CE10CD70065792D /* Volvo2_B.wav in Resources */,
+				4EC1DF6E2CE10CD70065792D /* Volvo2_A.wav in Resources */,
+				4EC1DF6F2CE10CD70065792D /* Volvo2_Route_End.wav in Resources */,
+				4EC1DF702CE10CD70065792D /* Volvo2_Proximity_Close.wav in Resources */,
+				4EC1DF712CE10CD70065792D /* Volvo2_Behind.wav in Resources */,
+				4EC1DF3E2CE10CAE0065792D /* NTPV2_A.wav in Resources */,
+				4EC1DF5A2CE10CCD0065792D /* Volvo_B.wav in Resources */,
+				4EC1DF5B2CE10CCD0065792D /* Volvo_A.wav in Resources */,
+				4EC1DF5C2CE10CCD0065792D /* Volvo_Behind.wav in Resources */,
+				4EC1DF5D2CE10CCD0065792D /* Volvo_Route_Start.wav in Resources */,
+				4EC1DF5E2CE10CCD0065792D /* Volvo_Route_End.wav in Resources */,
+				4EC1DF5F2CE10CCD0065792D /* Volvo_Proximity_Far.wav in Resources */,
+				4EC1DF602CE10CCD0065792D /* Volvo_A+.wav in Resources */,
+				4EC1DF612CE10CCD0065792D /* Volvo_Proximity_Close.wav in Resources */,
+				4EC1DF4E2CE10CC30065792D /* NewerNoise_A.wav in Resources */,
+				4EC1DF4F2CE10CC30065792D /* NewerNoise_B.wav in Resources */,
+				4EC1DF502CE10CC30065792D /* NewerNoise_Behind.wav in Resources */,
+				4EC1DF512CE10CC30065792D /* NewerNoise_A+.wav in Resources */,
+				4EC1DF3F2CE10CAE0065792D /* NTPV2_B.wav in Resources */,
+				4EC1DF462CE10CBA0065792D /* Soundcloud_Behind.wav in Resources */,
+				4EC1DF472CE10CBA0065792D /* Soundcloud_A+.wav in Resources */,
+				4EC1DF482CE10CBA0065792D /* Soundcloud_B.wav in Resources */,
+				4EC1DF492CE10CBA0065792D /* Soundcloud_A.wav in Resources */,
+				4EC1DF402CE10CAE0065792D /* NTPV2_Behind.wav in Resources */,
+				4EC1DF412CE10CAE0065792D /* NTPV2_A+.wav in Resources */,
+				4EC1DF392CE10C920065792D /* Africa_A.wav in Resources */,
 				28952D28228DBC1200FC91B4 /* hunt_complete.wav in Resources */,
 				4E2ACDBF2BECF582007A53AE /* WalkAMileInMyShoes_B.wav in Resources */,
 				4E2ACDC02BECF582007A53AE /* WalkAMileInMyShoes_A+.wav in Resources */,
@@ -6893,7 +7031,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SBXB9WC8M3;
+				DEVELOPMENT_TEAM = SNWR6BJM3P;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_BITCODE = NO;
 				FILE_SHARING_ENABLED = YES;
@@ -6926,7 +7064,7 @@
 				MARKETING_VERSION = 1.1.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-EARS-1";
+				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-EARS-2";
 				PRODUCT_NAME = "$(TARGET_NAME)-EARS";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;

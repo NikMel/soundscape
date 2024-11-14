@@ -672,6 +672,24 @@
 /* Name of a beacon style. */
 "beacon.styles.the_new_noise" = "The New Noise";
 
+/* Name of a beacon style. */
+"beacon.styles.africa" = "Africa";
+
+/* Name of a beacon style. */
+"beacon.styles.no_tones_v2" = "No Tones 2";
+
+/* Name of a beacon style. */
+"beacon.styles.soundcloud" = "Soundcloud";
+
+/* Name of a beacon style. */
+"beacon.styles.the_newer_noise" = "The Newer Noise";
+
+/* Name of a beacon style. */
+"beacon.styles.volvo" = "Volvo";
+
+/* Name of a beacon style. */
+"beacon.styles.volvo_2" = "Volvo 2";
+
 /* Name of a beacon style. Unlike the other beacon styles, this style include haptic feedback (e.g. vibration feedback from the iPhone). The term "wand" is used to refer to a pointing device. Together, this name is intended to convey that this beacon style provides haptic feedback to the user when they hold their phone in front of them and point it around. */
 "beacon.styles.haptic.wand" = "Haptic Wand";
 
