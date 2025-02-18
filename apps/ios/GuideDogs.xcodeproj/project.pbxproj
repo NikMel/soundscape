@@ -679,6 +679,7 @@
 		9A6990792D5BDC1D00D37B7D /* BoseFramesMotionManagerReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6990772D5BDC1D00D37B7D /* BoseFramesMotionManagerReachability.swift */; };
 		9A69907B2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */; };
 		9A69907C2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */; };
+		9A9BF9CC2D64E0EB00645600 /* TestLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9BF9CB2D64E0D900645600 /* TestLogger.swift */; };
 		AC3A3EE22C40C9080061EEB8 /* NearbyTableFilterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */; };
 		B90C27D61EAF81D600007368 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90C27D51EAF81D600007368 /* Sound.swift */; };
 		B918EE9825100FFF00A5354A /* CalloutRangeContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B918EE9725100FFF00A5354A /* CalloutRangeContext.swift */; };
@@ -1604,6 +1605,7 @@
 		9A6990702D5BDB8900D37B7D /* BoseSensorDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseSensorDataProcessor.swift; path = Code/Devices/BLE/BoseSensorDataProcessor.swift; sourceTree = "<group>"; };
 		9A6990772D5BDC1D00D37B7D /* BoseFramesMotionManagerReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManagerReachability.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManagerReachability.swift"; sourceTree = "<group>"; };
 		9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManager.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManager.swift"; sourceTree = "<group>"; };
+		9A9BF9CB2D64E0D900645600 /* TestLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLogger.swift; sourceTree = "<group>"; };
 		AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyTableFilterTest.swift; sourceTree = "<group>"; };
 		B90C27D51EAF81D600007368 /* Sound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sound.swift; path = Code/Audio/Protocols/Sound.swift; sourceTree = "<group>"; };
 		B918EE9725100FFF00A5354A /* CalloutRangeContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalloutRangeContext.swift; sourceTree = "<group>"; };
@@ -3013,6 +3015,7 @@
 			isa = PBXGroup;
 			children = (
 				311E92E51DF1E9CF003A5E23 /* LoggingContext.swift */,
+				9A9BF9CB2D64E0D900645600 /* TestLogger.swift */,
 				311E92E41DF1E9CF003A5E23 /* LogFormatter.swift */,
 				311E92E31DF1E9CF003A5E23 /* BLELogger.swift */,
 				31B94362212B6E4400AB12B2 /* GDATelemetry.swift */,
@@ -5733,6 +5736,7 @@
 				3178EB5B21812B47002157F7 /* CallManager.swift in Sources */,
 				28BD33DD23DB5AFA00566523 /* SoundType.swift in Sources */,
 				28FCD315281C93F0007CEFE7 /* HandledEventAction.swift in Sources */,
+				9A9BF9CC2D64E0EB00645600 /* TestLogger.swift in Sources */,
 				28EB9C75237CBA3A0064E7EF /* ExperimentConfiguration.swift in Sources */,
 				31E2EBD121E40192002AD6BB /* LanguageTableViewController.swift in Sources */,
 				627004F126055AE000FBF5E5 /* DeviceReachabilityAlertObserver.swift in Sources */,

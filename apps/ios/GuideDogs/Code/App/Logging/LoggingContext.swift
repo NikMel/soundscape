@@ -58,6 +58,7 @@ enum Logger: Int {
 
 // MARK: Log Contexts
 
+// gpt: a case for useCaseTest and appropriate log methods
 enum LogContext: Int {
     case `default`
     case network
@@ -87,6 +88,8 @@ enum LogContext: Int {
     case routeGuidance
     case urlResource
     case authoredContent
+    case useCaseTest // Added custom logging context
+
     
     var symbol: String {
         switch self {
@@ -118,6 +121,8 @@ enum LogContext: Int {
         case .routeGuidance: return "[RTG]"
         case .urlResource: return "[URL]"
         case .authoredContent: return "[ATH]"
+        case .useCaseTest: return "[USECASE]"
+
         }
     }
 }
@@ -354,6 +359,10 @@ public func GDLogURLResourceError(_ message: String) {
 
 public func GDLogURLResourceVerbose(_ message: String) {
     DDLogVerbose(message, context: LogContext.urlResource.rawValue)
+}
+
+public func GDUseCaseTestInfo(_ message: String) {
+    DDLogInfo(message, context: LogContext.useCaseTest.rawValue)
 }
 
 // MARK: -
