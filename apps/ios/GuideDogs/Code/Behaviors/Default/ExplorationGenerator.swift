@@ -7,6 +7,8 @@
 //
 
 import CoreLocation
+import UIKit  // Required for UIActivityViewController (for UseCaseLogger)
+
 
 struct ExplorationModeToggled: UserInitiatedEvent {
     let sender: AnyObject?
@@ -130,8 +132,9 @@ class ExplorationGenerator: ManualGenerator, AutomaticGenerator {
             return nil
         }
         
-        shareLogs()
+        UseCaseLogger.shareLogs(latest: true)
         
+
         guard event.mode != currentMode else {
             event.completionHandler?(false)
             
@@ -415,43 +418,4 @@ extension ExplorationGenerator: CalloutGroupDelegate {
             currentMode = nil
         }
     }
-    
-    func shareLogs() {
-        guard let topViewController = getTopViewController() else {
-            print("Error: No valid view controller to present UIActivityViewController")
-            return
-        }
-        
-        let fileManager = FileManager.default
-        let logDirectory = LoggingContext.shared.fileLogger.logFileManager.logsDirectory
-
-        do {
-            let logFiles = try fileManager.contentsOfDirectory(atPath: logDirectory)
-                .map { URL(fileURLWithPath: logDirectory).appendingPathComponent($0) }
-            
-            guard !logFiles.isEmpty else {
-                print("No log files found.")
-                return
-            }
-            
-            let activityViewController = UIActivityViewController(activityItems: logFiles, applicationActivities: nil)
-            topViewController.present(activityViewController, animated: true, completion: nil)
-        } catch {
-            print("Error retrieving log files: \(error.localizedDescription)")
-        }
-    }
-
-    // Helper function to get the top-most view controller
-    func getTopViewController() -> UIViewController? {
-        guard let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else {
-            return nil
-        }
-        var topController = keyWindow.rootViewController
-        while let presentedController = topController?.presentedViewController {
-            topController = presentedController
-        }
-        return topController
-    }
-
-
 }
