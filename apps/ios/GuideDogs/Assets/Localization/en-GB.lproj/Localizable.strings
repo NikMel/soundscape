@@ -2620,12 +2620,16 @@
 "menu.help_and_tutorials" = "Help & Tutorials";
 
 
+
 /*  */
 "menu.send_feedback" = "Send Feedback";
 
 
 /*  */
 "menu.rate" = "Rate";
+
+/*  */
+"menu.export_logs" = "Export Logs";
 
 
 /*  */
