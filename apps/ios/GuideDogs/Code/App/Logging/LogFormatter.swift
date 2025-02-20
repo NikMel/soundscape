@@ -20,12 +20,20 @@ class LogFormatter: NSObject {
     static var dateFormatter: DateFormatter = LogFormatter.defaultDateFormatter()
 
     var showFileAndLineNumber = false
+    var useCaseFilter: Bool // Toggle for useCaseTest filtering
+
     
     fileprivate var logFlagDisplayStringVerbose = "Ⓥ"
     fileprivate var logFlagDisplayStringDebug   = "Ⓓ"
     fileprivate var logFlagDisplayStringInfo    = "Ⓘ"
     fileprivate var logFlagDisplayStringWarn    = "Ⓦ"
     fileprivate var logFlagDisplayStringError   = "Ⓔ"
+    
+    // MARK: Initializer
+    
+    init(useCaseFilter: Bool = false) {
+        self.useCaseFilter = useCaseFilter
+    }
     
 }
 
@@ -34,6 +42,11 @@ class LogFormatter: NSObject {
 extension LogFormatter: DDLogFormatter {
     
     func format(message logMessage: DDLogMessage) -> String? {
+        // Check if filtering is enabled and filter out logs accordingly
+        if useCaseFilter && logMessage.context != LogContext.useCaseTest.rawValue {
+            return nil
+        }
+        
         let message: String = logMessage.message
         
         let logFlagDisplayString: String!
@@ -61,8 +74,7 @@ extension LogFormatter: DDLogFormatter {
             "\(date) \(LogContext(rawValue: logMessage.context)?.symbol ?? "[---]") \(message)"
         
         return formattedString
-    }
-}
+    }}
 
 // MARK: - Helpers
 

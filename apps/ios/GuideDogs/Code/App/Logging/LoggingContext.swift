@@ -384,7 +384,9 @@ class LoggingContext {
     
     var fileLogger: DDFileLogger = {
         let fileLogger: DDFileLogger = DDFileLogger()
-        fileLogger.logFormatter = LogFormatter()
+        // Toggle the filter here
+        let shouldFilterUseCaseLogs = true  // Change this to false to disable filtering
+        fileLogger.logFormatter = LogFormatter(useCaseFilter: shouldFilterUseCaseLogs)
         fileLogger.rollingFrequency = 0
         fileLogger.maximumFileSize = 0
         fileLogger.logFileManager.maximumNumberOfLogFiles = 14
@@ -444,3 +446,5 @@ class LoggingContext {
         DDLog.removeAllLoggers()
     }
 }
+
+
