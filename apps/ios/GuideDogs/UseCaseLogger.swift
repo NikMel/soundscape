@@ -34,6 +34,8 @@ class UseCaseLogger: DDLogFileManagerDefault {
         let fileManager = FileManager.default
         let logDirectory = LoggingContext.shared.fileLogger.logFileManager.logsDirectory
         print("[DEBUG] Log Directory: \(logDirectory)")
+        
+        // gpt: also show an alert if the number of log file are less than 1(that is , 0)
 
         do {
             let logFiles = try fileManager.contentsOfDirectory(atPath: logDirectory)
@@ -43,6 +45,7 @@ class UseCaseLogger: DDLogFileManagerDefault {
             
             guard !logFiles.isEmpty else {
                 print("[DEBUG] No log files found.")
+                showAlert(on: topViewController, title: "No Use Case Logs", message: "No use case action has been performed so there are no logs")
                 return
             }
             
@@ -70,14 +73,15 @@ class UseCaseLogger: DDLogFileManagerDefault {
                         
                         if let error = error {
                             print("[ERROR] Failed to present UIActivityViewController: \(error.localizedDescription)")
-                        }
-                        
-                        if !completed {
+                            showAlert(on: topViewController, title: "Error", message: "Failed to share the logs. Please try again.")
+                        } else if !completed {
                             print("[DEBUG] Sharing was cancelled or failed.")
+                            showAlert(on: topViewController, title: "Share Failed", message: "Unable to present the share sheet. Please try again.")
                         } else {
                             print("[DEBUG] Sharing completed successfully.")
                         }
                     }
+
                     
                     DispatchQueue.main.async {
                         topViewController.present(activityViewController, animated: true) {
@@ -114,6 +118,8 @@ class UseCaseLogger: DDLogFileManagerDefault {
             }
         } catch {
             print("[ERROR] Error retrieving log files: \(error.localizedDescription)")
+            showAlert(on: topViewController, title: "Error", message: "Failed to retrieve log files: \(error.localizedDescription)")
+
         }
     }
 
@@ -140,5 +146,15 @@ class UseCaseLogger: DDLogFileManagerDefault {
         print("[DEBUG] Presenting from Top Controller: \(String(describing: topController))")
         return topController
     }
+    
+    // MARK: - Helper Method to Show Alert
+    private static func showAlert(on viewController: UIViewController, title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        DispatchQueue.main.async {
+            viewController.present(alert, animated: true, completion: nil)
+        }
+    }
+
 
 }
