@@ -238,6 +238,7 @@ class AutoCalloutGenerator: AutomaticGenerator, ManualGenerator {
             return event.playSound ? .playCallouts(callouts) : nil
             
         case let event as MarkerAddedEvent:
+            GDUseCaseTestInfo(" a marker was added yh")
             guard let id = event.markerId, let marker = SpatialDataCache.referenceEntityByKey(id) else {
                 return nil
             }

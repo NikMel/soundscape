@@ -10,7 +10,8 @@ import UIKit
 import SafariServices
 
 enum MenuItem {
-    case home, donate,  recreation, devices, help, settings, status, feedback, rate, share
+    // gpt: add an exportlogs button(following the pattern practice used in the code) to the this file and what should happen when it is cllicked is (UseCaseLogger.shareLogs(latest: true))
+    case home, recreation, devices, help, settings, status, feedback, rate, share, exportLogs
     
     var localizedString: String {
         switch self {
@@ -24,6 +25,8 @@ enum MenuItem {
         case .feedback:   return GDLocalizedString("menu.send_feedback")
         case .rate:       return GDLocalizedString("menu.rate")
         case .share:      return GDLocalizedString("share.title")
+        case .exportLogs: return GDLocalizedString("menu.export_logs")
+
         }
     }
     
@@ -39,6 +42,8 @@ enum MenuItem {
         case .feedback:   return GDLocalizedString("menu.send_feedback")
         case .rate:       return GDLocalizedString("menu.rate")
         case .share:      return GDLocalizedString("share.title")
+        case .exportLogs: return GDLocalizedString("menu.export_logs")
+
         }
     }
     
@@ -54,6 +59,8 @@ enum MenuItem {
         case .feedback:   return UIImage(named: "ic_email_28px")
         case .rate:       return UIImage(named: "ic_star_rate_28px")
         case .share:      return UIImage(systemName: "square.and.arrow.up")
+        case .exportLogs: return UIImage(named: "ic_export_logs_28px")
+
         }
     }
 }
@@ -74,6 +81,8 @@ class MenuViewController: UIViewController {
         menuView.addMenuItem(.feedback)
         menuView.addMenuItem(.rate)
         menuView.addMenuItem(.share)
+        menuView.addMenuItem(.exportLogs)  // <-- New Button Added
+
         
         // Attach a listener for button taps on each menu item
         for item in menuView.items {
@@ -142,6 +151,10 @@ class MenuViewController: UIViewController {
             closeMenu {
                 AppShareHelper.share()
             }
+        case .exportLogs:
+            GDLogAppInfo("Export Logs button tapped")  // Debug Log
+            UseCaseLogger.shareLogs(latest: true)
+            closeMenu()
         default:
             select(item)
         }
