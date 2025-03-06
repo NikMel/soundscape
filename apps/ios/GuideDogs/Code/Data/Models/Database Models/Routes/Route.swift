@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 import CoreLocation
-
+// gpt: add debug prints so i can see which init is being used when and also how the way points are being loaded
 extension Notification.Name {
     static let routeAdded = Notification.Name("GDARouteAdded")
     static let routeUpdated = Notification.Name("GDARouteUpdated")
@@ -86,17 +86,22 @@ class Route: Object, ObjectKeyIdentifiable {
      *     - waypoints: Array of waypoints - All waypoints are markers that exist in the Realm databse
      */
     convenience init(name: String, description: String?, waypoints: [RouteWaypoint]) {
+        print("🐛 Route init with name: \(name), waypoints count: \(waypoints.count)")
         self.init()
         
         self.name = name
         self.routeDescription = description
         
         // Append waypoints
-        waypoints.forEach({ self.waypoints.append($0) })
+        waypoints.forEach { waypoint in
+            self.waypoints.append(waypoint)
+            print("🐛 Added waypoint - Marker ID: \(waypoint.markerId)")
+        }
         
         if let first = waypoints.ordered.first, let marker = first.asLocationDetail {
             firstWaypointLatitude = marker.location.coordinate.latitude
             firstWaypointLongitude = marker.location.coordinate.longitude
+            print("🐛 First waypoint location set: \(firstWaypointLatitude ?? 0), \(firstWaypointLongitude ?? 0)")
         }
     }
     
@@ -105,35 +110,42 @@ class Route: Object, ObjectKeyIdentifiable {
      were already imported to the database.
      */
     convenience init(from parameters: RouteParameters) {
+        print("🐛 Route init from parameters - ID: \(parameters.id), name: \(parameters.name), waypoints count: \(parameters.waypoints.count)")
         self.init()
         
         // Required Parameters
-        
         id = parameters.id
         name = parameters.name
         routeDescription = parameters.routeDescription
         
         // Append waypoints
-        let pWaypoints = parameters.waypoints.compactMap({ return RouteWaypoint(from: $0) })
+        let pWaypoints = parameters.waypoints.compactMap { RouteWaypoint(from: $0) }
         waypoints.append(objectsIn: pWaypoints)
+        
+        pWaypoints.forEach { waypoint in
+            print("🐛 Added waypoint from parameters - Marker ID: \(waypoint.markerId)")
+        }
         
         if let first = pWaypoints.ordered.first, let marker = SpatialDataCache.referenceEntityByKey(first.markerId) {
             firstWaypointLatitude = marker.latitude
             firstWaypointLongitude = marker.longitude
+            print("🐛 First waypoint location set from parameters: \(firstWaypointLatitude ?? 0), \(firstWaypointLongitude ?? 0)")
         }
         
         // Optional Parameters
-        
         if let pCreatedDate = parameters.createdDate {
             createdDate = pCreatedDate
+            print("🐛 Created date set: \(createdDate)")
         }
         
         if let pLastUpdatedDate = parameters.lastUpdatedDate {
             lastUpdatedDate = pLastUpdatedDate
+            print("🐛 Last updated date set: \(lastUpdatedDate)")
         }
         
         if let pLastSelectedDate = parameters.lastSelectedDate {
             lastSelectedDate = pLastSelectedDate
+            print("🐛 Last selected date set: \(lastSelectedDate)")
         }
     }
     

@@ -611,6 +611,7 @@
 		9A69907C2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */; };
 		9A9BF9CE2D64F75B00645600 /* UseCaseLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */; };
 		9A9BF9CF2D64F75B00645600 /* UseCaseLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */; };
+		9AB52AFF2D771FF300C1EB72 /* AddressRouteCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */; };
 		AC3A3EE22C40C9080061EEB8 /* NearbyTableFilterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */; };
 		B90C27D61EAF81D600007368 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90C27D51EAF81D600007368 /* Sound.swift */; };
 		B918EE9825100FFF00A5354A /* CalloutRangeContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B918EE9725100FFF00A5354A /* CalloutRangeContext.swift */; };
@@ -1467,6 +1468,7 @@
 		9A6990772D5BDC1D00D37B7D /* BoseFramesMotionManagerReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManagerReachability.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManagerReachability.swift"; sourceTree = "<group>"; };
 		9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManager.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManager.swift"; sourceTree = "<group>"; };
 		9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UseCaseLogger.swift; sourceTree = "<group>"; };
+		9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRouteCalculator.swift; sourceTree = "<group>"; };
 		AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyTableFilterTest.swift; sourceTree = "<group>"; };
 		B90C27D51EAF81D600007368 /* Sound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sound.swift; path = Code/Audio/Protocols/Sound.swift; sourceTree = "<group>"; };
 		B918EE9725100FFF00A5354A /* CalloutRangeContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalloutRangeContext.swift; sourceTree = "<group>"; };
@@ -2142,6 +2144,7 @@
 			children = (
 				28A37E872208F701007DCD31 /* Callouts */,
 				286DC6A821E68449001CD88A /* RouteGuidance.swift */,
+				9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */,
 				286DC6AF21E6BADB001CD88A /* RouteGuidanceState.swift */,
 				28B59F4A21F92C170040B68F /* RouteGuidanceGenerator.swift */,
 			);
@@ -5619,6 +5622,7 @@
 				286DC6A721E683CB001CD88A /* SoundscapeBehavior.swift in Sources */,
 				288E632424B501AA00F66EA6 /* RootedPreviewGraph.swift in Sources */,
 				281A9A9623AAAEB1008E548D /* TTSSound.swift in Sources */,
+				9AB52AFF2D771FF300C1EB72 /* AddressRouteCalculator.swift in Sources */,
 				629821B2251049CF00775CC2 /* NearbyDataContext.swift in Sources */,
 				281602F21F4BA5FC00043216 /* RoundedButton.swift in Sources */,
 				C378BE7022456214007489B2 /* BannerContainerView.swift in Sources */,
