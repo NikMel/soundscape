@@ -154,6 +154,7 @@ class MenuViewController: UIViewController {
         case .exportLogs:
             GDLogAppInfo("Export Logs button tapped")
             let mapsDecoder = MapsDecoder()
+            mapsDecoder.fetchRoute(origin: "57.7072,11.9389", destination: "57.7065,11.9398")
             //UseCaseLogger.shareLogs(latest: true)
             // let route = AddressRouteCalculator.testCreateRoute(waypointsData: AddressRouteCalculator.getWaypointsFromAPI())
             closeMenu()
