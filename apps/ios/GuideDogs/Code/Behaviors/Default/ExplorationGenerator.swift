@@ -131,9 +131,7 @@ class ExplorationGenerator: ManualGenerator, AutomaticGenerator {
         guard let event = event as? ExplorationModeToggled else {
             return nil
         }
-        
-        UseCaseLogger.shareLogs(latest: true)
-        
+                
 
         guard event.mode != currentMode else {
             event.completionHandler?(false)

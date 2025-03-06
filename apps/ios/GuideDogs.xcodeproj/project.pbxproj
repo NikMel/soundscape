@@ -362,11 +362,6 @@
 		31F12C4222569E9100BDA072 /* StreetSuffixAbbreviations_fr.plist in Resources */ = {isa = PBXBuildFile; fileRef = 31F12C4122569E9100BDA072 /* StreetSuffixAbbreviations_fr.plist */; };
 		31F1370422B867B800FC1860 /* GeolocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F1370322B867B800FC1860 /* GeolocationManager.swift */; };
 		31FE6C78233A7B760098D8C5 /* TelemetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FE6C77233A7B760098D8C5 /* TelemetryHelper.swift */; };
-		3D55C9112B9838B4003CF8E6 /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55C9102B9838B4003CF8E6 /* BoseFramesMotionManager.swift */; };
-		3D55C9132B983BA4003CF8E6 /* BoseFramesMotionManagerReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D55C9122B983BA4003CF8E6 /* BoseFramesMotionManagerReachability.swift */; };
-		3DD63B5F2B9906E800E4A159 /* BoseFramesBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD63B5E2B9906E800E4A159 /* BoseFramesBLEDevice.swift */; };
-		3DD63B652B9906FB00E4A159 /* BoseSensorDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD63B602B9906FA00E4A159 /* BoseSensorDataProcessor.swift */; };
-		3DD63B662B9906FB00E4A159 /* BoseSensorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD63B612B9906FA00E4A159 /* BoseSensorConfiguration.swift */; };
 		4E2ACDB72BECF14C007A53AE /* FollowTheMusic_A.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDB32BECF14C007A53AE /* FollowTheMusic_A.wav */; };
 		4E2ACDB82BECF14C007A53AE /* FollowTheMusic_A+.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDB42BECF14C007A53AE /* FollowTheMusic_A+.wav */; };
 		4E2ACDB92BECF14C007A53AE /* FollowTheMusic_B.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4E2ACDB52BECF14C007A53AE /* FollowTheMusic_B.wav */; };
@@ -423,7 +418,6 @@
 		4EC1DF6F2CE10CD70065792D /* Volvo2_Route_End.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF672CE10CD60065792D /* Volvo2_Route_End.wav */; };
 		4EC1DF702CE10CD70065792D /* Volvo2_Proximity_Close.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF682CE10CD60065792D /* Volvo2_Proximity_Close.wav */; };
 		4EC1DF712CE10CD70065792D /* Volvo2_Behind.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1DF692CE10CD70065792D /* Volvo2_Behind.wav */; };
-		568480891CB73F51004B4227 /* main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 568480881CB73F51004B4227 /* main.storyboard */; };
 		568480911CBC9C94004B4227 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480901CBC9C94004B4227 /* HomeViewController.swift */; };
 		568480931CBC9CEE004B4227 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480921CBC9CEE004B4227 /* SettingsViewController.swift */; };
 		568480981CBD6A19004B4227 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568480971CBD6A19004B4227 /* Colors.swift */; };
@@ -1204,12 +1198,6 @@
 		31F12C4122569E9100BDA072 /* StreetSuffixAbbreviations_fr.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = StreetSuffixAbbreviations_fr.plist; path = Assets/PropertyLists/StreetSuffixAbbreviations_fr.plist; sourceTree = "<group>"; };
 		31F1370322B867B800FC1860 /* GeolocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GeolocationManager.swift; path = "Code/Sensors/Geolocation/Geolocation Manager/GeolocationManager.swift"; sourceTree = "<group>"; };
 		31FE6C77233A7B760098D8C5 /* TelemetryHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TelemetryHelper.swift; path = Code/App/Logging/TelemetryHelper.swift; sourceTree = "<group>"; };
-		3D55C9102B9838B4003CF8E6 /* BoseFramesMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoseFramesMotionManager.swift; sourceTree = "<group>"; };
-		3D55C9122B983BA4003CF8E6 /* BoseFramesMotionManagerReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoseFramesMotionManagerReachability.swift; sourceTree = "<group>"; };
-		3D55C9142B9848FA003CF8E6 /* SoundscapeDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SoundscapeDebug.entitlements; sourceTree = SOURCE_ROOT; };
-		3DD63B5E2B9906E800E4A159 /* BoseFramesBLEDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoseFramesBLEDevice.swift; sourceTree = "<group>"; };
-		3DD63B602B9906FA00E4A159 /* BoseSensorDataProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoseSensorDataProcessor.swift; sourceTree = "<group>"; };
-		3DD63B612B9906FA00E4A159 /* BoseSensorConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoseSensorConfiguration.swift; sourceTree = "<group>"; };
 		4E2ACDB32BECF14C007A53AE /* FollowTheMusic_A.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = FollowTheMusic_A.wav; path = GuideDogs/Assets/Sounds/Beacons/FollowTheMusic/FollowTheMusic_A.wav; sourceTree = "<group>"; };
 		4E2ACDB42BECF14C007A53AE /* FollowTheMusic_A+.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "FollowTheMusic_A+.wav"; path = "GuideDogs/Assets/Sounds/Beacons/FollowTheMusic/FollowTheMusic_A+.wav"; sourceTree = "<group>"; };
 		4E2ACDB52BECF14C007A53AE /* FollowTheMusic_B.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = FollowTheMusic_B.wav; path = GuideDogs/Assets/Sounds/Beacons/FollowTheMusic/FollowTheMusic_B.wav; sourceTree = "<group>"; };
@@ -1271,7 +1259,6 @@
 		4EC1DF672CE10CD60065792D /* Volvo2_Route_End.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Route_End.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Route_End.wav; sourceTree = "<group>"; };
 		4EC1DF682CE10CD60065792D /* Volvo2_Proximity_Close.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Proximity_Close.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Proximity_Close.wav; sourceTree = "<group>"; };
 		4EC1DF692CE10CD70065792D /* Volvo2_Behind.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Volvo2_Behind.wav; path = GuideDogs/Assets/Sounds/Beacons/Volvo2/Volvo2_Behind.wav; sourceTree = "<group>"; };
-		568480881CB73F51004B4227 /* main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = main.storyboard; sourceTree = "<group>"; };
 		5684808F1CBC975E004B4227 /* Soundscape-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "Soundscape-Bridging-Header.h"; path = "Code/App/Soundscape-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		568480901CBC9C94004B4227 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = HomeViewController.swift; path = "Code/Visual UI/View Controllers/Home/HomeViewController.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		568480921CBC9CEE004B4227 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = SettingsViewController.swift; path = "Code/Visual UI/View Controllers/Settings/SettingsViewController.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -1708,7 +1695,7 @@
 		D3CE458A1C17377700AC1A25 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		D3CE458C1C17378B00AC1A25 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		D3CE458E1C1737AE00AC1A25 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		D3D7CFC81B3D96470020B5E9 /* Soundscape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundscape.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3D7CFC81B3D96470020B5E9 /* Soundscape-EARS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Soundscape-EARS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E2A6361CAD5CA100A5192A /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		DCAAD87E2BC1E95F0018D135 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Assets/PropertyLists/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -4641,7 +4628,7 @@
 		D3D7CFC91B3D96470020B5E9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D3D7CFC81B3D96470020B5E9 /* Soundscape.app */,
+				D3D7CFC81B3D96470020B5E9 /* Soundscape-EARS.app */,
 				914DEBCD2A3CE6B9007B161C /* UnitTests.xctest */,
 			);
 			name = Products;
@@ -4710,7 +4697,7 @@
 				91172A722AD8D56D00E6E8E9 /* CoreGPX */,
 			);
 			productName = GuideDogs;
-			productReference = D3D7CFC81B3D96470020B5E9 /* Soundscape.app */;
+			productReference = D3D7CFC81B3D96470020B5E9 /* Soundscape-EARS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -4811,7 +4798,6 @@
 			files = (
 				28467F07264365B700FB4C9F /* Route_Start.wav in Resources */,
 				C378BE8222458AE7007489B2 /* OnlineBanner.xib in Resources */,
-				C3BB6C121EE08FC500C8D66D /* Launch-Dynamic.storyboard in Resources */,
 				4EC1DF362CE10C920065792D /* Africa_Behind.wav in Resources */,
 				4EC1DF372CE10C920065792D /* Africa_B.wav in Resources */,
 				4EC1DF382CE10C920065792D /* Africa_A+.wav in Resources */,
@@ -4866,7 +4852,6 @@
 				4E2ACDD02BEFDEBC007A53AE /* SilenceIsGolden2_A.wav in Resources */,
 				4E2ACDD12BEFDEBC007A53AE /* SilenceIsGolden2_A+.wav in Resources */,
 				4E2ACDD22BEFDEBC007A53AE /* SilenceIsGolden2_B.wav in Resources */,
-				2880BBF61F22B2EC00E25DC3 /* RequiredPermission.storyboard in Resources */,
 				4E2ACDC42BEFDE0B007A53AE /* TheNewNoise_A.wav in Resources */,
 				28952D2E228DBC1200FC91B4 /* virtual_remote_click_down.wav in Resources */,
 				28952D33228DBC1200FC91B4 /* callouts_off.wav in Resources */,
@@ -5241,7 +5226,6 @@
 				62403FEE24CA3F75005CB80D /* PreviewViewController.swift in Sources */,
 				62494FFC26FAAFD1008D842B /* ShareRouteAlertObserver.swift in Sources */,
 				286C825A20C99CD800BB17B0 /* TableViewCellAccessibilityAction.swift in Sources */,
-				288E5FE4269FA7B500F7D4CD /* PreferenceKeyHelpers.swift in Sources */,
 				9A69907B2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */,
 				283C057E23DB6D990086C01F /* DynamicSound.swift in Sources */,
 				281D59D31F4765880090F23A /* FirstLaunchTermsStepViewController.swift in Sources */,
@@ -5309,7 +5293,6 @@
 				C3E9B80F224948B700E1E0E0 /* LargeBannerContainerView.swift in Sources */,
 				28F1B48F1F683D37008A4F3B /* HelpPageViewController.swift in Sources */,
 				623557A024DCDB3400266D9D /* PreviewActivityIndicatorViewController.swift in Sources */,
-				629F53ED26CB409B00796B23 /* InsetLocationItemStyleConfiguration.swift in Sources */,
 				9A6990782D5BDC1D00D37B7D /* BoseFramesMotionManagerReachability.swift in Sources */,
 				281CB8812016B4650059B8C4 /* LocationCallout.swift in Sources */,
 				B921CE622559EB9F00F777CE /* PushNotificationManager.swift in Sources */,
@@ -5592,7 +5575,6 @@
 				28F93A8E211A56B300994402 /* UITextField+Extensions.swift in Sources */,
 				C3A6E810204621E100C221E8 /* POI+Extensions.swift in Sources */,
 				286D18B7206C0F55006D1925 /* NewFeatures.swift in Sources */,
-				621628B5286E24AC00B1FF5B /* AccessibilityHStack.swift in Sources */,
 				9A9BF9CF2D64F75B00645600 /* UseCaseLogger.swift in Sources */,
 				62B11A6C27B46F820094FE66 /* BeaconOption+Strings.swift in Sources */,
 				283F160B202233A0009C2FFA /* POICalloutProtocol.swift in Sources */,
@@ -5939,6 +5921,325 @@
 			};
 			name = AdHoc;
 		};
+		9A3EBA442D79A8EB00A7DDFA /* Debug-Niklas */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62E2B87C25AE5C0F0008AF5D /* Debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFLocalizedString,
+					GDLocalizedString,
+					GDLocalizationUnnecessary,
+					GDLocalizedStringFormat,
+					GDFutureLocalizationRequired,
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-Niklas";
+		};
+		9A3EBA452D79A8EB00A7DDFA /* Debug-Niklas */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon Beta";
+				BUNDLE_SPOKEN_NAME = "Soundscape Debug";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SBXB9WC8M3;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				ENABLE_BITCODE = NO;
+				FILE_SHARING_ENABLED = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"TESTING=0",
+					"DEBUG_SAVE_LOGS=0",
+					"TELEMETRY_ENABLED=0",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/libxml2",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = GuideDogs/Assets/PropertyLists/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Soundscape;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/GuideDogs",
+				);
+				MARKETING_VERSION = 1.2.0;
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-EARS";
+				PRODUCT_NAME = "$(TARGET_NAME)-EARS";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "GuideDogs/Code/App/Soundscape-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/AudioKitV2.1/AudioKit/**";
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Debug-Niklas";
+		};
+		9A3EBA462D79A8EB00A7DDFA /* Debug-Niklas */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = X4H33NKGKY;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.rcos.soundscape.UnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Soundscape.app/Soundscape";
+			};
+			name = "Debug-Niklas";
+		};
+		9A3EBA472D79A8F800A7DDFA /* Release-NIklas */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62E2B87A25AE5C0F0008AF5D /* Release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFLocalizedString,
+					GDLocalizedString,
+					GDLocalizationUnnecessary,
+					GDLocalizedStringFormat,
+					GDFutureLocalizationRequired,
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-NIklas";
+		};
+		9A3EBA482D79A8F800A7DDFA /* Release-NIklas */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_SPOKEN_NAME = Soundscape;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_ENTITLEMENTS = GuideDogs/Assets/PropertyLists/Soundscape.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 8;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SBXB9WC8M3;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				ENABLE_BITCODE = NO;
+				FILE_SHARING_ENABLED = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"TESTING=0",
+					"TELEMETRY_ENABLED=0",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/libxml2",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = GuideDogs/Assets/PropertyLists/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Soundscape;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/GuideDogs",
+				);
+				MARKETING_VERSION = 1.2.0;
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited) -DRELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-release-EARS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Niklas Mellegård";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "GuideDogs/Code/App/Soundscape-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/AudioKitV2.1/AudioKit/**";
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = "Release-NIklas";
+		};
+		9A3EBA492D79A8F800A7DDFA /* Release-NIklas */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X4H33NKGKY;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.rcos.soundscape.UnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Soundscape.app/Soundscape";
+			};
+			name = "Release-NIklas";
+		};
 		D3D7CFEC1B3D96470020B5E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 62E2B87C25AE5C0F0008AF5D /* Debug.xcconfig */;
@@ -6194,7 +6495,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				914DEBD32A3CE6B9007B161C /* Debug */,
+				9A3EBA462D79A8EB00A7DDFA /* Debug-Niklas */,
 				914DEBD42A3CE6B9007B161C /* Release */,
+				9A3EBA492D79A8F800A7DDFA /* Release-NIklas */,
 				914DEBD52A3CE6B9007B161C /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -6204,7 +6507,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3D7CFEC1B3D96470020B5E9 /* Debug */,
+				9A3EBA442D79A8EB00A7DDFA /* Debug-Niklas */,
 				D3D7CFED1B3D96470020B5E9 /* Release */,
+				9A3EBA472D79A8F800A7DDFA /* Release-NIklas */,
 				3163C7421DFDB27D00C9E605 /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -6214,7 +6519,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3D7CFEF1B3D96470020B5E9 /* Debug */,
+				9A3EBA452D79A8EB00A7DDFA /* Debug-Niklas */,
 				D3D7CFF01B3D96470020B5E9 /* Release */,
+				9A3EBA482D79A8F800A7DDFA /* Release-NIklas */,
 				3163C7431DFDB27D00C9E605 /* AdHoc */,
 			);
 			defaultConfigurationIsVisible = 0;

@@ -11,7 +11,7 @@ import SafariServices
 
 enum MenuItem {
     // gpt: add an exportlogs button(following the pattern practice used in the code) to the this file and what should happen when it is cllicked is (UseCaseLogger.shareLogs(latest: true))
-    case home, recreation, devices, help, settings, status, feedback, rate, share, exportLogs
+    case home, recreation, devices, help, settings, status, feedback, rate, share, donate, exportLogs
     
     var localizedString: String {
         switch self {
