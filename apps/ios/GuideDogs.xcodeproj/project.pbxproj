@@ -610,6 +610,7 @@
 		9A69907B2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */; };
 		9A69907C2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */; };
 		9A8FC6AE2D79E1D2001CF3F5 /* MapsDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */; };
+		9A8FC7EB2D79ED8A001CF3F5 /* HereMapsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8FC7EA2D79ED85001CF3F5 /* HereMapsModels.swift */; };
 		9A9BF9CE2D64F75B00645600 /* UseCaseLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */; };
 		9A9BF9CF2D64F75B00645600 /* UseCaseLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */; };
 		9AB52AFF2D771FF300C1EB72 /* AddressRouteCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */; };
@@ -1469,6 +1470,7 @@
 		9A6990772D5BDC1D00D37B7D /* BoseFramesMotionManagerReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManagerReachability.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManagerReachability.swift"; sourceTree = "<group>"; };
 		9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManager.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManager.swift"; sourceTree = "<group>"; };
 		9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsDecoder.swift; sourceTree = "<group>"; };
+		9A8FC7EA2D79ED85001CF3F5 /* HereMapsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereMapsModels.swift; sourceTree = "<group>"; };
 		9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UseCaseLogger.swift; sourceTree = "<group>"; };
 		9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRouteCalculator.swift; sourceTree = "<group>"; };
 		AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyTableFilterTest.swift; sourceTree = "<group>"; };
@@ -2146,9 +2148,8 @@
 			children = (
 				28A37E872208F701007DCD31 /* Callouts */,
 				286DC6A821E68449001CD88A /* RouteGuidance.swift */,
-				9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */,
 				286DC6AF21E6BADB001CD88A /* RouteGuidanceState.swift */,
-				9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */,
+				9A8FC7EC2D79EDAB001CF3F5 /* TurnByTurnRouteGuidance */,
 				28B59F4A21F92C170040B68F /* RouteGuidanceGenerator.swift */,
 			);
 			path = "Route Guidance";
@@ -3736,6 +3737,16 @@
 			path = "Route Guidance";
 			sourceTree = "<group>";
 		};
+		9A8FC7EC2D79EDAB001CF3F5 /* TurnByTurnRouteGuidance */ = {
+			isa = PBXGroup;
+			children = (
+				9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */,
+				9A8FC7EA2D79ED85001CF3F5 /* HereMapsModels.swift */,
+				9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */,
+			);
+			path = TurnByTurnRouteGuidance;
+			sourceTree = "<group>";
+		};
 		B91D3F6227AB5546004159A8 /* User Actions */ = {
 			isa = PBXGroup;
 			children = (
@@ -5238,6 +5249,7 @@
 				281D59D31F4765880090F23A /* FirstLaunchTermsStepViewController.swift in Sources */,
 				284C9AFB23886DD000CBA392 /* DynamicAudioEngineAsset.swift in Sources */,
 				28C11179203508FE00CCB22C /* BaseCardView.swift in Sources */,
+				9A8FC7EB2D79ED8A001CF3F5 /* HereMapsModels.swift in Sources */,
 				283CDBD5204F3623009D2D16 /* LocationCalloutProtocol.swift in Sources */,
 				28D7573E2429479E002F0E7A /* HelpViewController.swift in Sources */,
 				C37E33CB23679CD00033D640 /* OfflineBannerObserver.swift in Sources */,

@@ -25,40 +25,41 @@ class MapsDecoder {
     
 
 
-    func fetchRoute(origin: String, destination: String) {  // <-- Adjusted to take origin and destination as parameters
+    func fetchRoute(origin: String, destination: String) async -> HereRouteResponse? {
         guard !apiKey.isEmpty else {
             print("❌ API key is missing, aborting request")
-            return
+            return nil
         }
 
         let urlString = "https://router.hereapi.com/v8/routes?transportMode=pedestrian&origin=\(origin)&destination=\(destination)&return=polyline,turnbyturnactions&spans=names,streetAttributes&apiKey=\(apiKey)"
 
         guard let url = URL(string: urlString) else {
             print("❌ Invalid URL")
-            return
+            return nil
         }
 
         print("📡 Sending request to HERE Maps API: \(urlString)")
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("❌ Request failed: \(error.localizedDescription)")
-                return
-            }
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)  // <-- Uses async/await to wait for response
 
             if let httpResponse = response as? HTTPURLResponse {
                 print("ℹ️ HTTP Status Code: \(httpResponse.statusCode)")
             }
 
-            guard let data = data, let responseString = String(data: data, encoding: .utf8) else {
-                print("❌ No data received or failed to decode response")
-                return
+            let decodedResponse = try JSONDecoder().decode(HereRouteResponse.self, from: data)
+            if let destinationName = decodedResponse.routes.first?.sections.first?.spans?.last?.names?.first?.value {
+                showAlert(message: "Destination: \(destinationName)")  // <-- Show destination name in alert
             }
+            print("✅ Successfully decoded route")
+            return decodedResponse  // <-- Returns HereRouteResponse directly
 
-            print("✅ Response received: \(responseString)")
-            self.showAlert(message: responseString)
-        }.resume()
+        } catch {
+            print("❌ Failed to fetch or decode: \(error)")
+            return nil
+        }
     }
+
 
 
 
