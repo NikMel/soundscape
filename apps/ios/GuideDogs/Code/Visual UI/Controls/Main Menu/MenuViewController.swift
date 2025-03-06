@@ -152,9 +152,10 @@ class MenuViewController: UIViewController {
                 AppShareHelper.share()
             }
         case .exportLogs:
-            GDLogAppInfo("Export Logs button tapped")  // Debug Log
-            UseCaseLogger.shareLogs(latest: true)
-            let route = AddressRouteCalculator.testCreateRoute(waypointsData: AddressRouteCalculator.getWaypointsFromAPI())
+            GDLogAppInfo("Export Logs button tapped")
+            let mapsDecoder = MapsDecoder()
+            //UseCaseLogger.shareLogs(latest: true)
+            // let route = AddressRouteCalculator.testCreateRoute(waypointsData: AddressRouteCalculator.getWaypointsFromAPI())
             closeMenu()
         default:
             select(item)

@@ -255,5 +255,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>HereMapsAPIKey</key>
+	<string>$(HERE_MAPS_API_KEY)</string>
 </dict>
 </plist>
