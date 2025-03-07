@@ -17,23 +17,10 @@ class AddressRouteCalculator {
     ///   - geoJSON: The Mapbox GeoJSON response as a dictionary
     ///   - index: The waypoint's position in the route (default = 0)
     /// - Returns: A RouteWaypoint if successful, otherwise nil
-    func createWaypoint(from geoJSON: [String: Any], index: Int = 0) -> RouteWaypoint? {
-        // Extract the first feature
-        guard let features = geoJSON["features"] as? [[String: Any]],
-              let firstFeature = features.first,
-              let geometry = firstFeature["geometry"] as? [String: Any],
-              let nickname = firstFeature["text"] as? String, // Extract nickname
-              let coordinates = geometry["coordinates"] as? [Double],
-              coordinates.count == 2 else {
-            print("🐛 Error: Invalid GeoJSON format")
-            return nil
-        }
-        
-        let longitude = coordinates[0]
-        let latitude = coordinates[1]
+    func createWaypoint(from coordinateData: (Double, Double, Double?, String), index: Int = 0) -> RouteWaypoint? {
+        let (latitude, longitude, _, nickname) = coordinateData
         
         do {
-            
             let locationDetail = try createLocationDetailWithMarker(latitude: latitude, longitude: longitude, nickname: nickname)
             try saveMarker(locationDetail: locationDetail, updatedLocation: nil)
             
@@ -48,8 +35,8 @@ class AddressRouteCalculator {
             print("❌ Error creating waypoint: \(error.localizedDescription)")
             return nil
         }
-
     }
+
     
     func saveMarker(locationDetail: LocationDetail, updatedLocation: LocationDetail?) throws {
         let markerId: String
@@ -143,28 +130,34 @@ class AddressRouteCalculator {
     
     static func testCreateWaypoints() -> [RouteWaypoint] {
         let waypointsData = getWaypointsFromAPI() // ✅ Fetch waypoints
-        
+
         print("🚀 Creating multiple waypoints")
-        
+
         let waypoints = waypointsData.enumerated().compactMap { index, data in
-            print("🔍 Processing waypoint \(index + 1): \(data["text"] ?? "Unknown")")
-            return AddressRouteCalculator().createWaypoint(from: ["features": [data]], index: index + 1)
+            let (latitude, longitude, elevation, nickname) = data
+            print("🔍 Processing waypoint \(index + 1): \(nickname)")
+
+            return AddressRouteCalculator().createWaypoint(from: data, index: index + 1)
         }
 
         print("✅ Successfully created \(waypoints.count) waypoints")
         return waypoints
     }
 
+
     
-    static func testCreateRoute(waypointsData: [[String: Any]]) -> Route { // ✅ Accept waypointsData as a parameter
+    static func testCreateRoute(waypointsData: [(Double, Double, Double?, String)]) -> Route {
+        print("🚀 Creating Route")
+
         let waypoints = waypointsData.enumerated().compactMap { index, data in
-            AddressRouteCalculator().createWaypoint(from: ["features": [data]], index: index + 1)
+            print("🔍 Processing waypoint \(index + 1): \(data.3)") // Using nickname from tuple
+            return AddressRouteCalculator().createWaypoint(from: data, index: index + 1)
         }
 
         let routeName = "To Eiffel Tower"
         let routeDescription = "Scenic path leading to the Eiffel Tower."
 
-        print("🚀 Creating Route: \(routeName) with \(waypoints.count) waypoints")
+        print("✅ Creating Route: \(routeName) with \(waypoints.count) waypoints")
 
         let route = Route(name: routeName, description: routeDescription, waypoints: waypoints)
 
@@ -179,40 +172,14 @@ class AddressRouteCalculator {
     }
 
 
+
     
-    static func getWaypointsFromAPI() -> [[String: Any]] {
-        print("🌐 Fetching waypoints from API")
+    static func getWaypointsFromAPI() -> [(Double, Double, Double?, String)] {
+        print("🌍 Fetching waypoints from API")
         return [
-            [
-                "id": "poi.123456",
-                "type": "Feature",
-                "place_type": ["poi"],
-                "text": "Eiffel Tower",
-                "geometry": [
-                    "type": "Point",
-                    "coordinates": [2.294481, 48.858370]
-                ]
-            ],
-            [
-                "id": "poi.123457",
-                "type": "Feature",
-                "place_type": ["poi"],
-                "text": "Champ de Mars",
-                "geometry": [
-                    "type": "Point",
-                    "coordinates": [2.297220, 48.855480]
-                ]
-            ],
-            [
-                "id": "poi.123458",
-                "type": "Feature",
-                "place_type": ["poi"],
-                "text": "Seine Riverside",
-                "geometry": [
-                    "type": "Point",
-                    "coordinates": [2.293480, 48.857800]
-                ]
-            ]
+            (48.858370, 2.294481, nil, "point_1"),
+            (48.855480, 2.297220, nil, "point_2"),
+            (48.857800, 2.293480, nil, "point_3")
         ]
     }
 

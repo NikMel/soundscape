@@ -25,7 +25,9 @@ class MapsDecoder {
     
 
 
-    func fetchRoute(origin: String, destination: String) async -> HereRouteResponse? {
+    func fetchRoute(origin: String, destination: String) async -> [(Double, Double, Double?, String)]? {
+        print("🚀 Fetching route from \(origin) to \(destination)")
+        
         guard !apiKey.isEmpty else {
             print("❌ API key is missing, aborting request")
             return nil
@@ -34,30 +36,36 @@ class MapsDecoder {
         let urlString = "https://router.hereapi.com/v8/routes?transportMode=pedestrian&origin=\(origin)&destination=\(destination)&return=polyline,turnbyturnactions&spans=names,streetAttributes&apiKey=\(apiKey)"
 
         guard let url = URL(string: urlString) else {
-            print("❌ Invalid URL")
+            print("❌ Invalid URL: \(urlString)")
             return nil
         }
 
         print("📡 Sending request to HERE Maps API: \(urlString)")
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)  // <-- Uses async/await to wait for response
-
-            if let httpResponse = response as? HTTPURLResponse {
-                print("ℹ️ HTTP Status Code: \(httpResponse.statusCode)")
-            }
+            let (data, response) = try await URLSession.shared.data(from: url)
+            print("📥 Received response from HERE Maps API")
 
             let decodedResponse = try JSONDecoder().decode(HereRouteResponse.self, from: data)
-            if let destinationName = decodedResponse.routes.first?.sections.first?.spans?.last?.names?.first?.value {
-                showAlert(message: "Destination: \(destinationName)")  // <-- Show destination name in alert
-            }
-            print("✅ Successfully decoded route")
-            return decodedResponse  // <-- Returns HereRouteResponse directly
+            print("✅ Successfully decoded route response")
 
+            if let route = decodedResponse.routes.first, let section = route.sections.first {
+                print("🛣️ Route ID: \(route.id), Section ID: \(section.id)")
+                let polyline = section.polyline
+                print("🗺️ Encoded Polyline: \(polyline)")
+
+                let decodedPolyline = try PolylineDecoder.decode(polyline)
+                print("✅ Decoded Polyline: \(decodedPolyline)")
+
+                return decodedPolyline
+            } else {
+                print("⚠️ No valid route found in API response")
+            }
         } catch {
             print("❌ Failed to fetch or decode: \(error)")
-            return nil
         }
+
+        return nil
     }
 
 

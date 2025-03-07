@@ -611,6 +611,7 @@
 		9A69907C2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */; };
 		9A8FC6AE2D79E1D2001CF3F5 /* MapsDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */; };
 		9A8FC7EB2D79ED8A001CF3F5 /* HereMapsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8FC7EA2D79ED85001CF3F5 /* HereMapsModels.swift */; };
+		9A8FC7EE2D7A57B2001CF3F5 /* PolylineDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8FC7ED2D7A57B2001CF3F5 /* PolylineDecoder.swift */; };
 		9A9BF9CE2D64F75B00645600 /* UseCaseLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */; };
 		9A9BF9CF2D64F75B00645600 /* UseCaseLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */; };
 		9AB52AFF2D771FF300C1EB72 /* AddressRouteCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */; };
@@ -1471,6 +1472,7 @@
 		9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManager.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManager.swift"; sourceTree = "<group>"; };
 		9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsDecoder.swift; sourceTree = "<group>"; };
 		9A8FC7EA2D79ED85001CF3F5 /* HereMapsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereMapsModels.swift; sourceTree = "<group>"; };
+		9A8FC7ED2D7A57B2001CF3F5 /* PolylineDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineDecoder.swift; sourceTree = "<group>"; };
 		9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UseCaseLogger.swift; sourceTree = "<group>"; };
 		9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRouteCalculator.swift; sourceTree = "<group>"; };
 		AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyTableFilterTest.swift; sourceTree = "<group>"; };
@@ -3740,6 +3742,7 @@
 		9A8FC7EC2D79EDAB001CF3F5 /* TurnByTurnRouteGuidance */ = {
 			isa = PBXGroup;
 			children = (
+				9A8FC7ED2D7A57B2001CF3F5 /* PolylineDecoder.swift */,
 				9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */,
 				9A8FC7EA2D79ED85001CF3F5 /* HereMapsModels.swift */,
 				9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */,
@@ -5626,6 +5629,7 @@
 				C37E33D12367BF980033D640 /* RouteGuidanceBannerObserver.swift in Sources */,
 				620118CC24AAB489004B0380 /* LocationActionAlert.swift in Sources */,
 				C3BC95D3231F053600B78903 /* (null) in Sources */,
+				9A8FC7EE2D7A57B2001CF3F5 /* PolylineDecoder.swift in Sources */,
 				2872D14C26D83B36000BE465 /* HapticWandBeacon.swift in Sources */,
 				2872D14E26D89C14000BE465 /* HapticBeacon.swift in Sources */,
 				284C9AF923886DA600CBA392 /* AudioEngineAsset.swift in Sources */,
