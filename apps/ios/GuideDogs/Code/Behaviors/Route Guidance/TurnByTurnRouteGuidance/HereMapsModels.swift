@@ -23,6 +23,10 @@ struct HereSection: Decodable {
     let polyline: String
     let spans: [HereSpan]?
     let turnByTurnActions: [HereTurnAction]?
+    
+    func getSpanOffsets() -> [Int] {
+        return spans?.map { $0.offset } ?? []
+    }
 }
 
 struct HereSpan: Decodable {

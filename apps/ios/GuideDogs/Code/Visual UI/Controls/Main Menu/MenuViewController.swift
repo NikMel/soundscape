@@ -155,7 +155,7 @@ class MenuViewController: UIViewController {
             GDLogAppInfo("Export Logs button tapped")
             Task {
                 let mapsDecoder = MapsDecoder()
-                let fetchedRoute = await mapsDecoder.fetchRoute(origin: "57.7086,11.9381", destination: "57.7072,11.9397")
+                let fetchedRoute = await mapsDecoder.fetchRoute(origin: "57.708646105898765,11.93819811220115", destination: "57.70726240740203,11.93895646189489")
 
                 guard let fetchedRoute = fetchedRoute else {
                     print("❌ Failed to fetch route")

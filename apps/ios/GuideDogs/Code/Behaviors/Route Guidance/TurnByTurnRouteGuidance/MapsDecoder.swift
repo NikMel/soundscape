@@ -53,8 +53,8 @@ class MapsDecoder {
                 print("🛣️ Route ID: \(route.id), Section ID: \(section.id)")
                 let polyline = section.polyline
                 print("🗺️ Encoded Polyline: \(polyline)")
-
-                let decodedPolyline = try PolylineDecoder.decode(polyline)
+                let coordinatesToInclude = filterCoordinates(from: decodedResponse)
+                let decodedPolyline = try PolylineDecoder.decode(polyline, origin: origin, destination: destination)
                 print("✅ Decoded Polyline: \(decodedPolyline)")
 
                 return decodedPolyline
@@ -67,6 +67,21 @@ class MapsDecoder {
 
         return nil
     }
+    
+    private func filterCoordinates(from response: HereRouteResponse) -> [Int] {
+        print("🔍 Filtering coordinates from route response")
+
+        guard let firstRoute = response.routes.first, let firstSection = firstRoute.sections.first else {
+            print("⚠️ No valid route or section found")
+            return []
+        }
+
+        let spanOffsets = firstSection.getSpanOffsets()
+        print("📌 Span Offsets Extracted: \(spanOffsets)")
+
+        return spanOffsets
+    }
+
 
 
 

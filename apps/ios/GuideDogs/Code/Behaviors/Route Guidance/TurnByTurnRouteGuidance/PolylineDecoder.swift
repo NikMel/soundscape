@@ -90,37 +90,57 @@ class PolylineDecoder {
         return result
     }
     
-    static func decode(_ encoded: String) throws -> [(Double, Double, Double?, String)] {
+    static func decode(_ encoded: String, origin: String, destination: String, pickingOnly indices: [Int] = []) throws -> [(Double, Double, Double?, String)] {
         var values = try decodeUnsignedValues(encoded)
         let (precision, thirdDim, thirdDimPrecision) = try decodeHeader(&values)
-        
-        var lastLat = 0
-        var lastLng = 0
-        var lastZ = 0
-        
+
         let factorDegree = pow(10.0, Double(precision))
         let factorZ = pow(10.0, Double(thirdDimPrecision))
+
+        var lastLat = 0, lastLng = 0, lastZ = 0
+        var allCoordinates: [(Double, Double, Double?)] = []
         
-        var coordinates: [(Double, Double, Double?)] = []
-        
+        print("🔄 Starting decoding process...")
+
         while !values.isEmpty {
             lastLat += toSigned(values.removeFirst())
             guard !values.isEmpty else { throw NSError(domain: "Invalid encoding: incomplete coordinate", code: 0, userInfo: nil) }
             lastLng += toSigned(values.removeFirst())
-            
-            if thirdDim > 0 {
-                guard !values.isEmpty else { throw NSError(domain: "Invalid encoding: missing third dimension", code: 0, userInfo: nil) }
-                lastZ += toSigned(values.removeFirst())
-                coordinates.append((Double(lastLat) / factorDegree, Double(lastLng) / factorDegree, Double(lastZ) / factorZ))
-            } else {
-                coordinates.append((Double(lastLat) / factorDegree, Double(lastLng) / factorDegree, nil))
-            }
+
+            let zValue: Double? = thirdDim > 0 && !values.isEmpty ? Double(toSigned(values.removeFirst())) / factorZ : nil
+            let coordinate = (Double(lastLat) / factorDegree, Double(lastLng) / factorDegree, zValue)
+            allCoordinates.append(coordinate)
         }
 
-        
-        return addNicknames(to: coordinates)
+        print("✅ Total decoded coordinates: \(allCoordinates.count)")
 
+        var selectedCoordinates = indices.isEmpty ? allCoordinates : indices.compactMap { idx in
+            guard idx > 0 && idx <= allCoordinates.count else { return nil }
+            return allCoordinates[idx - 1]
+        }
+
+        if let originCoords = parseCoordinate(origin) {
+            selectedCoordinates.insert(originCoords, at: 0)
+            print("📍 Added origin: \(originCoords)")
+        }
+
+        if let destinationCoords = parseCoordinate(destination) {
+            selectedCoordinates.append(destinationCoords)
+            print("🏁 Added destination: \(destinationCoords)")
+        }
+
+        print("🎯 Returning \(selectedCoordinates.count) coordinates (filtered: \(indices.isEmpty ? "No" : "Yes"))")
+
+        return addNicknames(to: selectedCoordinates)
     }
+
+    private static func parseCoordinate(_ coordinate: String) -> (Double, Double, Double?)? {
+        let parts = coordinate.split(separator: ",").compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+        return parts.count == 2 ? (parts[0], parts[1], nil) : nil
+    }
+
+
+
 }
 
 
