@@ -102,7 +102,6 @@ class PolylineDecoder {
         var lastLat = 0, lastLng = 0, lastZ = 0
         var allCoordinates: [(Double, Double, Double?)] = []
         
-        print("🔄 Starting decoding process...")
 
         while !values.isEmpty {
             lastLat += toSigned(values.removeFirst())
@@ -114,40 +113,25 @@ class PolylineDecoder {
             allCoordinates.append(coordinate)
         }
         
-        print("✅ Total decoded coordinates: \(allCoordinates.count)")
         
-        print("📌 Original WGS84 Coordinates:")
-        for (index, coord) in allCoordinates.enumerated() {
-            print("🌍 WGS84 Coordinate \(index + 1): Lat: \(coord.0), Lng: \(coord.1), Z: \(coord.2 ?? 0.0)")
-        }
         
         let convertedCoordinates = convertCoordinates(allCoordinates, toCartesian: true)
-        
         let epsilon = 4.0
         let simplifiedIndices = simplifyPolyline(convertedCoordinates: convertedCoordinates, epsilon: epsilon)
-        print("Retained indices: \(simplifiedIndices)")
         
-        for (index, coord) in convertedCoordinates.enumerated() {
-            print("🗺️ Cartesian Coordinate \(index + 1): X: \(coord.0), Y: \(coord.1), Z: \(coord.2 ?? 0.0)")
-        }
+
         
         let unionIndices = Array(Set(simplifiedIndices).union(indices)).sorted()
-        print("🔗 Unified retained indices (simplified + selected): \(unionIndices)")
-        
         var selectedCoordinates = pickSelectedCoordinates(from: allCoordinates, indices: unionIndices)
 
 
         if let originCoords = parseCoordinate(origin) {
             selectedCoordinates.insert(originCoords, at: 0)
-            print("📍 Added origin: \(originCoords)")
         }
 
         if let destinationCoords = parseCoordinate(destination) {
             selectedCoordinates.append(destinationCoords)
-            print("🏁 Added destination: \(destinationCoords)")
         }
-
-        print("🎯 Returning \(selectedCoordinates.count) coordinates (filtered: \(indices.isEmpty ? "No" : "Yes"))")
 
         return addNicknames(to: selectedCoordinates, resolvedDestination: resolvedDestination)
     }
@@ -158,7 +142,6 @@ class PolylineDecoder {
     }
     
     private static func pickSelectedCoordinates(from allCoordinates: [(Double, Double, Double?)], indices: [Int]) -> [(Double, Double, Double?)] {
-        print("🎯 Selecting coordinates based on indices: \(indices)")
         return indices.isEmpty ? allCoordinates : indices.compactMap { idx in
             guard idx > 0 && idx <= allCoordinates.count else {
                 print("⚠️ Index \(idx) is out of bounds")
@@ -169,7 +152,6 @@ class PolylineDecoder {
     }
     
     private static func convertCoordinates(_ coordinates: [(Double, Double, Double?)], toCartesian: Bool) -> [(Double, Double, Double?)] {
-        print(toCartesian ? "🌍 Converting WGS84 to Cartesian (ECEF)" : "🔄 Converting Cartesian to WGS84")
 
         return coordinates.map { (lon, lat, alt) in
             let phi = lat * .pi / 180  // Convert to radians

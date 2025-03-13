@@ -25,11 +25,9 @@ class AddressRouteCalculator {
             try saveMarker(locationDetail: locationDetail, updatedLocation: nil)
             
             guard let waypoint = RouteWaypoint(index: index, locationDetail: locationDetail) else {
-                print("🐛 Error: RouteWaypoint could not be created")
                 return nil
             }
             
-            print("✅ Waypoint created at index \(index), Marker ID: \(waypoint.markerId ?? "None")")
             return waypoint
         } catch {
             print("❌ Error creating waypoint: \(error.localizedDescription)")
@@ -101,14 +99,10 @@ class AddressRouteCalculator {
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let source = LocationDetail.Source.coordinate(at: location)
 
-        print("📍 Checking for existing marker at (\(latitude), \(longitude))")
 
         if let existingMarker = SpatialDataCache.referenceEntity(source: source, isTemp: false) {
-            print("✅ Existing marker found, using it")
             return LocationDetail(marker: existingMarker)
         } else {
-            print("❌ No existing marker. Creating new marker with nickname: \(nickname ?? "None")")
-
             let genericLocation = GenericLocation(lat: latitude, lon: longitude)
             let newMarkerId = try ReferenceEntity.add(
                 location: genericLocation,
@@ -123,68 +117,31 @@ class AddressRouteCalculator {
                 throw NSError(domain: "LocationDetailError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve newly created marker."])
             }
 
-            print("✅ New marker created with ID: \(newMarkerId)")
             return LocationDetail(marker: newMarker)
         }
     }
     
-    static func testCreateWaypoints() -> [RouteWaypoint] {
-        let waypointsData = getWaypointsFromAPI() // ✅ Fetch waypoints
-
-        print("🚀 Creating multiple waypoints")
-
-        let waypoints = waypointsData.enumerated().compactMap { index, data in
-            let (latitude, longitude, _, nickname) = data
-            print("🔍 Processing waypoint \(index + 1): \(nickname)")
-
-            return AddressRouteCalculator().createWaypoint(from: data, index: index + 1)
-        }
-
-        print("✅ Successfully created \(waypoints.count) waypoints")
-        return waypoints
-    }
-
-
     
     static func testCreateRoute(waypointsData: [(Double, Double, Double?, String)], resolvedDestination: String) -> Route {
-        print("🚀 Creating Route")
 
         let waypoints = waypointsData.enumerated().compactMap { index, data in
-            print("🔍 Processing waypoint \(index + 1): \(data.3)") // Using nickname from tuple
             return AddressRouteCalculator().createWaypoint(from: data, index: index + 1)
         }
 
         let routeName = "To \(resolvedDestination)"
         let routeDescription = "Scenic path leading to \(resolvedDestination)."
 
-        print("✅ Creating Route: \(routeName) with \(waypoints.count) waypoints")
 
         let route = Route(name: routeName, description: routeDescription, waypoints: waypoints)
 
         do {
             try Route.add(route) // ✅ Correctly adds the route to the database
-            print("✅ Route added to database: \(route.name)")
         } catch {
-            print("❌ Failed to add route: \(error.localizedDescription)")
+            print("Failed to add route: \(error.localizedDescription)")
         }
 
         return route
     }
-
-
-
-    
-    static func getWaypointsFromAPI() -> [(Double, Double, Double?, String)] {
-        print("🌍 Fetching waypoints from API")
-        return [
-            (48.858370, 2.294481, nil, "point_1"),
-            (48.855480, 2.297220, nil, "point_2"),
-            (48.857800, 2.293480, nil, "point_3")
-        ]
-    }
-
-
-
 
 }
 
