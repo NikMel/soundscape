@@ -161,7 +161,6 @@ class MenuViewController: UIViewController {
                 )
 
                 guard let coordinates = coordinates else {
-                    print("❌ Failed to fetch route")
                     return
                 }
 
@@ -171,7 +170,7 @@ class MenuViewController: UIViewController {
                     print("⚠️ Using raw destination coordinates")
                 }
 
-                let route = AddressRouteCalculator.testCreateRoute(waypointsData: coordinates)
+                let route = AddressRouteCalculator.testCreateRoute(waypointsData: coordinates, resolvedDestination: resolvedDestination ?? "Unknown Destination")
                 closeMenu()
             }
             //UseCaseLogger.shareLogs(latest: true)

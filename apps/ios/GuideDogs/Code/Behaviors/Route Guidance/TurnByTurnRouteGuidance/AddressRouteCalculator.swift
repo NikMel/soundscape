@@ -134,7 +134,7 @@ class AddressRouteCalculator {
         print("🚀 Creating multiple waypoints")
 
         let waypoints = waypointsData.enumerated().compactMap { index, data in
-            let (latitude, longitude, elevation, nickname) = data
+            let (latitude, longitude, _, nickname) = data
             print("🔍 Processing waypoint \(index + 1): \(nickname)")
 
             return AddressRouteCalculator().createWaypoint(from: data, index: index + 1)
@@ -146,7 +146,7 @@ class AddressRouteCalculator {
 
 
     
-    static func testCreateRoute(waypointsData: [(Double, Double, Double?, String)]) -> Route {
+    static func testCreateRoute(waypointsData: [(Double, Double, Double?, String)], resolvedDestination: String) -> Route {
         print("🚀 Creating Route")
 
         let waypoints = waypointsData.enumerated().compactMap { index, data in
@@ -154,8 +154,8 @@ class AddressRouteCalculator {
             return AddressRouteCalculator().createWaypoint(from: data, index: index + 1)
         }
 
-        let routeName = "To Eiffel Tower"
-        let routeDescription = "Scenic path leading to the Eiffel Tower."
+        let routeName = "To \(resolvedDestination)"
+        let routeDescription = "Scenic path leading to \(resolvedDestination)."
 
         print("✅ Creating Route: \(routeName) with \(waypoints.count) waypoints")
 

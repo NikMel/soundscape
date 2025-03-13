@@ -83,16 +83,16 @@ class PolylineDecoder {
         return (precision, thirdDim, thirdDimPrecision)
     }
     
-    private static func addNicknames(to coordinates: [(Double, Double, Double?)]) -> [(Double, Double, Double?, String)] {
+    private static func addNicknames(to coordinates: [(Double, Double, Double?)], resolvedDestination: String?) -> [(Double, Double, Double?, String)] {
         var result: [(Double, Double, Double?, String)] = []
         for (index, coord) in coordinates.enumerated() {
-            let nickname = "point_\(index + 1)"
+            let nickname = "point_\(index + 1)_\(resolvedDestination ?? "unknown")"
             result.append((coord.0, coord.1, coord.2, nickname))
         }
         return result
     }
     
-    static func decode(_ encoded: String, origin: String, destination: String, pickingOnly indices: [Int] = []) throws -> [(Double, Double, Double?, String)] {
+    static func decode(_ encoded: String, origin: String, destination: String, resolvedDestination: String?, pickingOnly indices: [Int] = []) throws -> [(Double, Double, Double?, String)] {
         var values = try decodeUnsignedValues(encoded)
         let (precision, thirdDim, thirdDimPrecision) = try decodeHeader(&values)
 
@@ -149,7 +149,7 @@ class PolylineDecoder {
 
         print("🎯 Returning \(selectedCoordinates.count) coordinates (filtered: \(indices.isEmpty ? "No" : "Yes"))")
 
-        return addNicknames(to: selectedCoordinates)
+        return addNicknames(to: selectedCoordinates, resolvedDestination: resolvedDestination)
     }
 
     private static func parseCoordinate(_ coordinate: String) -> (Double, Double, Double?)? {

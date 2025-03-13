@@ -62,7 +62,7 @@ class MapsDecoder {
                 let polyline = section.polyline
                 print("🗺️ Encoded Polyline: \(polyline)")
                 let coordinatesToInclude = filterCoordinates(from: decodedResponse)
-                let decodedPolyline = try PolylineDecoder.decode(polyline, origin: origin, destination: destination, pickingOnly: coordinatesToInclude)
+                let decodedPolyline = try PolylineDecoder.decode(polyline, origin: origin, destination: destination, resolvedDestination: resolvedDestination, pickingOnly: coordinatesToInclude)
                 print("✅ Decoded Polyline: \(decodedPolyline)")
 
                 return (resolvedDestination, decodedPolyline)
@@ -121,9 +121,11 @@ class MapsDecoder {
 
             let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             if let items = json?["items"] as? [[String: Any]], let firstItem = items.first,
-               let address = firstItem["address"] as? [String: Any], let label = address["label"] as? String {
-                print("🏠 Found address: \(label)")
-                return label
+               let address = firstItem["address"] as? [String: Any], let street = address["street"] as? String {
+                print("🏠 Found street: \(street)")
+                return street
+            } else {
+                print("⚠️ No street found in response")
             }
         } catch {
             print("❌ Failed to fetch or decode reverse geocoding response: \(error)")
@@ -131,4 +133,5 @@ class MapsDecoder {
         
         return nil
     }
+
 }
