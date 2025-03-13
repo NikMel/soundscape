@@ -54,7 +54,7 @@ class MapsDecoder {
                 let polyline = section.polyline
                 print("🗺️ Encoded Polyline: \(polyline)")
                 let coordinatesToInclude = filterCoordinates(from: decodedResponse)
-                let decodedPolyline = try PolylineDecoder.decode(polyline, origin: origin, destination: destination)
+                let decodedPolyline = try PolylineDecoder.decode(polyline, origin: origin, destination: destination, pickingOnly: coordinatesToInclude)
                 print("✅ Decoded Polyline: \(decodedPolyline)")
 
                 return decodedPolyline

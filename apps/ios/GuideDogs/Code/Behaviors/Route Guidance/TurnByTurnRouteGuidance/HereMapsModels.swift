@@ -9,10 +9,10 @@
 import Foundation
 
 struct HereRouteResponse: Decodable {
-    let routes: [HereNavigationRoute]  // Renamed to HereNavigationRoute
+    let routes: [HereNavigationRoute]
 }
 
-struct HereNavigationRoute: Decodable {  // Changed name from NavigationRoute
+struct HereNavigationRoute: Decodable {  
     let id: String
     let sections: [HereSection]
 }

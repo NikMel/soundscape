@@ -130,7 +130,11 @@ class PolylineDecoder {
         for (index, coord) in convertedCoordinates.enumerated() {
             print("🗺️ Cartesian Coordinate \(index + 1): X: \(coord.0), Y: \(coord.1), Z: \(coord.2 ?? 0.0)")
         }
-        var selectedCoordinates = pickSelectedCoordinates(from: allCoordinates, indices: simplifiedIndices)
+        
+        let unionIndices = Array(Set(simplifiedIndices).union(indices)).sorted()
+        print("🔗 Unified retained indices (simplified + selected): \(unionIndices)")
+        
+        var selectedCoordinates = pickSelectedCoordinates(from: allCoordinates, indices: unionIndices)
 
 
         if let originCoords = parseCoordinate(origin) {
