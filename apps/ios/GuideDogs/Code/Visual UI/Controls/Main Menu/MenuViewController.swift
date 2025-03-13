@@ -155,14 +155,23 @@ class MenuViewController: UIViewController {
             GDLogAppInfo("Export Logs button tapped")
             Task {
                 let mapsDecoder = MapsDecoder()
-                let fetchedRoute = await mapsDecoder.fetchRoute(origin: "57.708646105898765,11.93819811220115", destination: "57.70726240740203,11.93895646189489")
+                let (resolvedDestination, coordinates) = await mapsDecoder.fetchRoute(
+                    origin: "57.708646105898765,11.93819811220115",
+                    destination: "57.70726240740203,11.93895646189489"
+                )
 
-                guard let fetchedRoute = fetchedRoute else {
+                guard let coordinates = coordinates else {
                     print("❌ Failed to fetch route")
                     return
                 }
 
-                let route = AddressRouteCalculator.testCreateRoute(waypointsData: fetchedRoute)
+                if let resolvedDestination = resolvedDestination {
+                    print("📍 Using resolved destination: \(resolvedDestination)")
+                } else {
+                    print("⚠️ Using raw destination coordinates")
+                }
+
+                let route = AddressRouteCalculator.testCreateRoute(waypointsData: coordinates)
                 closeMenu()
             }
             //UseCaseLogger.shareLogs(latest: true)
