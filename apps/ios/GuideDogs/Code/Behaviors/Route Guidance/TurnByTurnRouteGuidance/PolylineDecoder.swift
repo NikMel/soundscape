@@ -8,6 +8,8 @@
 
 
 import Foundation
+import CoreLocation
+import simd
 
 class PolylineDecoder {
     private static let FORMAT_VERSION = 1
@@ -111,13 +113,25 @@ class PolylineDecoder {
             let coordinate = (Double(lastLat) / factorDegree, Double(lastLng) / factorDegree, zValue)
             allCoordinates.append(coordinate)
         }
-
+        
         print("✅ Total decoded coordinates: \(allCoordinates.count)")
-
-        var selectedCoordinates = indices.isEmpty ? allCoordinates : indices.compactMap { idx in
-            guard idx > 0 && idx <= allCoordinates.count else { return nil }
-            return allCoordinates[idx - 1]
+        
+        print("📌 Original WGS84 Coordinates:")
+        for (index, coord) in allCoordinates.enumerated() {
+            print("🌍 WGS84 Coordinate \(index + 1): Lat: \(coord.0), Lng: \(coord.1), Z: \(coord.2 ?? 0.0)")
         }
+        
+        let convertedCoordinates = convertCoordinates(allCoordinates, toCartesian: true)
+        
+        let epsilon = 4.0
+        let simplifiedIndices = simplifyPolyline(convertedCoordinates: convertedCoordinates, epsilon: epsilon)
+        print("Retained indices: \(simplifiedIndices)")
+        
+        for (index, coord) in convertedCoordinates.enumerated() {
+            print("🗺️ Cartesian Coordinate \(index + 1): X: \(coord.0), Y: \(coord.1), Z: \(coord.2 ?? 0.0)")
+        }
+        var selectedCoordinates = pickSelectedCoordinates(from: allCoordinates, indices: simplifiedIndices)
+
 
         if let originCoords = parseCoordinate(origin) {
             selectedCoordinates.insert(originCoords, at: 0)
@@ -138,6 +152,95 @@ class PolylineDecoder {
         let parts = coordinate.split(separator: ",").compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
         return parts.count == 2 ? (parts[0], parts[1], nil) : nil
     }
+    
+    private static func pickSelectedCoordinates(from allCoordinates: [(Double, Double, Double?)], indices: [Int]) -> [(Double, Double, Double?)] {
+        print("🎯 Selecting coordinates based on indices: \(indices)")
+        return indices.isEmpty ? allCoordinates : indices.compactMap { idx in
+            guard idx > 0 && idx <= allCoordinates.count else {
+                print("⚠️ Index \(idx) is out of bounds")
+                return nil
+            }
+            return allCoordinates[idx - 1]
+        }
+    }
+    
+    private static func convertCoordinates(_ coordinates: [(Double, Double, Double?)], toCartesian: Bool) -> [(Double, Double, Double?)] {
+        print(toCartesian ? "🌍 Converting WGS84 to Cartesian (ECEF)" : "🔄 Converting Cartesian to WGS84")
+
+        return coordinates.map { (lon, lat, alt) in
+            let phi = lat * .pi / 180  // Convert to radians
+            let lambda = lon * .pi / 180
+            let h = alt ?? 0.0
+
+            // WGS 84 reference ellipsoid parameters
+            let a = 6378137.0         // Semi-major axis (meters)
+            let f = 1 / 298.257223563 // Flattening
+            let e2 = f * (2 - f)      // Square of eccentricity
+
+            let N = a / sqrt(1 - e2 * sin(phi) * sin(phi)) // Radius of curvature
+
+            // Convert to ECEF
+            let x = (N + h) * cos(phi) * cos(lambda)
+            let y = (N + h) * cos(phi) * sin(lambda)
+            let z = ((1 - e2) * N + h) * sin(phi)
+
+            return (x, y, z)
+        }
+    }
+    
+    private static func simplifyPolyline(convertedCoordinates: [(Double, Double, Double?)], epsilon: Double) -> [Int] {
+        guard convertedCoordinates.count > 2 else { return Array(0..<convertedCoordinates.count) }
+        
+        var stk: [(Int, Int)] = [(0, convertedCoordinates.count - 1)]  // Stack for segment indices
+        let globalStartIndex = 0
+        var indices = Array(repeating: true, count: convertedCoordinates.count) // Boolean array for filtering
+        
+        while !stk.isEmpty {
+            let (startIndex, lastIndex) = stk.removeLast()
+            
+            var dmax = 0.0
+            var index = startIndex
+
+            for i in (startIndex + 1)..<lastIndex {
+                if indices[i - globalStartIndex] {
+                    let d = perpendicularDistance(point: convertedCoordinates[i],
+                                                  lineStart: convertedCoordinates[startIndex],
+                                                  lineEnd: convertedCoordinates[lastIndex])
+                    if d > dmax {
+                        index = i
+                        dmax = d
+                    }
+                }
+            }
+
+            if dmax > epsilon {
+                stk.append((startIndex, index))
+                stk.append((index, lastIndex))
+            } else {
+                for i in (startIndex + 1)..<lastIndex {
+                    indices[i - globalStartIndex] = false
+                }
+            }
+        }
+
+        // Extract and return indices of retained points
+        return indices.enumerated().compactMap { $0.element ? $0.offset + 1 : nil }
+    }
+    
+    private static func perpendicularDistance(point: (Double, Double, Double?),
+                               lineStart: (Double, Double, Double?),
+                               lineEnd: (Double, Double, Double?)) -> Double {
+        let (x0, y0) = (point.0, point.1)
+        let (x1, y1) = (lineStart.0, lineStart.1)
+        let (x2, y2) = (lineEnd.0, lineEnd.1)
+
+        let num = abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1)
+        let denom = sqrt(pow(y2 - y1, 2) + pow(x2 - x1, 2))
+
+        return denom != 0 ? num / denom : 0.0
+    }
+
+    
 
 
 

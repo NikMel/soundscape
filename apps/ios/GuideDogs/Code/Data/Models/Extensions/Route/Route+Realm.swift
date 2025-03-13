@@ -58,45 +58,35 @@ extension Route {
     static func add(_ route: Route, context: String? = nil) throws {
         try autoreleasepool {
             guard let database = try? RealmHelper.getDatabaseRealm() else {
-                print("🐛 Failed to get database realm")
                 throw RouteRealmError.databaseError
             }
-            print("🐛 Database retrieved successfully")
 
             // Log the route details before processing
-            print("🐛 Adding route - ID: \(route.id), Name: \(route.name), Waypoints: \(route.waypoints.count)")
 
             try route.waypoints.forEach {
                 guard let locationDetail = $0.asLocationDetail else {
-                    print("🐛 Skipping waypoint due to missing location detail")
                     return
                 }
                 let markerId = try ReferenceEntity.add(detail: locationDetail, telemetryContext: "add_route", notify: false)
                 $0.markerId = markerId
-                print("🐛 Waypoint processed - Marker ID: \(markerId)")
             }
 
             if let existingRoute = database.object(ofType: Route.self, forPrimaryKey: route.id) {
-                print("🐛 Route already exists, updating instead of adding")
                 try update(id: existingRoute.id, name: route.name, description: route.routeDescription, waypoints: route.waypoints)
                 AppContext.shared.cloudKeyValueStore.update(route: route)
             } else {
                 try database.write {
                     database.add(route, update: .modified)
-                    print("🐛 New route added to database")
                 }
                 AppContext.shared.cloudKeyValueStore.store(route: route)
-                print("🐛 Route stored in cloud key-value store")
 
                 let id = route.id
                 NotificationCenter.default.post(name: .routeAdded, object: self, userInfo: [Route.Keys.id: id])
-                print("🐛 Notification posted for route addition - ID: \(id)")
 
                 GDATelemetry.track("routes.added", with: [
                     "context": context ?? "none",
                     "activity": AppContext.shared.motionActivityContext.currentActivity.rawValue
                 ])
-                print("🐛 Telemetry logged for route addition")
             }
         }
     }
