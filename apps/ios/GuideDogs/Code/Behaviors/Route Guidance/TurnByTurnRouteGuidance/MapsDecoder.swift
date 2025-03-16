@@ -18,7 +18,7 @@ class MapsDecoder {
             apiKey = key
         } else {
             apiKey = ""
-            print("❌ Failed to load HERE Maps API key")
+            GDLogError(.routeGuidance, "Failed to load HERE Maps API key")
         }
     }
     
@@ -27,22 +27,22 @@ class MapsDecoder {
     func fetchRoute(origin: String, destination: String) async -> (resolvedDestination: String?, coordinates: [(Double, Double, Double?, String)]?) {
 
         guard !apiKey.isEmpty else {
-            print("❌ API key is missing, aborting request")
+            GDLogError(.routeGuidance, "API key is missing, aborting request")
             return (nil, nil)
         }
 
         // 🔄 Fetch the closest address for the given destination coordinates
         let resolvedDestination = await getAddressLabel(for: destination)
         if let resolved = resolvedDestination {
-            print("📍 Resolved Destination Address: \(resolved)")
+            print("Resolved Destination Address: \(resolved)")
         } else {
-            print("⚠️ Failed to resolve destination address, using raw coordinates")
+            print("Failed to resolve destination address, using raw coordinates")
         }
 
         let urlString = "https://router.hereapi.com/v8/routes?transportMode=pedestrian&origin=\(origin)&destination=\(destination)&return=polyline,turnbyturnactions&spans=names,streetAttributes&apiKey=\(apiKey)"
 
         guard let url = URL(string: urlString) else {
-            print("❌ Invalid URL: \(urlString)")
+            GDLogError(.routeGuidance, "Invalid URL: \(urlString)")
             return (resolvedDestination, nil)
         }
 
@@ -59,10 +59,10 @@ class MapsDecoder {
 
                 return (resolvedDestination, decodedPolyline)
             } else {
-                print("⚠️ No valid route found in API response")
+                GDLogError(.routeGuidance, "No valid route found in API response")
             }
         } catch {
-            print("❌ Failed to fetch or decode: \(error)")
+            GDLogError(.routeGuidance, "Failed to fetch or decode: \(error)")
         }
 
         return (resolvedDestination, nil)
@@ -99,11 +99,10 @@ class MapsDecoder {
         let urlString = "https://revgeocode.search.hereapi.com/v1/revgeocode?at=\(destination)&lang=en-US&apiKey=\(apiKey)"
         
         guard let url = URL(string: urlString) else {
-            print("❌ Invalid URL for reverse geocoding: \(urlString)")
+            GDLogError(.routeGuidance, "Invalid URL for reverse geocoding: \(urlString)")
             return nil
         }
         
-        print("📡 Sending request to HERE Maps Reverse Geocoding API: \(urlString)")
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
@@ -116,7 +115,7 @@ class MapsDecoder {
                 print("No street found in response")
             }
         } catch {
-            print("Failed to fetch or decode reverse geocoding response: \(error)")
+            GDLogError(.routeGuidance, "Failed to fetch or decode reverse geocoding response: \(error)")
         }
         
         return nil

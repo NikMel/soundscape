@@ -144,7 +144,7 @@ class PolylineDecoder {
     private static func pickSelectedCoordinates(from allCoordinates: [(Double, Double, Double?)], indices: [Int]) -> [(Double, Double, Double?)] {
         return indices.isEmpty ? allCoordinates : indices.compactMap { idx in
             guard idx > 0 && idx <= allCoordinates.count else {
-                print("⚠️ Index \(idx) is out of bounds")
+                GDLogError(.routeGuidance, "Index \(idx) is out of bounds")
                 return nil
             }
             return allCoordinates[idx - 1]

@@ -95,13 +95,11 @@ class Route: Object, ObjectKeyIdentifiable {
         // Append waypoints
         waypoints.forEach { waypoint in
             self.waypoints.append(waypoint)
-            print("🐛 Added waypoint - Marker ID: \(waypoint.markerId)")
         }
         
         if let first = waypoints.ordered.first, let marker = first.asLocationDetail {
             firstWaypointLatitude = marker.location.coordinate.latitude
             firstWaypointLongitude = marker.location.coordinate.longitude
-            print("🐛 First waypoint location set: \(firstWaypointLatitude ?? 0), \(firstWaypointLongitude ?? 0)")
         }
     }
     
@@ -123,29 +121,24 @@ class Route: Object, ObjectKeyIdentifiable {
         waypoints.append(objectsIn: pWaypoints)
         
         pWaypoints.forEach { waypoint in
-            print("🐛 Added waypoint from parameters - Marker ID: \(waypoint.markerId)")
         }
         
         if let first = pWaypoints.ordered.first, let marker = SpatialDataCache.referenceEntityByKey(first.markerId) {
             firstWaypointLatitude = marker.latitude
             firstWaypointLongitude = marker.longitude
-            print("🐛 First waypoint location set from parameters: \(firstWaypointLatitude ?? 0), \(firstWaypointLongitude ?? 0)")
         }
         
         // Optional Parameters
         if let pCreatedDate = parameters.createdDate {
             createdDate = pCreatedDate
-            print("🐛 Created date set: \(createdDate)")
         }
         
         if let pLastUpdatedDate = parameters.lastUpdatedDate {
             lastUpdatedDate = pLastUpdatedDate
-            print("🐛 Last updated date set: \(lastUpdatedDate)")
         }
         
         if let pLastSelectedDate = parameters.lastSelectedDate {
             lastSelectedDate = pLastSelectedDate
-            print("🐛 Last selected date set: \(lastSelectedDate)")
         }
     }
     

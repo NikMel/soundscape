@@ -30,7 +30,8 @@ class AddressRouteCalculator {
             
             return waypoint
         } catch {
-            print("❌ Error creating waypoint: \(error.localizedDescription)")
+            GDLogError(.routeGuidance, "Error creating waypoint: \(error.localizedDescription)")
+
             return nil
         }
     }
@@ -42,7 +43,6 @@ class AddressRouteCalculator {
 
         // 🔍 Check if marker already exists in Realm
         if let id = locationDetail.markerId ?? SpatialDataCache.referenceEntity(source: locationDetail.source, isTemp: true)?.id {
-            // ✅ Marker exists → Update it
             markerId = id
             try updateExisting(
                 id: id,
@@ -52,7 +52,6 @@ class AddressRouteCalculator {
                 annotation: detail.annotation
             )
         } else if case .entity(let id) = locationDetail.source, updatedLocation == nil {
-            // ✅ New marker that references an existing POI
             markerId = try ReferenceEntity.add(
                 entityKey: id,
                 nickname: detail.nickname,
@@ -61,7 +60,6 @@ class AddressRouteCalculator {
                 context: nil
             )
         } else {
-            // ✅ New marker at a generic location
             let loc = GenericLocation(
                 lat: detail.location.coordinate.latitude,
                 lon: detail.location.coordinate.longitude
@@ -135,9 +133,10 @@ class AddressRouteCalculator {
         let route = Route(name: routeName, description: routeDescription, waypoints: waypoints)
 
         do {
-            try Route.add(route) // ✅ Correctly adds the route to the database
+            try Route.add(route)
         } catch {
-            print("Failed to add route: \(error.localizedDescription)")
+            GDLogError(.routeGuidance, "Failed to add route: \(error.localizedDescription)")
+
         }
 
         return route
