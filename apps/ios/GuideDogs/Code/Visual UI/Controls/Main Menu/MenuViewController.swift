@@ -156,9 +156,10 @@ class MenuViewController: UIViewController {
             Task {
                 let mapsDecoder = MapsDecoder()
                 let (resolvedDestination, coordinates) = await mapsDecoder.fetchRoute(
-                    origin: "57.708646105898765,11.93819811220115",
-                    destination: "57.70726240740203,11.93895646189489"
+                    origin: "57.74993829511632,11.980720950898132",
+                    destination: "57.72831170542338,11.970618483367133"
                 )
+                
 
                 guard let coordinates = coordinates else {
                     return

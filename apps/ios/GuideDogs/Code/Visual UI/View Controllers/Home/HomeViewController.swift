@@ -668,10 +668,11 @@ extension HomeViewController: LocationActionDelegate {
                     self.performSegue(withIdentifier: "PreviewView", sender: detail)
                 
                 case .route:
-                    print("[LocationAction] Route action tapped")
-                    let alert = UIAlertController(title: "Route", message: "Create Route button tapped!", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self.present(alert, animated: true, completion: nil)
+                    if let originLocation = AppContext.shared.geolocationManager.location {
+                        AddressRouteCalculator.createRouteTask(originLocation: originLocation, destinationDetail: detail)
+                    } else {
+                        print("[LocationAction] ❌ Failed to get origin location from geolocationManager")
+                    }
                     
                 case .share:
                     // Create a URL to share a marker at the given location

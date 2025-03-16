@@ -86,7 +86,6 @@ class Route: Object, ObjectKeyIdentifiable {
      *     - waypoints: Array of waypoints - All waypoints are markers that exist in the Realm databse
      */
     convenience init(name: String, description: String?, waypoints: [RouteWaypoint]) {
-        print("🐛 Route init with name: \(name), waypoints count: \(waypoints.count)")
         self.init()
         
         self.name = name
@@ -108,7 +107,6 @@ class Route: Object, ObjectKeyIdentifiable {
      were already imported to the database.
      */
     convenience init(from parameters: RouteParameters) {
-        print("🐛 Route init from parameters - ID: \(parameters.id), name: \(parameters.name), waypoints count: \(parameters.waypoints.count)")
         self.init()
         
         // Required Parameters

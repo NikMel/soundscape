@@ -141,6 +141,54 @@ class AddressRouteCalculator {
 
         return route
     }
+    
+    // MARK: - Static Method: Create Route as Task (per GPT suggestion)
+
+    static func createRouteTask(origin: String, destination: String) {
+        // Debug: Start
+        print("🛣️ Starting route creation task from: \(origin) to: \(destination)")
+        
+        Task {
+            let mapsDecoder = MapsDecoder()
+            let (resolvedDestination, coordinates) = await mapsDecoder.fetchRoute(
+                origin: origin,
+                destination: destination
+            )
+            
+            guard let coordinates = coordinates else {
+                print("❌ Failed to fetch coordinates for route")
+                return
+            }
+            
+            if let resolvedDestination = resolvedDestination {
+                print("📍 Using resolved destination: \(resolvedDestination)")
+            } else {
+                print("⚠️ Using raw destination coordinates")
+            }
+            
+            let route = AddressRouteCalculator.testCreateRoute(
+                waypointsData: coordinates,
+                resolvedDestination: resolvedDestination ?? "Unknown Destination"
+            )
+            
+        }
+    }
+    
+    static func createRouteTask(originLocation: CLLocation, destinationDetail: LocationDetail) {
+        let originLat = originLocation.coordinate.latitude
+        let originLon = originLocation.coordinate.longitude
+        let origin = "\(originLat),\(originLon)"
+        print("🟢 Formatted Origin: \(origin)")
+
+        let destLat = destinationDetail.location.coordinate.latitude
+        let destLon = destinationDetail.location.coordinate.longitude
+        let destination = "\(destLat),\(destLon)"
+        print("🟢 Formatted Destination: \(destination)")
+
+        // Call existing method
+        createRouteTask(origin: origin, destination: destination)
+    }
+
 
 }
 
