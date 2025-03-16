@@ -354,6 +354,12 @@ extension NearbyTableViewController: LocationAccessibilityActionDelegate {
                     } else {
                         self.performSegue(withIdentifier: "PreviewView", sender: detail)
                     }
+                case .route:
+                    print("[LocationAction] Route action tapped")
+                    let alert = UIAlertController(title: "Route", message: "Create Route button tapped!", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true, completion: nil)
+                    
                 case .share:
                     // Create a URL to share a marker at the given location
                     let url = try LocationActionHandler.share(locationDetail: detail)

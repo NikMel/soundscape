@@ -65,6 +65,13 @@ class MarkersAndRoutesListNavigationHelper: ViewNavigationHelper, LocationAccess
                         self.host?.performSegue(withIdentifier: "PreviewView", sender: detail)
                     }
                     
+                case .route:
+                                print("[LocationAction] Route action selected")
+                                // Simple placeholder action: show alert
+                                let alert = UIAlertController(title: "Route", message: "Create Route button tapped!", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                                self.host?.present(alert, animated: true, completion: nil)
+                    
                 case .share:
                     // Create a URL to share a marker at the given location
                     let url = try LocationActionHandler.share(locationDetail: detail)

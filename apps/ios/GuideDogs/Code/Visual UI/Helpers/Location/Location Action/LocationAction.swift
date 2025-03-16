@@ -14,13 +14,14 @@ enum LocationAction {
     case edit
     case beacon
     case preview
+    case route
     case share(isEnabled: Bool)
     
     var isEnabled: Bool {
         switch self {
         case .save(let isEnabled): return isEnabled
         case .share(let isEnabled): return isEnabled
-        case .beacon, .preview, .edit:
+        case .beacon, .preview, .route, .edit:
             if AppContext.shared.eventProcessor.activeBehavior is RouteGuidance {
                 return false
             } else {
@@ -31,13 +32,13 @@ enum LocationAction {
     
     static func actions(for detail: LocationDetail) -> [LocationAction] {
         if detail.isMarker {
-            return [.beacon, .edit, .preview, .share(isEnabled: true)]
+            return [.beacon, .edit, .preview, .route, .share(isEnabled: true)]
         } else {
             // If the location does not have a backup coordinate
             // disable the save and share actions
             let isEnabled = detail.source.isCachingEnabled
             
-            return [.beacon, .save(isEnabled: isEnabled), .preview, .share(isEnabled: isEnabled)]
+            return [.beacon, .save(isEnabled: isEnabled), .preview, .route, .share(isEnabled: isEnabled)]
         }
     }
     
@@ -68,6 +69,7 @@ enum LocationAction {
         case .edit: return GDLocalizedString("markers.edit_screen.title.edit")
         case .beacon: return GDLocalizedString("location_detail.action.beacon")
         case .preview: return GDLocalizedString("preview.title")
+        case .route: return "Create Route" // Minimal, plain text (no localization key to keep simple)
         case .share: return GDLocalizedString("share.title")
         }
     }
@@ -78,6 +80,7 @@ enum LocationAction {
         case .edit: return GDLocalizedString("location_detail.action.edit.hint")
         case .beacon: return isEnabled ? GDLocalizedString("location_detail.action.beacon.hint") : GDLocalizedString("location_detail.action.beacon.hint.disabled")
         case .preview: return isEnabled ? GDLocalizedString("location_detail.action.preview.hint") : GDLocalizedString("location_detail.action.preview.hint.disabled")
+        case .route: return "Create a route to this location"
         case .share(let isEnabled): return isEnabled ? GDLocalizedString("location_detail.action.share.hint") : GDLocalizedString("location_detail.disabled.share")
         }
     }
@@ -88,6 +91,7 @@ enum LocationAction {
         case .edit: return GDLocalizationUnnecessary("action.edit")
         case .beacon: return GDLocalizationUnnecessary("action.beacon")
         case .preview: return GDLocalizationUnnecessary("action.preview")
+        case .route: return "action.route"
         case .share: return GDLocalizationUnnecessary("action.share")
         }
     }
@@ -98,6 +102,7 @@ enum LocationAction {
         case .edit: return UIImage(named: "EditMarker_icon")
         case .beacon: return UIImage(named: "Location_iconW")
         case .preview: return UIImage(named: "Preview_locationW")
+        case .route: return UIImage(systemName: "map") // Using SF Symbols for simplicity
         case .share: return UIImage(named: "Share_iconW")
         }
     }
@@ -110,6 +115,7 @@ enum LocationAction {
         case .edit: return "location_action.edit"
         case .beacon: return "location_action.beacon"
         case .preview: return "location_action.preview"
+        case .route: return "location_action.route"
         case .share: return "location_action.share"
         }
     }
