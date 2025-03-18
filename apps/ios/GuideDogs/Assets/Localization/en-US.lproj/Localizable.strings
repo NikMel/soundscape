@@ -2201,8 +2201,8 @@
 /* Title, Rate the app in App Store */
 "menu.rate" = "Rate";
 
-/*  */
-"menu.export_logs" = "Export Logs";
+/* export string */
+"menu.export_logs" = "Start/Stop Log Session";
 
 /* Title, Shows a webpage with resources for learning about how to use Soundscape {NumberedPlaceholder="Soundscape"} */
 "menu.learning_resources" = "Soundscape Blog";

@@ -58,7 +58,7 @@ enum MenuItem {
         case .feedback:   return UIImage(named: "ic_email_28px")
         case .rate:       return UIImage(named: "ic_star_rate_28px")
         case .share:      return UIImage(systemName: "square.and.arrow.up")
-        case .exportLogs: return UIImage(named: "ic_export_logs_28px")
+        case .exportLogs: return UIImage(named: "doc.badge.arrow.up") 
 
         }
     }
@@ -154,7 +154,6 @@ class MenuViewController: UIViewController {
         case .exportLogs:
             LoggerController.shared.toggleLogging(sessionName: "Manual Export Session") {
                     print("[DEBUG] LoggerController toggle complete")
-                    self.closeMenu()
                 }
             closeMenu()
 
