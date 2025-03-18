@@ -11,7 +11,7 @@ import Foundation
 import CoreLocation
 
 class LocationLogger {
-    static func logCurrentLocation() {
+    static func getLocation() {
         if let location = AppContext.shared.geolocationManager.location {
             GDUseCaseTestInfo("📍 LocationLogger polled location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
         } else {

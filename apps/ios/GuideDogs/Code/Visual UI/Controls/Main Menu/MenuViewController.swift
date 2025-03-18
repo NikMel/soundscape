@@ -151,10 +151,9 @@ class MenuViewController: UIViewController {
                 AppShareHelper.share()
             }
         case .exportLogs:
-            GDLogAppInfo("Export Logs button tapped")
-            GDLogAppInfo("Logging current location via LocationLogger")
-            LocationLogger.logCurrentLocation()
+            LogSession.shared.create(sessionName: "Manual Export Session")
             closeMenu()
+
         default:
             select(item)
         }

@@ -600,6 +600,7 @@
 		91C82ABE2A6B08500086D126 /* RouteGuidanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C82ABD2A6B08500086D126 /* RouteGuidanceTest.swift */; };
 		91DC0CF92A46134600244CC8 /* GeometryUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914DEBDC2A3CE901007B161C /* GeometryUtilsTest.swift */; };
 		9A21B90C2D896E3500F2CE01 /* LocationLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A21B90B2D896E3500F2CE01 /* LocationLogger.swift */; };
+		9A21B90E2D89760D00F2CE01 /* LogSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A21B90D2D89760D00F2CE01 /* LogSession.swift */; };
 		9A6990712D5BDB8900D37B7D /* BoseSensorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69906F2D5BDB8900D37B7D /* BoseSensorConfiguration.swift */; };
 		9A6990722D5BDB8900D37B7D /* BoseSensorDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6990702D5BDB8900D37B7D /* BoseSensorDataProcessor.swift */; };
 		9A6990732D5BDB8900D37B7D /* BoseFramesBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69906E2D5BDB8900D37B7D /* BoseFramesBLEDevice.swift */; };
@@ -1465,6 +1466,7 @@
 		91C82AAC2A5DCF040086D126 /*  GeolocationManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = " GeolocationManagerTest.swift"; path = "UnitTests/Sensors/Geolocation/Geolocation Manager/ GeolocationManagerTest.swift"; sourceTree = SOURCE_ROOT; };
 		91C82ABD2A6B08500086D126 /* RouteGuidanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RouteGuidanceTest.swift; path = "UnitTests/Behaviors/Route Guidance/RouteGuidanceTest.swift"; sourceTree = SOURCE_ROOT; };
 		9A21B90B2D896E3500F2CE01 /* LocationLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationLogger.swift; sourceTree = "<group>"; };
+		9A21B90D2D89760D00F2CE01 /* LogSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSession.swift; sourceTree = "<group>"; };
 		9A69906E2D5BDB8900D37B7D /* BoseFramesBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesBLEDevice.swift; path = Code/Devices/BLE/BoseFramesBLEDevice.swift; sourceTree = "<group>"; };
 		9A69906F2D5BDB8900D37B7D /* BoseSensorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseSensorConfiguration.swift; path = Code/Devices/BLE/BoseSensorConfiguration.swift; sourceTree = "<group>"; };
 		9A6990702D5BDB8900D37B7D /* BoseSensorDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseSensorDataProcessor.swift; path = Code/Devices/BLE/BoseSensorDataProcessor.swift; sourceTree = "<group>"; };
@@ -3742,6 +3744,7 @@
 		9A21B90A2D896E2800F2CE01 /* UseCase */ = {
 			isa = PBXGroup;
 			children = (
+				9A21B90D2D89760D00F2CE01 /* LogSession.swift */,
 				9A21B90B2D896E3500F2CE01 /* LocationLogger.swift */,
 			);
 			path = UseCase;
@@ -5573,6 +5576,7 @@
 				623E0108244767D50081CA5B /* UniversalLinkParameters.swift in Sources */,
 				62B9B410268A5B55007F9DB9 /* BeaconDetailLocalizedLabel.swift in Sources */,
 				C3A326281DDA41E400E770B6 /* DebugSettingsContext.swift in Sources */,
+				9A21B90E2D89760D00F2CE01 /* LogSession.swift in Sources */,
 				624C969D285147A9001F84F8 /* MapViewControllerRepresentable.swift in Sources */,
 				288E5FE0269504D500F7D4CD /* ConditionalAccessibilityAction.swift in Sources */,
 				2817389E22BBD7AF00EFDD62 /* Result+Extensions.swift in Sources */,
