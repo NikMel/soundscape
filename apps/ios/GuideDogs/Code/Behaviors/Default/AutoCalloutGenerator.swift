@@ -238,7 +238,7 @@ class AutoCalloutGenerator: AutomaticGenerator, ManualGenerator {
             return event.playSound ? .playCallouts(callouts) : nil
             
         case let event as MarkerAddedEvent:
-            LogSession.shared.appendLog(entry: "meerker added")
+            LogSession.shared.create(sessionName: "Manual Export Session")
             guard let id = event.markerId, let marker = SpatialDataCache.referenceEntityByKey(id) else {
                 return nil
             }

@@ -130,16 +130,7 @@ class MenuViewController: UIViewController {
             select(.help)
             
         case .feedback:
-            
-            let allLogs = LogSession.shared.endSession()
-            LoggingContext.shared.writeRawStringToSeparateFile(allLogs) { fileURL in
-                if let url = fileURL {
-                    print("Stored raw log at: \(url.path)")
-                } else {
-                    print("Failed to write raw log.")
-                }
-            }
-            
+        
             let alertController = UIAlertController(email: GDLocalizationUnnecessary("community.soundscape@gmail.com"),
                                                     subject: GDLocalizedString("settings.feedback.subject"),
                                                     preferredStyle: .actionSheet) { [weak self] (mailClient) in
@@ -161,7 +152,10 @@ class MenuViewController: UIViewController {
                 AppShareHelper.share()
             }
         case .exportLogs:
-            LogSession.shared.create(sessionName: "Manual Export Session")
+            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session") {
+                    print("[DEBUG] LoggerController toggle complete")
+                    self.closeMenu()
+                }
             closeMenu()
 
         default:
