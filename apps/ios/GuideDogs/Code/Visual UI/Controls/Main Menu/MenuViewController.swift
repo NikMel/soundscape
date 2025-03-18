@@ -10,7 +10,6 @@ import UIKit
 import SafariServices
 
 enum MenuItem {
-    // gpt: add an exportlogs button(following the pattern practice used in the code) to the this file and what should happen when it is cllicked is (UseCaseLogger.shareLogs(latest: true))
     case home, recreation, devices, help, settings, status, feedback, rate, share, donate, exportLogs
     
     var localizedString: String {
@@ -153,9 +152,8 @@ class MenuViewController: UIViewController {
             }
         case .exportLogs:
             GDLogAppInfo("Export Logs button tapped")
-            let mapsDecoder = MapsDecoder()
-            //UseCaseLogger.shareLogs(latest: true)
-            // let route = AddressRouteCalculator.testCreateRoute(waypointsData: AddressRouteCalculator.getWaypointsFromAPI())
+            GDLogAppInfo("Logging current location via LocationLogger")
+            LocationLogger.logCurrentLocation()
             closeMenu()
         default:
             select(item)

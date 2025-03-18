@@ -599,6 +599,7 @@
 		91C82AAD2A5DCF040086D126 /*  GeolocationManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C82AAC2A5DCF040086D126 /*  GeolocationManagerTest.swift */; };
 		91C82ABE2A6B08500086D126 /* RouteGuidanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C82ABD2A6B08500086D126 /* RouteGuidanceTest.swift */; };
 		91DC0CF92A46134600244CC8 /* GeometryUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914DEBDC2A3CE901007B161C /* GeometryUtilsTest.swift */; };
+		9A21B90C2D896E3500F2CE01 /* LocationLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A21B90B2D896E3500F2CE01 /* LocationLogger.swift */; };
 		9A6990712D5BDB8900D37B7D /* BoseSensorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69906F2D5BDB8900D37B7D /* BoseSensorConfiguration.swift */; };
 		9A6990722D5BDB8900D37B7D /* BoseSensorDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6990702D5BDB8900D37B7D /* BoseSensorDataProcessor.swift */; };
 		9A6990732D5BDB8900D37B7D /* BoseFramesBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69906E2D5BDB8900D37B7D /* BoseFramesBLEDevice.swift */; };
@@ -1463,6 +1464,7 @@
 		915FF9F42ADE3F91002B3690 /* AuthoredActivityContentTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthoredActivityContentTest.swift; sourceTree = "<group>"; };
 		91C82AAC2A5DCF040086D126 /*  GeolocationManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = " GeolocationManagerTest.swift"; path = "UnitTests/Sensors/Geolocation/Geolocation Manager/ GeolocationManagerTest.swift"; sourceTree = SOURCE_ROOT; };
 		91C82ABD2A6B08500086D126 /* RouteGuidanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RouteGuidanceTest.swift; path = "UnitTests/Behaviors/Route Guidance/RouteGuidanceTest.swift"; sourceTree = SOURCE_ROOT; };
+		9A21B90B2D896E3500F2CE01 /* LocationLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationLogger.swift; sourceTree = "<group>"; };
 		9A69906E2D5BDB8900D37B7D /* BoseFramesBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesBLEDevice.swift; path = Code/Devices/BLE/BoseFramesBLEDevice.swift; sourceTree = "<group>"; };
 		9A69906F2D5BDB8900D37B7D /* BoseSensorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseSensorConfiguration.swift; path = Code/Devices/BLE/BoseSensorConfiguration.swift; sourceTree = "<group>"; };
 		9A6990702D5BDB8900D37B7D /* BoseSensorDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseSensorDataProcessor.swift; path = Code/Devices/BLE/BoseSensorDataProcessor.swift; sourceTree = "<group>"; };
@@ -2775,6 +2777,7 @@
 		311E92E21DF1E9CF003A5E23 /* Logging */ = {
 			isa = PBXGroup;
 			children = (
+				9A21B90A2D896E2800F2CE01 /* UseCase */,
 				311E92E51DF1E9CF003A5E23 /* LoggingContext.swift */,
 				311E92E41DF1E9CF003A5E23 /* LogFormatter.swift */,
 				9A9BF9CD2D64F75B00645600 /* UseCaseLogger.swift */,
@@ -3734,6 +3737,14 @@
 				91C82ABD2A6B08500086D126 /* RouteGuidanceTest.swift */,
 			);
 			path = "Route Guidance";
+			sourceTree = "<group>";
+		};
+		9A21B90A2D896E2800F2CE01 /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				9A21B90B2D896E3500F2CE01 /* LocationLogger.swift */,
+			);
+			path = UseCase;
 			sourceTree = "<group>";
 		};
 		B91D3F6227AB5546004159A8 /* User Actions */ = {
@@ -5318,6 +5329,7 @@
 				620118DC24AD691B004B0380 /* ActivityIndicatorTableViewCell.swift in Sources */,
 				281CB87B201699760059B8C4 /* DestinationCallout.swift in Sources */,
 				311E92E61DF1E9CF003A5E23 /* BLELogger.swift in Sources */,
+				9A21B90C2D896E3500F2CE01 /* LocationLogger.swift in Sources */,
 				28C9809B1F0D7FD0000BEB15 /* OSMServiceModel.swift in Sources */,
 				D30355D31B61401D00E1DDED /* GDAJSONObject.m in Sources */,
 				C30DDAEC2256935F00104085 /* Typeable.swift in Sources */,
