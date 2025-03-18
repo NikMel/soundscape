@@ -18,7 +18,10 @@ class LogSession {
     private(set) var startTime: Date?
     private(set) var endTime: Date?
     private(set) var isActive: Bool = false
+    
     private var locationTimer: Timer?
+//    private var logLocationFilter = LocationUpdateFilter(minTime: 10.0, minDistance: 50.0)
+
     private let pollingInterval: TimeInterval = 7.0
 
 
@@ -38,18 +41,28 @@ class LogSession {
         self.isActive = true
         appendLog(entry: "Session '\(sessionName)' started.")
         startLocationPolling()
-        print("✅ LogSession: Session '\(sessionName)' started at \(String(describing: startTime))")
         
     }
     
     private func startLocationPolling() {
-        print("🛰️ LogSession: Starting location polling every 20 seconds")
         locationTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { _ in
-            print("🛰️ LogSession: Polling location...")
             if let locationEntry = LocationLogger.getLocationEntry() {
                 self.appendLog(entry: locationEntry)
             }
         }
+        
+//        locationTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { _ in
+//                guard let currentLocation = LocationLogger.getCurrentLocation(),
+//                      self.logLocationFilter.shouldUpdate(location: currentLocation) else {
+//                    return // Skip logging if no location or no meaningful movement
+//                }
+//                
+//                if let locationEntry = LocationLogger.getLocationEntry(for: currentLocation) {
+//                    self.appendLog(entry: locationEntry)
+//                }
+//                
+//                self.logLocationFilter.update(location: currentLocation)
+//            }
     }
 
     
@@ -73,7 +86,6 @@ class LogSession {
     }
 
     func endSession() -> String {
-        print("endSession called:")
         endTime = Date()
         appendLog(entry: "Session '\(sessionName)' ended.")
         isActive = false

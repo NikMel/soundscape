@@ -131,8 +131,14 @@ class MenuViewController: UIViewController {
             
         case .feedback:
             
-            let alllogs = LogSession.shared.endSession()
-            print(alllogs)
+            let allLogs = LogSession.shared.endSession()
+            LoggingContext.shared.writeRawStringToSeparateFile(allLogs) { fileURL in
+                if let url = fileURL {
+                    print("Stored raw log at: \(url.path)")
+                } else {
+                    print("Failed to write raw log.")
+                }
+            }
             
             let alertController = UIAlertController(email: GDLocalizationUnnecessary("community.soundscape@gmail.com"),
                                                     subject: GDLocalizedString("settings.feedback.subject"),

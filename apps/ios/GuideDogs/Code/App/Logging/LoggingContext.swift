@@ -442,6 +442,34 @@ class LoggingContext {
         }
     }
     
+    func writeRawStringToSeparateFile(_ rawString: String, completion: ((URL?) -> Void)? = nil) {
+        // Step 1: Create a temporary file logger (same config as current)
+        let tempFileLogger: DDFileLogger = DDFileLogger()
+        tempFileLogger.rollingFrequency = 0
+        tempFileLogger.maximumFileSize = 0
+        tempFileLogger.logFileManager.maximumNumberOfLogFiles = 1
+        tempFileLogger.doNotReuseLogFiles = true
+        
+        // Step 2: Get log file path
+        let logFilePath = tempFileLogger.currentLogFileInfo?.filePath
+        
+        guard let logFilePath = logFilePath else {
+            completion?(nil)
+            return
+        }
+        
+        let logFileURL = URL(fileURLWithPath: logFilePath)
+        
+        // Step 3: Write raw string directly to file (no formatters, no DDLogInfo)
+        do {
+            try rawString.write(to: logFileURL, atomically: true, encoding: .utf8)
+            completion?(logFileURL)
+        } catch {
+            print("Failed to write raw log: \(error)")
+            completion?(nil)
+        }
+    }
+    
     func stop() {
         DDLog.removeAllLoggers()
     }

@@ -11,6 +11,11 @@ import Foundation
 import CoreLocation
 
 class LocationLogger {
+    
+    static func getCurrentLocation() -> CLLocation? {
+        return AppContext.shared.geolocationManager.location
+    }
+    
     static func getLocationEntry() -> String? {
         if let location = AppContext.shared.geolocationManager.location {
             let entry = "📍 LocationLogger polled location: \(location.coordinate.latitude), \(location.coordinate.longitude)"
