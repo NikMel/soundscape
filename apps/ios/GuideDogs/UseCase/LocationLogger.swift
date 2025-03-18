@@ -11,11 +11,12 @@ import Foundation
 import CoreLocation
 
 class LocationLogger {
-    static func getLocation() {
+    static func getLocationEntry() -> String? {
         if let location = AppContext.shared.geolocationManager.location {
-            GDUseCaseTestInfo("📍 LocationLogger polled location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+            let entry = "📍 LocationLogger polled location: \(location.coordinate.latitude), \(location.coordinate.longitude)"
+            return entry
         } else {
-            print("📍 No location available yet")
+            return "no location available"
         }
     }
 }

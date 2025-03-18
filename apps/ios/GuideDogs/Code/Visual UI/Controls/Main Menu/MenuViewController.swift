@@ -130,6 +130,10 @@ class MenuViewController: UIViewController {
             select(.help)
             
         case .feedback:
+            
+            let alllogs = LogSession.shared.endSession()
+            print(alllogs)
+            
             let alertController = UIAlertController(email: GDLocalizationUnnecessary("community.soundscape@gmail.com"),
                                                     subject: GDLocalizedString("settings.feedback.subject"),
                                                     preferredStyle: .actionSheet) { [weak self] (mailClient) in
