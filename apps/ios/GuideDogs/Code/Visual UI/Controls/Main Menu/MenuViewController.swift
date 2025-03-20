@@ -152,7 +152,7 @@ class MenuViewController: UIViewController {
                 AppShareHelper.share()
             }
         case .exportLogs:
-            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session") {
+            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session", shouldPollLocation: false) {
                     print("[DEBUG] LoggerController toggle complete")
                 }
             closeMenu()

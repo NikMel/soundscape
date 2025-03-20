@@ -34,15 +34,19 @@ class LogSession {
     
   
     
-    func create(sessionName: String) {
+    func create(sessionName: String, shouldPollLocation: Bool = true) { // Added shouldPollLocation param
         self.sessionName = sessionName
         self.startTime = Date()
         self.logs.removeAll()
         self.isActive = true
-        appendLog(entry: "Session '\(sessionName)' started.")
-        startLocationPolling()
-        
+        appendLog(entry: "Session '\(sessionName)' started. Polling: \(shouldPollLocation)")
+        if shouldPollLocation { // Poll only if true
+            startLocationPolling()
+        } else {
+            print("[DEBUG] LogSession: Polling disabled for this session")
+        }
     }
+
     
     private func startLocationPolling() {
         locationTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { _ in
