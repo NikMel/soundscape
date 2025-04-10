@@ -15,15 +15,18 @@ class StepTracker {
     private var timer: Timer?
     private var interval: TimeInterval = 10
     private var lastStepCount: Int = 0
+    private var currentCadence: Double = 0.0  // gpt: Add attribute for cadence
+
 
     
     func startTracking(interval: TimeInterval = 10) {
         self.interval = interval
         guard CMPedometer.isStepCountingAvailable() else {
-            LogSession.shared.appendLog(entry: "[StepTracker] Step counting not available")
+            print("[StepTracker] Step counting not available")
             return
         }
-        LogSession.shared.appendLog( entry:"[StepTracker] Starting step tracking with interval: \(interval)s")
+        LogSession.shared.appendLog(entry: "-,-,-,STEP_TRACKING_STARTED_WITH_10s_INTERVAL,-")
+
 
         pedometer.startUpdates(from: Date()) { [weak self] data, error in
             if let error = error {
@@ -31,30 +34,34 @@ class StepTracker {
                 return
             }
             if let steps = data?.numberOfSteps {
-                LogSession.shared.appendLog(entry:"[StepTracker] Steps counted so far: \(steps)")
+//                LogSession.shared.appendLog(entry:"[StepTracker] Steps counted so far: \(steps)")
                 self?.lastStepCount = steps.intValue  // Store step count
             }
         }
 
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
-            print("[StepTracker] Timer fired - requesting current step count")
             self.pedometer.queryPedometerData(from: Date().addingTimeInterval(-self.interval), to: Date()) { data, error in
                 if let error = error {
                     LogSession.shared.appendLog(entry:"[StepTracker] Query error: \(error.localizedDescription)")
                     return
                 }
                 if let steps = data?.numberOfSteps {
-                    LogSession.shared.appendLog(entry:"[StepTracker] Steps in last \(self.interval)s: \(steps)")
+//                    LogSession.shared.appendLog(entry:"[StepTracker] Steps in last \(self.interval)s: \(steps)")
                     _ = self.getCurrentCadence()
                 }
             }
         }
     }
     
+    public var currentCadenceValue: Double {
+        return self.currentCadence
+    }
+    
     // Add new method
     func getCurrentCadence() -> Double {
         let cadence = Double(lastStepCount) / interval
-        LogSession.shared.appendLog(entry:"[StepTracker] Current cadence: \(cadence) steps/sec over interval: \(interval)s")
+//        LogSession.shared.appendLog(entry:"[StepTracker] Current cadence: \(cadence) steps/sec over interval: \(interval)s")
+        self.currentCadence = cadence
         return cadence
     }
     

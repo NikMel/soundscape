@@ -159,7 +159,7 @@ class MenuViewController: UIViewController {
                 AppShareHelper.share()
             }
         case .exportLogs:
-            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session", shouldPollLocation: false) {
+            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session", shouldPollLocation: true) {
                     print("[DEBUG] LoggerController toggle complete")
                 }
             stepTracker.startTracking(interval: 10)
