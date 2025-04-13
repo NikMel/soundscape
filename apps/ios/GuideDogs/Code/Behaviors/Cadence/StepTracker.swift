@@ -9,13 +9,15 @@
 
 
 import CoreMotion
-
+// flow: https://tinyurl.com/54cwmhps
 class StepTracker {
     private let pedometer = CMPedometer()
     private var timer: Timer?
     private var interval: TimeInterval = 10
     private var lastStepCount: Int = 0
     private var currentCadence: Double = 0.0  // gpt: Add attribute for cadence
+    private var stepsInCurrentInterval: Int = 0
+
 
 
     
@@ -34,15 +36,16 @@ class StepTracker {
                 return
             }
             if let steps = data?.numberOfSteps {
-//                LogSession.shared.appendLog(entry:"[StepTracker] Steps counted so far: \(steps)")
-                self?.lastStepCount = steps.intValue  // Store step count
+                let stepsThisInterval = steps.intValue - (self?.lastStepCount ?? 0)
+                self?.stepsInCurrentInterval = stepsThisInterval
+                self?.lastStepCount = steps.intValue
             }
         }
 
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
             self.pedometer.queryPedometerData(from: Date().addingTimeInterval(-self.interval), to: Date()) { data, error in
                 if let error = error {
-                    LogSession.shared.appendLog(entry:"[StepTracker] Query error: \(error.localizedDescription)")
+//                    LogSession.shared.appendLog(entry:"[StepTracker] Query error: \(error.localizedDescription)")
                     return
                 }
                 if let steps = data?.numberOfSteps {
@@ -59,7 +62,8 @@ class StepTracker {
     
     // Add new method
     func getCurrentCadence() -> Double {
-        let cadence = Double(lastStepCount) / interval
+        let cadence = Double(stepsInCurrentInterval) / interval
+        self.stepsInCurrentInterval = 0  // Reset steps for the next interval
 //        LogSession.shared.appendLog(entry:"[StepTracker] Current cadence: \(cadence) steps/sec over interval: \(interval)s")
         self.currentCadence = cadence
         return cadence
