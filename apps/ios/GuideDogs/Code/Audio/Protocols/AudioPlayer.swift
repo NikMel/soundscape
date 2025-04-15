@@ -42,7 +42,7 @@ protocol AudioPlayer {
     func play(_ userHeading: Heading?, _ userLocation: CLLocation?) throws
     func resumeIfNecessary() throws -> Bool
     func stop()
-    func setPlaybackSpeed(to speed: Float)
+    func setPlaybackSpeed(byPercentage speed: Float)
     
 }
 

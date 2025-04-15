@@ -425,8 +425,8 @@ extension DynamicAudioPlayer: FinishableAudioPlayer {
 
 extension DynamicAudioPlayer {
     /// Provides public access to the primary PreparableAudioLayer
-       public func setPlaybackSpeed(to speed: Float) {
-        layer.setPlaybackSpeed(to: speed)
+       public func setPlaybackSpeed(byPercentage speed: Float) {
+        layer.setPlaybackSpeed(byPercentage: speed)
     }
 }
 

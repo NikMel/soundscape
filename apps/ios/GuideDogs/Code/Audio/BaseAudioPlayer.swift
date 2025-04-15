@@ -12,7 +12,7 @@ import CoreLocation
 import Combine
 
 class BaseAudioPlayer: AudioPlayer {
-    func setPlaybackSpeed(to speed: Float) {
+    func setPlaybackSpeed(byPercentage speed: Float) {
         print("to be implemented")
     }
     

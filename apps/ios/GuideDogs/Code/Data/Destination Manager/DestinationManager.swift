@@ -704,7 +704,7 @@ class DestinationManager: DestinationManagerProtocol {
     }
     
     // Update the playback speed
-    player.setPlaybackSpeed(to: playbackSpeed)
+    player.setPlaybackSpeed(byPercentage: playbackSpeed)
     
     // Optionally log or notify about the successful update
     GDLogAppInfo("Playback speed updated to \(playbackSpeed) for player \(beaconPlayerId.uuidString).")
