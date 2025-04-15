@@ -14,6 +14,7 @@ class PreparableAudioLayer {
     let player: AVAudioPlayerNode = .init()
     private let equalizer: AVAudioUnitEQ?
     private let mixer: AVAudioMixerNode?
+    private let timePitch: AVAudioUnitTimePitch  // TimePitch node for controlling speed
     
     var format: AVAudioFormat?
     
@@ -58,7 +59,10 @@ class PreparableAudioLayer {
     }
     
     init(eqParameters: EQParameters? = nil) {
-        // Create and configure the EQ node if necessary
+        
+        // Initialize the timePitch node as non-optional
+
+        timePitch = AVAudioUnitTimePitch()  // Non-optional initialization
         guard let eqParameters = eqParameters else {
             equalizer = nil
             mixer = nil
@@ -101,6 +105,7 @@ class PreparableAudioLayer {
         self.engine = engine
         
         engine.attach(player)
+        engine.attach(timePitch)  // Attach the time pitch node
         
         if let equalizer = equalizer, let mixer = mixer {
             engine.attach(equalizer)
@@ -114,14 +119,29 @@ class PreparableAudioLayer {
             return
         }
         
-        guard let equalizer = equalizer, let mixer = mixer else {
-            engine.connect(player, to: node, format: format)
+        guard let equalizer = equalizer, let mixer = mixer  else {
+            // Connect player -> timePitch -> final node
+            engine.connect(player, to: timePitch, format: format)
+            engine.connect(timePitch, to: node, format: format)
             return
         }
         
-        engine.connect(player, to: equalizer, format: format)
+        // Connect player -> timePitch -> equalizer -> mixer -> final node
+        engine.connect(player, to: timePitch, format: format)
+        engine.connect(timePitch, to: equalizer, format: format)
         engine.connect(equalizer, to: mixer, format: format)
         engine.connect(mixer, to: node, format: format)
+    }
+    
+    func setPlaybackSpeed(to rate: Float) {
+        let clampedRate = max(0.1, min(2.0, rate))  // Ensure the rate is between 0.1x and 2x
+
+        // Set the rate on the timePitch node
+        timePitch.rate = clampedRate
+    }
+    
+    func getPlaybackSpeed() -> Float {
+        return timePitch.rate
     }
     
     func play() throws {

@@ -12,6 +12,9 @@ import CoreLocation
 import Combine
 
 class BaseAudioPlayer: AudioPlayer {
+    func setPlaybackSpeed(to speed: Float) {
+        print("to be implemented")
+    }
     
     let id = AudioPlayerIdentifier()
     

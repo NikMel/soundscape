@@ -17,6 +17,7 @@ extension Notification.Name {
     static let disableDestinationGeofence = Notification.Name("GDADisableDestinationGeofence")
     static let destinationGeofenceDidTrigger = Notification.Name("GDADestinationGeofenceDidTrigger")
     static let beaconInBoundsDidChange = Notification.Name("GDABeaconInBoundsDidChange")
+    static let cadenceDidChange = Notification.Name("GDACadenceDidChange")
 }
 
 enum DestinationManagerError: Error {
@@ -204,6 +205,8 @@ class DestinationManager: DestinationManagerProtocol {
         NotificationCenter.default.addObserver(self, selector: #selector(self.onAudioEngineStateChanged(_:)), name: NSNotification.Name.audioEngineStateChanged, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.onAppDidInitialize(_:)), name: NSNotification.Name.appDidInitialize, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.onCadenceDidChange(_:)), name: Notification.Name.cadenceDidChange, object: nil)
     }
     
     // MARK: Manage Destination Methods
@@ -542,6 +545,14 @@ class DestinationManager: DestinationManagerProtocol {
         
         isCurrentBeaconAsyncFinishable = sound.outroAsset != nil
         _beaconPlayerId = audioEngine.play(sound, heading: args.heading)
+        
+        // Attempt to retrieve the layer
+        if let layer = audioEngine.getPlayer(for: beaconPlayerId!) {
+            // Access the layer and perform any necessary operations
+            print("Successfully accessed the layer: \(layer)")
+        } else {
+            GDLogAppError("Failed to access the layer for the beacon player ID")
+        }
     }
     
     /// Disables the audio beacon for the current destination, if one is set.
@@ -653,6 +664,51 @@ class DestinationManager: DestinationManagerProtocol {
     }
     
     // MARK: Notifications
+
+    @objc private func onCadenceDidChange(_ notification: Notification) {
+    print(" onCadenceDidChange ")
+    // Validate that `_beaconPlayerId` exists
+    guard let beaconPlayerId = _beaconPlayerId else {
+        GDLogAppError("Failed to update playback speed: No active beacon player.")
+        return
+    }
+    
+    // Retrieve the playback speed percentage from the notification
+    GDLogAppInfo("Received cadenceDidChange notification.")
+    
+    // Validate and extract userInfo
+    guard let userInfo = notification.userInfo else {
+        GDLogAppError("cadenceDidChange notification missing userInfo.")
+        return
+    }
+    GDLogAppInfo("cadenceDidChange userInfo: \(userInfo)")
+    
+    // Extract playback speed
+    guard let playbackSpeed = userInfo["playbackSpeed"] as? Float else {
+        GDLogAppError("cadenceDidChange notification missing playbackSpeed or invalid type.")
+        return
+    }
+    GDLogAppInfo("Extracted playbackSpeed: \(playbackSpeed)")
+    
+    // Validate playback speed
+    guard playbackSpeed > 0 else {
+        GDLogAppError("Invalid playbackSpeed value: \(playbackSpeed). Must be greater than 0.")
+        return
+    }
+    GDLogAppInfo("Validated playbackSpeed: \(playbackSpeed)")
+    
+    // Retrieve the player from the audio engine
+        guard let player = audioEngine.getPlayer(for: beaconPlayerId) as? AudioPlayer else {
+        GDLogAppError("Failed to retrieve player for beaconPlayerId: \(beaconPlayerId.uuidString)")
+        return
+    }
+    
+    // Update the playback speed
+    player.setPlaybackSpeed(to: playbackSpeed)
+    
+    // Optionally log or notify about the successful update
+    GDLogAppInfo("Playback speed updated to \(playbackSpeed) for player \(beaconPlayerId.uuidString).")
+}
     
     @objc private func onLocationUpdated(_ notification: Notification) {
         // TODO: All of this logic (callout and view update logic) should moved into

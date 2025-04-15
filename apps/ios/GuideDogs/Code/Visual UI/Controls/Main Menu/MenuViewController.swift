@@ -159,6 +159,7 @@ class MenuViewController: UIViewController {
                 AppShareHelper.share()
             }
         case .exportLogs:
+            NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(1.7)])
             LoggerController.shared.toggleLogging(sessionName: "Manual Export Session", shouldPollLocation: true) {
                     print("[DEBUG] LoggerController toggle complete")
                 }

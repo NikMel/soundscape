@@ -16,6 +16,7 @@ class StepTracker {
     private var interval: TimeInterval = 10
     private var lastStepCount: Int = 0
     private var currentCadence: Double = 0.0  // gpt: Add attribute for cadence
+    private var stepsInCurrentInterval: Int = 0
 
 
     
@@ -34,8 +35,9 @@ class StepTracker {
                 return
             }
             if let steps = data?.numberOfSteps {
-//                LogSession.shared.appendLog(entry:"[StepTracker] Steps counted so far: \(steps)")
-                self?.lastStepCount = steps.intValue  // Store step count
+                let stepsThisInterval = steps.intValue - (self?.lastStepCount ?? 0)
+                self?.stepsInCurrentInterval = stepsThisInterval
+                self?.lastStepCount = steps.intValue
             }
         }
 
@@ -46,7 +48,7 @@ class StepTracker {
                     return
                 }
                 if let steps = data?.numberOfSteps {
-//                    LogSession.shared.appendLog(entry:"[StepTracker] Steps in last \(self.interval)s: \(steps)")
+                    LogSession.shared.appendLog(entry:"[StepTracker] Steps in last \(self.interval)s: \(steps)")
                     _ = self.getCurrentCadence()
                 }
             }
@@ -59,8 +61,9 @@ class StepTracker {
     
     // Add new method
     func getCurrentCadence() -> Double {
-        let cadence = Double(lastStepCount) / interval
-//        LogSession.shared.appendLog(entry:"[StepTracker] Current cadence: \(cadence) steps/sec over interval: \(interval)s")
+        let cadence = Double(stepsInCurrentInterval) / interval
+        self.stepsInCurrentInterval = 0  // Reset steps for the next interval
+        LogSession.shared.appendLog(entry:"[StepTracker] Current cadence: \(cadence) steps/sec over interval: \(interval)s")
         self.currentCadence = cadence
         return cadence
     }
