@@ -10,6 +10,8 @@
 
 import CoreMotion
 
+// gets stride number by dividing the number of steps by 2(ince stride is 2 steps)
+
 class StepTracker {
     private let pedometer = CMPedometer()
     private var timer: Timer?
@@ -17,6 +19,8 @@ class StepTracker {
     private var lastStepCount: Int = 0
     private var currentCadence: Double = 0.0  // gpt: Add attribute for cadence
     private var stepsInCurrentInterval: Int = 0
+    private var totalStrides: Double = 0.0
+
 
 
     
@@ -35,8 +39,6 @@ class StepTracker {
                 return
             }
             if let steps = data?.numberOfSteps {
-                let stepsThisInterval = steps.intValue - (self?.lastStepCount ?? 0)
-                self?.stepsInCurrentInterval = stepsThisInterval
                 self?.lastStepCount = steps.intValue
             }
         }
@@ -48,8 +50,11 @@ class StepTracker {
                     return
                 }
                 if let steps = data?.numberOfSteps {
+                    self.stepsInCurrentInterval = steps.intValue
                     LogSession.shared.appendLog(entry:"[StepTracker] Steps in last \(self.interval)s: \(steps)")
                     _ = self.getCurrentCadence()
+
+
                 }
             }
         }
@@ -62,6 +67,7 @@ class StepTracker {
     // Add new method
     func getCurrentCadence() -> Double {
         let cadence = Double(stepsInCurrentInterval) / interval
+        _ = self.getStridesForInterval()
         self.stepsInCurrentInterval = 0  // Reset steps for the next interval
         LogSession.shared.appendLog(entry:"[StepTracker] Current cadence: \(cadence) steps/sec over interval: \(interval)s")
         self.currentCadence = cadence
@@ -72,6 +78,13 @@ class StepTracker {
         pedometer.stopUpdates()
         timer?.invalidate()
         LogSession.shared.appendLog(entry:"[StepTracker] Stopped step tracking")
+    }
+
+    func getStridesForInterval() -> Double {
+        let strides = Double(stepsInCurrentInterval) / 2.0 // 1 stride = 2 steps
+        totalStrides += strides // Update (cumulate) the total strides
+        LogSession.shared.appendLog(entry: "[StepTracker] Strides in last \(interval)s: \(strides), Total strides: \(totalStrides)")
+        return strides
     }
 }
 
