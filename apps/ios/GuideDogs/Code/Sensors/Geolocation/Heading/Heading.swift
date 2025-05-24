@@ -61,6 +61,10 @@ class Heading: HeadingNotifier {
         }
     }
     
+    func getHeadingValue() -> Double? {
+        return course?.value ?? deviceHeading?.value ?? userHeading?.value
+    }
+    
     // MARK: Initialization
     
     init(orderedBy types: [HeadingType],
@@ -126,5 +130,7 @@ class Heading: HeadingNotifier {
         
         onHeadingDidUpdate?(newValue)
     }
+    
+
     
 }

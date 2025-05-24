@@ -130,6 +130,7 @@ class RouteGuidance: BehaviorBase {
     }
     
     override func activate(with parent: Behavior?) {
+        print("RouteGuidance activated for route: \(content.displayName)")
         let gen = RouteGuidanceGenerator(self, motionActivity: motionActivity, alreadyCompleted: progress.isDone)
         
         manualGenerators.append(gen)
@@ -425,6 +426,8 @@ class RouteGuidance: BehaviorBase {
     }
     
     private func setOrTransitionBeacon(to waypoint: LocationDetail, enableAudio: Bool = true, skipAsyncFinish: Bool = false) {
+        print("RouteGuidance: Setting or transitioning to waypoint: \(waypoint.displayName)")
+
         // Notify the UI that we are transitioning between beacon locations
         NotificationCenter.default.post(name: .routeGuidanceTransitionStateChanged, object: nil, userInfo: [Key.isTransitioning: true])
         

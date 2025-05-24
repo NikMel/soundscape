@@ -39,6 +39,7 @@ protocol AudioEngineProtocol: AnyObject {
     func play(looped: SynchronouslyGeneratedSound) -> AudioPlayerIdentifier?
     func play(_ sound: Sound, completion callback: CompletionCallback?)
     func play(_ sounds: Sounds, completion callback: CompletionCallback?)
+    func getPlayer(for playerId: AudioPlayerIdentifier) -> AudioPlayer?
     
     func finish(dynamicPlayerId: AudioPlayerIdentifier)
     func stop(_ id: AudioPlayerIdentifier)

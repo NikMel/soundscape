@@ -222,7 +222,7 @@ class GDASpatialDataResultEntity: Object {
         }
     }
     
-    // MARK: - Geometries
+    // MARK: - Geometries, GEOFENCE ALGO
     
     /// Returns whether a coordinate lies inside the entity.
     /// - note: This is only valid for entities that contain geometries, such as buildings.

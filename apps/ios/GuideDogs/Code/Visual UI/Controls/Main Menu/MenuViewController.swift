@@ -10,6 +10,8 @@ import UIKit
 import SafariServices
 
 enum MenuItem {
+    
+    
     case home, recreation, devices, help, settings, status, feedback, rate, share, donate, exportLogs
     
     var localizedString: String {
@@ -66,9 +68,14 @@ enum MenuItem {
 
 class MenuViewController: UIViewController {
     
+    
+    
     private(set) var selected: MenuItem = .home
     
     private let menuView = MenuView()
+    
+    private let stepTracker = StepTracker()
+
     
     override func loadView() {
         // Build views for menu items
@@ -152,9 +159,13 @@ class MenuViewController: UIViewController {
                 AppShareHelper.share()
             }
         case .exportLogs:
-            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session") {
+            // NotificationCenter.default.post(name: Notification.Name.speedDidChange,
+            //                                 object: nil,
+            //                                 userInfo: ["speed": 1.4])
+            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session", shouldPollLocation: false) {
                     print("[DEBUG] LoggerController toggle complete")
                 }
+            // stepTracker.startTracking(interval: 10)
             closeMenu()
 
         default:

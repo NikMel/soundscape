@@ -17,11 +17,18 @@ extension Notification.Name {
     static let disableDestinationGeofence = Notification.Name("GDADisableDestinationGeofence")
     static let destinationGeofenceDidTrigger = Notification.Name("GDADestinationGeofenceDidTrigger")
     static let beaconInBoundsDidChange = Notification.Name("GDABeaconInBoundsDidChange")
+    static let cadenceDidChange: Notification.Name = Notification.Name("GDACadenceDidChange")
+    static let speedDidChange: Notification.Name = Notification.Name("GDASpeedDidChange")
+
 }
 
 enum DestinationManagerError: Error {
     case referenceEntityDoesNotExist
 }
+
+
+
+
 
 class DestinationManager: DestinationManagerProtocol {
     
@@ -43,6 +50,15 @@ class DestinationManager: DestinationManagerProtocol {
         var startMelody: Bool
         var endMelody: Bool
     }
+
+    private enum PaceState {
+        case onPace
+        case speedingUp
+        case slowingDown
+    }
+
+    private var lastPaceState: PaceState = .onPace
+
     
     // MARK: Properties
     
@@ -144,6 +160,16 @@ class DestinationManager: DestinationManagerProtocol {
             NotificationCenter.default.post(name: name, object: self, userInfo: userInfo)
         }
     }
+
+    // MARK: ETA
+    private(set) var destinationETA: Double? // ETA in seconds
+    private(set) var targetTime: Date? // Target time for reaching the destination
+
+
+    private var distanceTraveled: CLLocationDistance = 0.0
+    private var startLocation: CLLocation?
+    private let distanceThreshold: CLLocationDistance = 2.0 // Minimum distance to trigger notification
+    private var stepTracker: StepTracker?
     
     private(set) var isCurrentBeaconAsyncFinishable: Bool = false
     
@@ -194,6 +220,11 @@ class DestinationManager: DestinationManagerProtocol {
                 self.isBeaconInBounds = false
             }
         }
+
+        NotificationCenter.default.addObserver(self, 
+                                       selector: #selector(self.onSpeedChanged(_:)), 
+                                       name: Notification.Name.speedDidChange, 
+                                       object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.onLocationUpdated), name: Notification.Name.locationUpdated, object: nil)
         
@@ -204,6 +235,8 @@ class DestinationManager: DestinationManagerProtocol {
         NotificationCenter.default.addObserver(self, selector: #selector(self.onAudioEngineStateChanged(_:)), name: NSNotification.Name.audioEngineStateChanged, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.onAppDidInitialize(_:)), name: NSNotification.Name.appDidInitialize, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.onCadenceDidChange(_:)), name: Notification.Name.cadenceDidChange, object: nil)
     }
     
     // MARK: Manage Destination Methods
@@ -239,6 +272,8 @@ class DestinationManager: DestinationManagerProtocol {
         isWithinGeofence = false
         
         if let userLoc = userLocation ?? AppContext.shared.geolocationManager.location {
+            startLocation = userLoc
+            distanceTraveled = 0.0 // Reset distance traveled
             updateBeaconClosestLocation(for: userLoc)
         }
         
@@ -251,6 +286,46 @@ class DestinationManager: DestinationManagerProtocol {
         // If user location is known, is user within geofence?
         if let userLocation = userLocation {
             isWithinGeofence = isLocationWithinGeofence(origin: entity.getPOI(), location: userLocation)
+        }
+
+        // Calculate ETA if the user is not within the geofence
+        if let userLocation = userLocation, !isWithinGeofence {
+            let destinationLocation = CLLocation(latitude: entity.latitude, longitude: entity.longitude)
+
+
+            let origin = userLocation // <-- use directly
+            let destination = destinationLocation
+
+            Task {
+                if let eta = await MapsDecoder.fetchWalkingTimeInSeconds(origin: origin, destination: destination) {
+                    destinationETA = Double(eta)
+                    targetTime = Date(timeIntervalSinceNow: destinationETA!)
+                    LogSession.shared.appendLog(entry: "Target time set to: \(targetTime!)")
+                    LogSession.shared.appendLog(entry: "🕒 ETA from MapsDecoder: \(eta) seconds")
+                } else {
+                    LogSession.shared.appendLog(entry: "⚠️ Failed to fetch ETA from MapsDecoder")
+                }
+            }
+
+            stepTracker = StepTracker()
+            stepTracker?.startTracking(interval: 10) // Start tracking with a 10-second interval
+            LogSession.shared.appendLog(entry: "[DestinationManager] Step tracking started after setting destination.")
+
+            // let distance: CLLocationDistance = entity.getPOI().distanceToClosestLocation(from: userLocation)
+            // let hardcodedSpeed: Double = 1.4 // Speed in meters per second (average walking speed)
+            // // speed = distanceso far since destination was set / cadence so far since destination was set * time since destination was set
+            
+            // if hardcodedSpeed > 0 {
+            //     destinationETA = distance / hardcodedSpeed // ETA in seconds
+            //     print("Calculated ETA for destination: \(destinationETA!) seconds")
+            // } else {
+            //     destinationETA = nil
+            //     print("Unable to calculate ETA: Speed is zero or invalid")
+            // }
+            
+        } else {
+            destinationETA = nil
+            print("User is within geofence, ETA not calculated")
         }
         
         // Start audio if enabled and user is not within geofence
@@ -269,6 +344,7 @@ class DestinationManager: DestinationManagerProtocol {
             updateNowPlayingDisplay(for: userLocation)
             GDATelemetry.helper?.beaconCountSet += 1
         }
+
         
         // Log the destination change and notify the rest of the app
         GDATelemetry.track("beacon.added", with: (logContext != nil) ? ["context": logContext!] : nil)
@@ -378,9 +454,17 @@ class DestinationManager: DestinationManagerProtocol {
         temporaryBeaconClosestLocation = nil
         
         isBeaconInBounds = false
+
+        startLocation = nil
+        distanceTraveled = 0.0
         
         // Clear the destination key to clear the destination
         destinationKey = nil
+
+        stepTracker?.stopTracking()
+        stepTracker = nil
+        LogSession.shared.appendLog(entry: "[DestinationManager] Step tracking stopped after clearing destination.")
+
         
         // Turn off the audio
         proximityBeaconPlayerId = nil
@@ -542,6 +626,14 @@ class DestinationManager: DestinationManagerProtocol {
         
         isCurrentBeaconAsyncFinishable = sound.outroAsset != nil
         _beaconPlayerId = audioEngine.play(sound, heading: args.heading)
+        
+        // Attempt to retrieve the layer
+        if let layer = audioEngine.getPlayer(for: beaconPlayerId!) {
+            // Access the layer and perform any necessary operations
+            print("Successfully accessed the layer: \(layer)")
+        } else {
+            GDLogAppError("Failed to access the layer for the beacon player ID")
+        }
     }
     
     /// Disables the audio beacon for the current destination, if one is set.
@@ -651,12 +743,210 @@ class DestinationManager: DestinationManagerProtocol {
         
         return true
     }
+
+func setDestinationETA(newETA: Double, window: Double) {
+    let currentTime = Date()
+    let targetTimeInterval = targetTime?.timeIntervalSince(currentTime) ?? 0
+
+    LogSession.shared.appendLog(entry: "setDestinationETA: Current time: \(currentTime)")
+    LogSession.shared.appendLog(entry: "setDestinationETA: Target time interval: \(targetTimeInterval)")
+    LogSession.shared.appendLog(entry: "setDestinationETA: New ETA: \(newETA), Window: \(window)")
+
+    if targetTimeInterval < newETA - window {
+        // User is behind schedule
+        if lastPaceState != .speedingUp {
+            LogSession.shared.appendLog(entry: "setDestinationETA: User is behind schedule. Changing pace state to speedingUp.")
+            LogSession.shared.appendLog(entry: "setDestinationETA: Previous pace state: \(lastPaceState), New pace state: speedingUp.")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(15.0)])
+            }
+            lastPaceState = .speedingUp
+        }
+        LogSession.shared.appendLog(entry: "setDestinationETA: User is behind schedule but not this (lastPaceState != .speedingUp)")
+    } else if targetTimeInterval > newETA + window {
+        // User is ahead of schedule
+        if lastPaceState != .slowingDown {
+            LogSession.shared.appendLog(entry: "setDestinationETA: User is ahead of schedule. Changing pace state to slowingDown.")
+            LogSession.shared.appendLog(entry: "setDestinationETA: Previous pace state: \(lastPaceState), New pace state: slowingDown.")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(-15.0)])
+            }
+            lastPaceState = .slowingDown
+        }
+        LogSession.shared.appendLog(entry: "setDestinationETA: User is ahead of schedule but not this (lastPaceState != .slowingDown)")
+    } else {
+        // User is on pace
+        if lastPaceState != .onPace {
+            LogSession.shared.appendLog(entry: "setDestinationETA: User is on pace. Changing pace state to onPace.")
+            LogSession.shared.appendLog(entry: "setDestinationETA: Previous pace state: \(lastPaceState), New pace state: onPace.")
+            lastPaceState = .onPace
+        }
+        LogSession.shared.appendLog(entry: "setDestinationETA: User is on pace but not this (lastPaceState != .onPace)")
+    }
+
+
+
+        // // Calculate the percentage difference if the current ETA is not nil
+        // if let currentETA = destinationETA {
+        //     let difference = (newETA - currentETA)
+        //     percentageDifferenceInETA = (difference / currentETA) * 100
+        //     LogSession.shared.appendLog(entry: "Current ETA: \(currentETA), New ETA: \(newETA), Difference: \(difference), Percentage Difference: \(percentageDifferenceInETA)%")
+        //     let userInfo: [String: Any] = ["playbackSpeed": Float(percentageDifferenceInETA)]
+        //     let notification = Notification(name: .cadenceDidChange, object: nil, userInfo: userInfo)
+        //     // Call the method directly with the simulated notification
+        //     // onCadenceDidChange(notification) 
+
+        //     // if targetTimeInterval < ETA - window → speedUp
+        //     // if targetTimeInterval > ETA + window → slowDown
+        //     // else → onPace   
+        //     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        //         NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(percentageDifferenceInETA)])
+        //     }
+        // } else {
+        //     // If there is no current ETA, set the percentage difference to 0
+        //     percentageDifferenceInETA = 0.0
+        // }
+
+        // // Log the percentage difference
+        // LogSession.shared.appendLog(entry: "Percentage difference in ETA: \(percentageDifferenceInETA)%")
+
+        // // Set the new ETA value
+        // destinationETA = newETA
+
+        // // Log the new ETA value
+        // LogSession.shared.appendLog(entry: "New destination ETA set: \(destinationETA!) seconds")
+    }
     
     // MARK: Notifications
+
+    @objc private func onSpeedChanged(_ notification: Notification) {
+        LogSession.shared.appendLog(entry: "onSpeedChanged: Received speed change notification with speed: \(notification.userInfo?["speed"] ?? "unknown")")
+
+    // Extract the new speed from the notification
+    guard let userInfo = notification.userInfo,
+          let newSpeed = userInfo["speed"] as? Double else {
+        print("onSpeedChanged: Missing or invalid speed in notification")
+        return
+    }
+
+    // Validate the speed
+    guard newSpeed > 0 else {
+        LogSession.shared.appendLog(entry:"onSpeedChanged: Invalid speed value (\(newSpeed)). Must be greater than 0.")
+        destinationETA = nil
+        return
+    }
+
+
+    // Ensure a destination is set
+    guard let destination = destination,
+          let userLocation = AppContext.shared.geolocationManager.location else {
+        print("onSpeedChanged: No destination or user location available, speed is (\(newSpeed))")
+        destinationETA = nil
+        return
+    }
+
+    // Check if the user is within the geofence
+    isWithinGeofence = isLocationWithinGeofence(origin: destination.getPOI(), location: userLocation)
+    if isWithinGeofence {
+        print("onSpeedChanged: User is within geofence, ETA not calculated")
+        destinationETA = nil
+        return
+    }
+
+    // Calculate the ETA
+    LogSession.shared.appendLog(entry: "onSpeedChanged: Calculating ETA with new speed: \(newSpeed)")
+
+    // Calculate the distance to the closest location of the destination
+    let distance = destination.getPOI().distanceToClosestLocation(from: userLocation)
+    LogSession.shared.appendLog(entry: "onSpeedChanged: Distance to destination: \(distance) meters")
+
+    let Δv = 0.1 // Hardcoded value for velocity adjustment
+    let k = 1.2 // Hardcoded scaling factor
+
+    let jitterHalf = (distance / (newSpeed * newSpeed)) * Δv
+    LogSession.shared.appendLog(entry: "onSpeedChanged: Calculated jitterHalf: \(jitterHalf)")
+
+    let window = k * jitterHalf
+    LogSession.shared.appendLog(entry: "onSpeedChanged: Calculated window for cadence adjustment: \(window)")
+
+    // NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(15.0)])
+    setDestinationETA(newETA: distance / newSpeed, window: window ) // ETA in seconds
+}
+
+    @objc private func onCadenceDidChange(_ notification: Notification) {
+    LogSession.shared.appendLog(entry:" onCadenceDidChange ")
+    // Validate that `_beaconPlayerId` exists
+    guard let beaconPlayerId = _beaconPlayerId else {
+        GDLogAppError("Failed to update playback speed: No active beacon player.")
+        return
+    }
+    
+    // Retrieve the playback speed percentage from the notification
+    GDLogAppInfo("Received cadenceDidChange notification.")
+    
+    // Validate and extract userInfo
+    guard let userInfo = notification.userInfo else {
+        GDLogAppError("cadenceDidChange notification missing userInfo.")
+        return
+    }
+    GDLogAppInfo("cadenceDidChange userInfo: \(userInfo)")
+    
+    // Extract playback speed
+    guard let playbackSpeed = userInfo["playbackSpeed"] as? Float else {
+        GDLogAppError("cadenceDidChange notification missing playbackSpeed or invalid type.")
+        return
+    }
+    GDLogAppInfo("Extracted playbackSpeed: \(playbackSpeed)")
+    
+    // Validate playback speed
+    guard playbackSpeed != 0 else {
+        GDLogAppError("Invalid playbackSpeed value: \(playbackSpeed). Must not be zero.")
+        return
+    }
+    GDLogAppInfo("Validated playbackSpeed: \(playbackSpeed)")
+    
+    // Retrieve the player from the audio engine
+        guard let player = audioEngine.getPlayer(for: beaconPlayerId) as? AudioPlayer else {
+        GDLogAppError("Failed to retrieve player for beaconPlayerId: \(beaconPlayerId.uuidString)")
+        return
+    }
+    
+    // Update the playback speed
+    player.setPlaybackSpeed(byPercentage: playbackSpeed)
+    
+    // Optionally log or notify about the successful update
+    GDLogAppInfo("Playback speed updated to \(playbackSpeed) for player \(beaconPlayerId.uuidString).")
+    LogSession.shared.appendLog(entry: "Playback speed updated to \(playbackSpeed) for player \(beaconPlayerId.uuidString).")
+
+}
     
     @objc private func onLocationUpdated(_ notification: Notification) {
         // TODO: All of this logic (callout and view update logic) should moved into
         //       the BeaconCalloutGenerator
+
+        guard let userInfo = notification.userInfo,
+            let location = userInfo[SpatialDataContext.Keys.location] as? CLLocation else {
+            GDLogSpatialDataError("Error: LocationUpdated notification is missing location")
+            return
+        }
+
+        // Calculate the distance traveled
+        if let startLocationInUpdatedMethod = startLocation {
+            let distance = haversineDistance(from: startLocationInUpdatedMethod, to: location)
+            distanceTraveled = distance // for now, distance traveled is the distance between the start location and the current location
+            LogSession.shared.appendLog(entry: "distanceTraveled: \(distanceTraveled)")
+
+            // Notify subscribers if the distance exceeds the threshold
+            if distance >= distanceThreshold {
+                // LogSession.shared.appendLog(entry: "distanceTraveled threshold: \(distanceTraveled)")
+                NotificationCenter.default.post(name: Notification.Name("DistanceTraveledUpdated"),
+                                                object: self,
+                                                userInfo: ["distanceTraveled": distanceTraveled])
+            }   
+        } else {
+            LogSession.shared.appendLog(entry: "start location is nil \( startLocation))")
+            startLocation = location // in what condtion will this happen? give me an example walkthrough
+        }
         
         guard !AppContext.shared.eventProcessor.activeBehavior.blockedAutoGenerators.contains(where: { $0 == BeaconCalloutGenerator.self }) else {
             GDLogAutoCalloutInfo("Skipping beacon geofence update. Beacon callouts are managed by the active behavior.")
@@ -752,6 +1042,27 @@ class DestinationManager: DestinationManagerProtocol {
     @objc private func onAppDidInitialize(_ notification: Notification) {
         appDidInitialize = true
     }
+
+    private func haversineDistance(from: CLLocation, to: CLLocation) -> CLLocationDistance {
+        let radius: Double = 6_371_000 // meters
+        let lat1 = from.coordinate.latitude * .pi / 180
+        let lon1 = from.coordinate.longitude * .pi / 180
+        let lat2 = to.coordinate.latitude * .pi / 180
+        let lon2 = to.coordinate.longitude * .pi / 180
+
+        let dlat = lat2 - lat1
+        let dlon = lon2 - lon1
+
+        let a = sin(dlat / 2) * sin(dlat / 2) +
+                cos(lat1) * cos(lat2) *
+                sin(dlon / 2) * sin(dlon / 2)
+        let c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        
+        let distance = radius * c
+        LogSession.shared.appendLog(entry: "Haversine distance calculated: \(distance) meters")
+        return distance
+    }
+
     
     private func notifyDestinationChanged(id: String?) {
         var userInfo: [String: Any]?

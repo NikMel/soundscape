@@ -349,6 +349,7 @@ class DynamicAudioPlayer<T: DynamicSound>: AudioPlayer {
         
         guard let playerTime = layer.player.playerTime(forNodeTime: lastRendered) else {
             // If we don't have a last rendered time, just play the buffer after the intro ends
+            // MARK: beacon sound audio 
             let time = AVAudioTime(sampleTime: AVAudioFramePosition(introFrameLength), atRate: buffer.format.sampleRate)
             layer.player.scheduleBuffer(buffer, at: time, options: [.interrupts, .loops])
             return
@@ -419,6 +420,13 @@ extension DynamicAudioPlayer: FinishableAudioPlayer {
                 self.delegate?.onPlayerFinished(self.id)
             }
         }
+    }
+}
+
+extension DynamicAudioPlayer {
+    /// Provides public access to the primary PreparableAudioLayer
+       public func setPlaybackSpeed(byPercentage speed: Float) {
+        layer.setPlaybackSpeed(byPercentage: speed)
     }
 }
 

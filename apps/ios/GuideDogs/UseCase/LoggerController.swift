@@ -17,10 +17,10 @@ class LoggerController {
     
     private init() { } // Prevent external init
     
-    func toggleLogging(sessionName: String, completion: @escaping () -> Void) {
+    func toggleLogging(sessionName: String, shouldPollLocation: Bool = true, completion: @escaping () -> Void) { // Added shouldPollLocation param, default true
         if !isLoggingActive {
-            print("[DEBUG] LoggerController: Starting new session '\(sessionName)'")
-            LogSession.shared.create(sessionName: sessionName)
+            print("[DEBUG] LoggerController: Starting new session '\(sessionName)' with polling: \(shouldPollLocation)")
+            LogSession.shared.create(sessionName: sessionName, shouldPollLocation: shouldPollLocation) // Pass param here
             isLoggingActive = true
             completion()
         } else {

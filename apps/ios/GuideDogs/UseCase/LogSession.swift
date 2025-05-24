@@ -22,7 +22,7 @@ class LogSession {
     private var locationTimer: Timer?
 //    private var logLocationFilter = LocationUpdateFilter(minTime: 10.0, minDistance: 50.0)
 
-    private let pollingInterval: TimeInterval = 7.0
+    private let pollingInterval: TimeInterval = 10.0
 
 
     
@@ -34,21 +34,27 @@ class LogSession {
     
   
     
-    func create(sessionName: String) {
+    func create(sessionName: String, shouldPollLocation: Bool = true) { // Added shouldPollLocation param
         self.sessionName = sessionName
         self.startTime = Date()
         self.logs.removeAll()
         self.isActive = true
-        appendLog(entry: "Session '\(sessionName)' started.")
-        startLocationPolling()
-        
+        let columns = "Timestamp,latitude,longitude,Cadence,Event,Heading"
+        self.appendLog(entry: columns, includeTimestamp: false)
+        appendLog(entry: "-,-,-,LOG_START,-")
+        if shouldPollLocation { // Poll only if true
+            startLocationPolling()
+        } else {
+            print("[DEBUG] LogSession: Polling disabled for this session")
+        }
     }
+
     
     private func startLocationPolling() {
+        let stepTracker = StepTracker()
+        stepTracker.startTracking(interval: pollingInterval)
         locationTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { _ in
-            if let locationEntry = LocationLogger.getLocationEntry() {
-                self.appendLog(entry: locationEntry)
-            }
+            LogSession.logRow(steptracker: stepTracker)// Call the logRow method to log the location entry
         }
         
 //        locationTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { _ in
@@ -60,10 +66,11 @@ class LogSession {
 //                if let locationEntry = LocationLogger.getLocationEntry(for: currentLocation) {
 //                    self.appendLog(entry: locationEntry)
 //                }
-//                
+//
 //                self.logLocationFilter.update(location: currentLocation)
 //            }
     }
+
 
     
     private func stopLocationPolling() {
@@ -71,23 +78,60 @@ class LogSession {
         locationTimer = nil
     }
     
+    // MARK: - Log Row Method
+
     
-    func appendLog(entry: String) {
+    public static func logRow(event: String = "NORMAL", steptracker: StepTracker  ) {
+        
+        let stepT = steptracker
+        let coordinates = LocationLogger.getLocationEntry() ?? "Unknown Location"
+        let cadence = stepT.currentCadenceValue
+        let heading = AppContext.shared.geolocationManager.heading(orderedBy: [.course, .device, .user])
+        let currentHeadingValue = heading.getHeadingValue()
+        
+        // Debug log for the logRow method execution
+        print("[DEBUG] Logging new row: Location: \(coordinates), Cadence: \(cadence), Event: \(event), Heading: \(String(describing: currentHeadingValue))")
+        
+        // Format the log entry
+        let logString = "\(coordinates),\(cadence),\(event),\(String(describing: currentHeadingValue))°"
+
+        // Call appendLog to store this entry
+        shared.appendLog(entry: logString)
+    }
+
+    
+    
+    func appendLog(entry: String, includeTimestamp: Bool = true) {
+        // Debug log: Track if timestamp inclusion is requested
+        print("Debug: Timestamp inclusion - \(includeTimestamp ? "Yes" : "No")")
+        
         guard isActive else {
             return
         }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let timestamp = formatter.string(from: Date())
-        let formattedEntry = "[\(timestamp)] [USECASE] \(entry)"
+        
+        let formattedEntry: String
+        
+        if includeTimestamp {
+            // Debug log: Adding timestamp
+            print("Debug: Adding timestamp to the log entry")
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let timestamp = formatter.string(from: Date())
+            formattedEntry = "\(timestamp),\(entry)"
+        } else {
+            // Debug log: No timestamp added
+            print("Debug: No timestamp added")
+            formattedEntry = entry
+        }
+        
         logs.append(formattedEntry)
-        print("📜 Current logs:")
         logs.forEach { print($0) }
     }
 
+
     func endSession() -> String {
         endTime = Date()
-        appendLog(entry: "Session '\(sessionName)' ended.")
+        appendLog(entry: "-,-,-,LOG_END,-")
         isActive = false
         stopLocationPolling() // 🔑 Stop polling when session ends
         return logs.joined(separator: "\n")

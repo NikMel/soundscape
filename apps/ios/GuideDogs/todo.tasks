@@ -1,0 +1,11 @@
+☐ investigate how the window actually affects changing the sound
+☐ investigate how frequent the the speed change has to be, if thresholding at whole number speed changes is enough
+☐ plan out test route
+☐ 
+
+
+
+☐ assumptions
+    ☐ the distance travveld is a straight line from where the user is now and the starting point, not distance actually traveled if they went in circles
+    ☐ handle the case where the destination is  unreasonably far away
+    ☐ what if the user cannot reach the speed that causes the audio not to be play faster(to go back to normal)

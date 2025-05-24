@@ -18,7 +18,7 @@ class LocationLogger {
     
     static func getLocationEntry() -> String? {
         if let location = AppContext.shared.geolocationManager.location {
-            let entry = "📍 LocationLogger polled location: \(location.coordinate.latitude), \(location.coordinate.longitude)"
+            let entry = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
             return entry
         } else {
             return "no location available"

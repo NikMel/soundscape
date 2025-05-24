@@ -84,6 +84,8 @@ class AudioEngine: AudioEngineProtocol {
     private var isAwaitingRouteOverride = false
     
     private var routeOverrideCompletionHandler: ((AVAudioSession.PortOverride) -> Void)?
+
+    private var lastDynamicPlayerId: AudioPlayerIdentifier?
     
     private var state = State.stopped {
         didSet {
@@ -1331,5 +1333,14 @@ extension AudioEngine: AudioSessionManagerDelegate {
         routeOverrideCompletionHandler?(override)
         routeOverrideCompletionHandler = nil
     }
-    
+}
+
+extension AudioEngine {
+    /// Retrieves the AudioPlayer by its identifier.
+    ///
+    /// - Parameter playerId: The identifier of the player.
+    /// - Returns: The AudioPlayer if the player exists, otherwise `nil`.
+    func getPlayer(for playerId: AudioPlayerIdentifier) -> AudioPlayer? {
+        return players.first(where: { $0.id == playerId })
+    }
 }

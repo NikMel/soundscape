@@ -14,6 +14,7 @@ class PreparableAudioLayer {
     let player: AVAudioPlayerNode = .init()
     private let equalizer: AVAudioUnitEQ?
     private let mixer: AVAudioMixerNode?
+    private let timePitch: AVAudioUnitTimePitch  // TimePitch node for controlling speed
     
     var format: AVAudioFormat?
     
@@ -58,7 +59,10 @@ class PreparableAudioLayer {
     }
     
     init(eqParameters: EQParameters? = nil) {
-        // Create and configure the EQ node if necessary
+        
+        // Initialize the timePitch node as non-optional
+
+        timePitch = AVAudioUnitTimePitch()  // Non-optional initialization
         guard let eqParameters = eqParameters else {
             equalizer = nil
             mixer = nil
@@ -101,6 +105,7 @@ class PreparableAudioLayer {
         self.engine = engine
         
         engine.attach(player)
+        engine.attach(timePitch)  // Attach the time pitch node
         
         if let equalizer = equalizer, let mixer = mixer {
             engine.attach(equalizer)
@@ -114,14 +119,68 @@ class PreparableAudioLayer {
             return
         }
         
-        guard let equalizer = equalizer, let mixer = mixer else {
-            engine.connect(player, to: node, format: format)
+        guard let equalizer = equalizer, let mixer = mixer  else {
+            // Connect player -> timePitch -> final node
+            engine.connect(player, to: timePitch, format: format)
+            engine.connect(timePitch, to: node, format: format)
             return
         }
         
-        engine.connect(player, to: equalizer, format: format)
+        // Connect player -> timePitch -> equalizer -> mixer -> final node
+        engine.connect(player, to: timePitch, format: format)
+        engine.connect(timePitch, to: equalizer, format: format)
         engine.connect(equalizer, to: mixer, format: format)
         engine.connect(mixer, to: node, format: format)
+    }
+    
+    func setPlaybackSpeed(byPercentage percentage: Float) {
+        // Ensure the percentage is valid (e.g., -100% to +100%)
+        let clampedPercentage = max(-100.0, min(100.0, percentage))
+        
+        // Calculate the target playback speed
+        let currentRate = timePitch.rate
+        let adjustmentFactor = 1.0 + (clampedPercentage / 100.0)
+        let targetRate = currentRate * adjustmentFactor
+        
+        // Clamp the target rate to the valid range (0.1x to 2.0x)
+        let clampedTargetRate = max(0.1, min(2.0, targetRate))
+        
+        // Smoothly transition to the target rate over 3 seconds
+        smoothTransition(to: clampedTargetRate, duration: 3.0)
+    }
+
+    /// Smoothly transitions the playback speed to a target rate over a specified duration.
+    ///
+    /// - Parameters:
+    ///   - targetRate: The desired playback speed (clamped between 0.1x and 2.0x).
+    ///   - duration: The duration of the transition in seconds.
+    private func smoothTransition(to targetRate: Float, duration: TimeInterval) {
+        // Calculate the rate change per step
+        let currentRate = timePitch.rate
+        let rateDifference = targetRate - currentRate
+        let steps = 30 // Number of steps for the transition
+        let stepDuration = duration / Double(steps)
+        let rateIncrement = rateDifference / Float(steps)
+        
+        // Create a timer to update the rate incrementally
+        var currentStep = 0
+        Timer.scheduledTimer(withTimeInterval: stepDuration, repeats: true) { timer in
+            if currentStep >= steps {
+                // Stop the timer when the transition is complete
+                timer.invalidate()
+                self.timePitch.rate = targetRate // Ensure the final rate is set
+                GDLogAudioInfo("Playback speed smoothly transitioned to \(targetRate)x")
+                return
+            }
+            
+            // Incrementally update the rate
+            self.timePitch.rate += rateIncrement
+            currentStep += 1
+        }
+    }
+    
+    func getPlaybackSpeed() -> Float {
+        return timePitch.rate
     }
     
     func play() throws {

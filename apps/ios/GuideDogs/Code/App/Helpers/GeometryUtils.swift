@@ -77,6 +77,7 @@ class GeometryUtils {
         
         // Check if the point is inside the polygon
         (pixelX, pixelY) = VectorTile.getPixelXY(latitude: location.latitude, longitude: location.longitude, zoom: 16)
+        // MARK: GEOFENCE AL
         return path.contains(CGPoint(x: pixelX, y: pixelY))
     }
     
