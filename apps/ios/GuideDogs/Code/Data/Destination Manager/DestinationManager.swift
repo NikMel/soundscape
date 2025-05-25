@@ -307,7 +307,7 @@ class DestinationManager: DestinationManagerProtocol {
                 }
             }
 
-            stepTracker = StepTracker()
+            stepTracker =  StepTracker.shared
             stepTracker?.startTracking(interval: 10) // Start tracking with a 10-second interval
             LogSession.shared.appendLog(entry: "[DestinationManager] Step tracking started after setting destination.")
 
@@ -461,7 +461,7 @@ class DestinationManager: DestinationManagerProtocol {
         // Clear the destination key to clear the destination
         destinationKey = nil
 
-        stepTracker?.stopTracking()
+        StepTracker.shared.stopTracking()
         stepTracker = nil
         LogSession.shared.appendLog(entry: "[DestinationManager] Step tracking stopped after clearing destination.")
 

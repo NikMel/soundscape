@@ -74,7 +74,7 @@ class MenuViewController: UIViewController {
     
     private let menuView = MenuView()
     
-    private let stepTracker = StepTracker()
+    private let stepTracker = StepTracker.shared
 
     
     override func loadView() {
@@ -162,7 +162,7 @@ class MenuViewController: UIViewController {
             // NotificationCenter.default.post(name: Notification.Name.speedDidChange,
             //                                 object: nil,
             //                                 userInfo: ["speed": 1.4])
-            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session", shouldPollLocation: false) {
+            LoggerController.shared.toggleLogging(sessionName: "Manual Export Session", shouldPollLocation: true) {
                     print("[DEBUG] LoggerController toggle complete")
                 }
             // stepTracker.startTracking(interval: 10)

@@ -51,10 +51,10 @@ class LogSession {
 
     
     private func startLocationPolling() {
-        let stepTracker = StepTracker()
+        let stepTracker = StepTracker.shared
         stepTracker.startTracking(interval: pollingInterval)
         locationTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { _ in
-            LogSession.logRow(steptracker: stepTracker)// Call the logRow method to log the location entry
+            LogSession.logRow()// Call the logRow method to log the location entry
         }
         
 //        locationTimer = Timer.scheduledTimer(withTimeInterval: pollingInterval, repeats: true) { _ in
@@ -81,19 +81,18 @@ class LogSession {
     // MARK: - Log Row Method
 
     
-    public static func logRow(event: String = "NORMAL", steptracker: StepTracker  ) {
+    public static func logRow(event: String = "NORMAL" ) {
         
-        let stepT = steptracker
+        let stepT = StepTracker.shared // gpt:  use that shared step tracker here instead of needing a param
         let coordinates = LocationLogger.getLocationEntry() ?? "Unknown Location"
         let cadence = stepT.currentCadenceValue
         let heading = AppContext.shared.geolocationManager.heading(orderedBy: [.course, .device, .user])
         let currentHeadingValue = heading.getHeadingValue()
+        let altitude = AltitudeManager.shared.getCurrentAltitude()
         
-        // Debug log for the logRow method execution
-        print("[DEBUG] Logging new row: Location: \(coordinates), Cadence: \(cadence), Event: \(event), Heading: \(String(describing: currentHeadingValue))")
-        
-        // Format the log entry
-        let logString = "\(coordinates),\(cadence),\(event),\(String(describing: currentHeadingValue))°"
+        let logString = "\(coordinates),\(cadence),\(event),\(String(describing: currentHeadingValue))°,Alt:\(altitude)"
+        print("[DEBUG] Full log row: \(logString)")
+
 
         // Call appendLog to store this entry
         shared.appendLog(entry: logString)

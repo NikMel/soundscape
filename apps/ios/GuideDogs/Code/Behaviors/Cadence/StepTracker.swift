@@ -10,11 +10,13 @@
 
 import CoreMotion
 
-// gets stride number by dividing the number of steps by 2(ince stride is 2 steps)
-
-// gpt: add Add functionality for the pedometer to give the speed and store the speed in a variable and  have a method that went called gives you the speed at a certain moment do it following the conventions of how it should be done with the speedometer
 
 class StepTracker {
+    static let shared = StepTracker()
+    private init() {
+        print("[DEBUG] StepTracker initialized via shared singleton")
+    }
+    // gpt: as it is now this class must be treated as an instance but i wanted it to also be called using the shared way (i.e AltitudeManager.shared.getCurrentAltitude(), how to adjust so that there is a way to feetch any running instance and reuse if needed)
     private let pedometer = CMPedometer()
     private var timer: Timer?
     private var interval: TimeInterval = 10
