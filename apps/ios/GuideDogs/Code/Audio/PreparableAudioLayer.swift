@@ -134,18 +134,17 @@ class PreparableAudioLayer {
     }
     
     func setPlaybackSpeed(byPercentage percentage: Float) {
-        // Ensure the percentage is valid (e.g., -100% to +100%)
+        // Clamp input percentage to a reasonable range
         let clampedPercentage = max(-100.0, min(100.0, percentage))
         
-        // Calculate the target playback speed
-        let currentRate = timePitch.rate
+        // Use a fixed base rate (1.0x) instead of compounding
+        let baseRate: Float = 1.0
         let adjustmentFactor = 1.0 + (clampedPercentage / 100.0)
-        let targetRate = currentRate * adjustmentFactor
+        let targetRate = baseRate * adjustmentFactor
+        // Clamp the final rate to a natural-sounding range
+        let clampedTargetRate = max(0.5, min(1.5, targetRate))
         
-        // Clamp the target rate to the valid range (0.1x to 2.0x)
-        let clampedTargetRate = max(0.1, min(2.0, targetRate))
-        
-        // Smoothly transition to the target rate over 3 seconds
+        // Apply the transition
         smoothTransition(to: clampedTargetRate, duration: 3.0)
     }
 

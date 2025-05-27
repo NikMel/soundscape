@@ -744,25 +744,58 @@ class DestinationManager: DestinationManagerProtocol {
         return true
     }
 
-func setDestinationETA(newETA: Double, window: Double) {
+    private func nudgeValue(distanceLeft d: Double,
+                        timeLeft Δt: TimeInterval,
+                        currentPace vCurrent: Double) -> Double {
+    LogSession.shared.appendLog(entry: "nudgeValue: Calculating nudge value with distanceLeft: \(d), timeLeft: \(Δt), currentPace: \(vCurrent)")
+
+    // 1) Ideal pace
+    let vTarget = d / Δt
+    LogSession.shared.appendLog(entry: "nudgeValue: Calculated target pace (vTarget): \(vTarget)")
+
+    // 2) Raw error
+    let error = vTarget - vCurrent
+    LogSession.shared.appendLog(entry: "nudgeValue: Calculated raw error: \(error)")
+
+    // 3) Optional dead-band
+    let deadband: Double = 0.017
+    if abs(error) < deadband {
+        LogSession.shared.appendLog(entry: "nudgeValue: Error (\(error)) is within deadband (\(deadband)). Returning 0.")
+        return 0
+    }
+
+    // 4) Linear + clamp mapping
+    let Emax: Double = 0.5
+    var u = -(error / Emax)
+    u = max(-1, min(1, u))
+    LogSession.shared.appendLog(entry: "nudgeValue: Calculated nudge value (u): \(u) after clamping to range [-1, 1]")
+
+    return u
+        }
+
+
+func setDestinationETA(newETA: Double, window: Double, distance: Double, newSpeed: Double) {
     let currentTime = Date()
     let targetTimeInterval = targetTime?.timeIntervalSince(currentTime) ?? 0
 
-    LogSession.shared.appendLog(entry: "setDestinationETA: Current time: \(currentTime)")
-    LogSession.shared.appendLog(entry: "setDestinationETA: Target time interval: \(targetTimeInterval)")
-    LogSession.shared.appendLog(entry: "setDestinationETA: New ETA: \(newETA), Window: \(window)")
 
-    if targetTimeInterval < newETA - window {
+
+    if true {
         // User is behind schedule
         if lastPaceState != .speedingUp {
             LogSession.shared.appendLog(entry: "setDestinationETA: User is behind schedule. Changing pace state to speedingUp.")
             LogSession.shared.appendLog(entry: "setDestinationETA: Previous pace state: \(lastPaceState), New pace state: speedingUp.")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(15.0)])
-            }
+            // DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            //     NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(15.0)])
+            // }
             lastPaceState = .speedingUp
         }
         LogSession.shared.appendLog(entry: "setDestinationETA: User is behind schedule but not this (lastPaceState != .speedingUp)")
+        let nudge = nudgeValue(distanceLeft: distance, timeLeft: targetTimeInterval, currentPace: newSpeed)
+        LogSession.shared.appendLog(entry: "setDestinationETA: Nudge value calculated: \(nudge) and in percentage: \(nudge * 100)%")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(nudge * 100)])
+        }
     } else if targetTimeInterval > newETA + window {
         // User is ahead of schedule
         if lastPaceState != .slowingDown {
@@ -870,7 +903,7 @@ func setDestinationETA(newETA: Double, window: Double) {
     LogSession.shared.appendLog(entry: "onSpeedChanged: Calculated window for cadence adjustment: \(window)")
 
     // NotificationCenter.default.post(name: .cadenceDidChange, object: nil, userInfo: ["playbackSpeed": Float(15.0)])
-    setDestinationETA(newETA: distance / newSpeed, window: window ) // ETA in seconds
+    setDestinationETA(newETA: distance / newSpeed, window: window, distance: distance, newSpeed: newSpeed ) // ETA in seconds
 }
 
     @objc private func onCadenceDidChange(_ notification: Notification) {

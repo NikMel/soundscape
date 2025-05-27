@@ -93,7 +93,7 @@ class StepTracker {
         return percentageDifference > 1.5
     }
 
-    private func updateSmoothedValue(previous: Double, newValue: Double, alpha: Double = 0.5) -> Double {
+    private func updateSmoothedValue(previous: Double, newValue: Double, alpha: Double = 0.81) -> Double {
         let smoothedValue = alpha * newValue + (1 - alpha) * previous
         LogSession.shared.appendLog(entry: "[StepTracker] Smoothing applied: previous=\(previous), newValue=\(newValue), alpha=\(alpha), smoothedValue=\(smoothedValue)")
         return smoothedValue

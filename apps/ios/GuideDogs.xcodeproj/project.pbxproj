@@ -616,6 +616,7 @@
 		9A69907C2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */; };
 		9A8FC6AE2D79E1D2001CF3F5 /* MapsDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */; };
 		9AB52AFF2D771FF300C1EB72 /* AddressRouteCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */; };
+		9ADFE7EB2DE2459000047FD0 /* AltitudeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADFE7EA2DE2459000047FD0 /* AltitudeManager.swift */; };
 		AC3A3EE22C40C9080061EEB8 /* NearbyTableFilterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */; };
 		B90C27D61EAF81D600007368 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90C27D51EAF81D600007368 /* Sound.swift */; };
 		B918EE9825100FFF00A5354A /* CalloutRangeContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B918EE9725100FFF00A5354A /* CalloutRangeContext.swift */; };
@@ -1478,6 +1479,7 @@
 		9A69907A2D5BDC5E00D37B7D /* BoseFramesMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesMotionManager.swift; path = "Code/Sensors/Motion/Headphone Motion/BoseFramesMotionManager.swift"; sourceTree = "<group>"; };
 		9A8FC6AD2D79E1D2001CF3F5 /* MapsDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsDecoder.swift; sourceTree = "<group>"; };
 		9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressRouteCalculator.swift; sourceTree = "<group>"; };
+		9ADFE7EA2DE2459000047FD0 /* AltitudeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltitudeManager.swift; sourceTree = "<group>"; };
 		AC3A3EE12C40C9080061EEB8 /* NearbyTableFilterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyTableFilterTest.swift; sourceTree = "<group>"; };
 		B90C27D51EAF81D600007368 /* Sound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sound.swift; path = Code/Audio/Protocols/Sound.swift; sourceTree = "<group>"; };
 		B918EE9725100FFF00A5354A /* CalloutRangeContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalloutRangeContext.swift; sourceTree = "<group>"; };
@@ -2646,6 +2648,7 @@
 		28D7573A2425395A002F0E7A /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				9ADFE7EA2DE2459000047FD0 /* AltitudeManager.swift */,
 				282A806D23F7238000993B7D /* NSException Handling */,
 				31BC2554219CE41500F1DFE0 /* DirectoryObserver.swift */,
 				B93629B11FCF1C3000BAF3A6 /* GeometryUtils.swift */,
@@ -5071,6 +5074,7 @@
 				B9776F1A24ECA61900AC8656 /* StreetPreviewRoadsCell.swift in Sources */,
 				620118CD24AAB489004B0380 /* LocationActionDelegate.swift in Sources */,
 				62B428FD262638E0005101DC /* MKMapView+Extensions.swift in Sources */,
+				9ADFE7EB2DE2459000047FD0 /* AltitudeManager.swift in Sources */,
 				6218860427C5A27800E70422 /* FirstLaunchTermsView.swift in Sources */,
 				C3BC95E12322D72200B78903 /* RawCourseProviderDelegate.swift in Sources */,
 				626789B826FA58C20007E566 /* ShareRouteActivityViewRepresentable.swift in Sources */,
