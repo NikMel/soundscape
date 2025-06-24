@@ -14,11 +14,11 @@ class MapsDecoder {
     private let apiKey: String
 
     init() {
-        if let key = Bundle.main.object(forInfoDictionaryKey: "HereMapsAPIKey") as? String {
+        if let key = Bundle.main.object(forInfoDictionaryKey: "ORSAPIKey") as? String {
             apiKey = key
         } else {
             apiKey = ""
-            GDLogError(.routeGuidance, "Failed to load HERE Maps API key")
+            GDLogError(.routeGuidance, "Failed to load ORS API key")
         }
     }
     
@@ -32,41 +32,114 @@ class MapsDecoder {
         }
 
         // 🔄 Fetch the closest address for the given destination coordinates
-        let resolvedDestination = await getAddressLabel(for: destination)
+        let label = await reverseGeocodeORS(latLon: destination)
+        let resolvedDestination = label?
+            .split(separator: ",")
+            .prefix(2)
+            .joined(separator: ", ")
+
         if let resolved = resolvedDestination {
             print("Resolved Destination Address: \(resolved)")
         } else {
             print("Failed to resolve destination address, using raw coordinates")
         }
 
-        let urlString = "https://router.hereapi.com/v8/routes?transportMode=pedestrian&origin=\(origin)&destination=\(destination)&return=polyline,turnbyturnactions&spans=names,streetAttributes&apiKey=\(apiKey)"
-
-        guard let url = URL(string: urlString) else {
-            GDLogError(.routeGuidance, "Invalid URL: \(urlString)")
-            return (resolvedDestination, nil)
-        }
-
-
+        // Example placeholder response (replace with actual API logic)
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-
-            let decodedResponse = try JSONDecoder().decode(HereRouteResponse.self, from: data)
-
-            if let route = decodedResponse.routes.first, let section = route.sections.first {
-                let polyline = section.polyline
-                let coordinatesToInclude = filterCoordinates(from: decodedResponse)
-                let decodedPolyline = try PolylineDecoder.decode(polyline, origin: origin, destination: destination, resolvedDestination: resolvedDestination, pickingOnly: coordinatesToInclude)
-
-                return (resolvedDestination, decodedPolyline)
-            } else {
-                GDLogError(.routeGuidance, "No valid route found in API response")
+            guard let orsResponse = await fetchORSCoordinates(origin: origin, destination: destination) else {
+                GDLogError(.routeGuidance, "Failed to fetch ORS route coordinates")
+                return (resolvedDestination, nil)
             }
+            
+            print("📦 Received ORS route coordinates: \(orsResponse)")
+            
+            let turnByTurnCoords = try PolylineDecoder.orsDecode(from: orsResponse, routeName: label ?? "unknown")
+            return (resolvedDestination, turnByTurnCoords)
         } catch {
             GDLogError(.routeGuidance, "Failed to fetch or decode: \(error)")
         }
 
         return (resolvedDestination, nil)
     }
+    
+    func fetchORSCoordinates(origin: String, destination: String) async -> [[Double]]? {
+        
+        guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "ORSAPIKey") as? String, !apiKey.isEmpty else {
+            GDLogError(.routeGuidance, "API key is missing, aborting request")
+            return nil
+        }
+        
+        let startComponents = origin.split(separator: ",").compactMap { Double($0) }
+        let endComponents = destination.split(separator: ",").compactMap { Double($0) }
+
+        guard startComponents.count == 2, endComponents.count == 2 else {
+            print("❌ Invalid coordinate strings: origin=\(origin), destination=\(destination)")
+            return nil
+        }
+
+        let start = [startComponents[1], startComponents[0]]
+        let end = [endComponents[1], endComponents[0]]
+        
+        let url = URL(string: "https://api.openrouteservice.org/v2/directions/foot-walking/geojson")!
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "coordinates": [start, end]
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+            
+            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let features = json["features"] as? [[String: Any]],
+               let geometry = features.first?["geometry"] as? [String: Any],
+               let coordinates = geometry["coordinates"] as? [[Double]] {
+                
+                return coordinates
+            }
+        } catch {
+            print("❌ Error fetching or parsing route:", error)
+        }
+        
+        return nil
+    }
+    
+    private func reverseGeocodeORS(latLon: String) async -> String? {
+        guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "ORSAPIKey") as? String,
+              !apiKey.isEmpty else {
+            GDLogError(.routeGuidance, "Missing ORS API key")
+            return nil
+        }
+
+        let parts = latLon.split(separator: ",").compactMap { Double($0) }
+        guard parts.count == 2 else { return nil }
+
+        let urlString = "https://api.openrouteservice.org/geocode/reverse?api_key=\(apiKey)&point.lat=\(parts[0])&point.lon=\(parts[1])"
+
+        guard let url = URL(string: urlString) else { return nil }
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let features = json["features"] as? [[String: Any]],
+               let props = features.first?["properties"] as? [String: Any],
+               let label = props["label"] as? String {
+                return label
+            }
+        } catch {
+            GDLogError(.routeGuidance, "ORS reverse geocoding failed: \(error)")
+        }
+
+        return nil
+    }
+
+
     
     private func filterCoordinates(from response: HereRouteResponse) -> [Int] {
         print("🔍 Filtering coordinates from route response")
@@ -79,6 +152,8 @@ class MapsDecoder {
 
         return spanOffsets
     }
+
+    
 
 
 

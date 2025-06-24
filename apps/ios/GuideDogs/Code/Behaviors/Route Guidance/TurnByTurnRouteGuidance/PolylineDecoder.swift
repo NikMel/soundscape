@@ -116,7 +116,8 @@ class PolylineDecoder {
         
         
         let convertedCoordinates = convertCoordinates(allCoordinates, toCartesian: true)
-        let epsilon = 4.0
+        let epsilon = 4.0 // 000007
+        
         let simplifiedIndices = simplifyPolyline(convertedCoordinates: convertedCoordinates, epsilon: epsilon)
         
 
@@ -136,6 +137,8 @@ class PolylineDecoder {
         return addNicknames(to: selectedCoordinates, resolvedDestination: resolvedDestination)
     }
 
+
+
     private static func parseCoordinate(_ coordinate: String) -> (Double, Double, Double?)? {
         let parts = coordinate.split(separator: ",").compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
         return parts.count == 2 ? (parts[0], parts[1], nil) : nil
@@ -149,6 +152,33 @@ class PolylineDecoder {
             }
             return allCoordinates[idx - 1]
         }
+    }
+
+    static func orsDecode(from coordinates: [[Double]], routeName: String = "unknown") -> [(Double, Double, Double?, String)] {
+        var result: [(Double, Double, Double?, String)] = []
+        
+        let cartesianCoords = convertCoordinates(coordinates.map { ($0[1], $0[0], nil) }, toCartesian: true) // lat/lon → lon/lat for conversion
+        let simplifiedIndices = simplifyPolyline(convertedCoordinates: cartesianCoords, epsilon: 2.0)
+
+        
+        for (index, i) in simplifiedIndices.enumerated() {
+            guard i < coordinates.count, coordinates[i].count == 2 else {
+                GDLogError(.routeGuidance, "Invalid coordinate at simplified index \(i)")
+                continue
+            }
+            
+            let coord = coordinates[i]
+            let latitude = coord[0]
+            let longitude = coord[1]
+            
+            let shortName = routeName.count > 13 ? String(routeName.prefix(13)) + "..." : routeName
+            let nickname = "\(shortName) point\(index + 1)"
+
+            result.append((longitude, latitude, nil, nickname))
+        }
+
+        
+        return result
     }
     
     private static func convertCoordinates(_ coordinates: [(Double, Double, Double?)], toCartesian: Bool) -> [(Double, Double, Double?)] {

@@ -81,6 +81,10 @@
 	<string>${BUNDLE_SPOKEN_NAME}</string>
 	<key>CFBundleVersion</key>
 	<string>${CURRENT_PROJECT_VERSION}</string>
+	<key>ORSAPIKey</key>
+	<string>$(ORS_API_KEY)</string>
+	<key>ORSKey</key>
+	<string></string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
@@ -255,7 +259,5 @@
 			</dict>
 		</dict>
 	</array>
-	<key>HereMapsAPIKey</key>
-	<string>$(HERE_MAPS_API_KEY)</string>
 </dict>
 </plist>
