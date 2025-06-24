@@ -44,7 +44,6 @@ class MapsDecoder {
             print("Failed to resolve destination address, using raw coordinates")
         }
 
-        // Example placeholder response (replace with actual API logic)
         do {
             guard let orsResponse = await fetchORSCoordinates(origin: origin, destination: destination) else {
                 GDLogError(.routeGuidance, "Failed to fetch ORS route coordinates")
@@ -53,7 +52,7 @@ class MapsDecoder {
             
             print("📦 Received ORS route coordinates: \(orsResponse)")
             
-            let turnByTurnCoords = try PolylineDecoder.orsDecode(from: orsResponse, routeName: label ?? "unknown")
+            let turnByTurnCoords = try PolylineDecoder.orsDecode(from: orsResponse, routeName: label ?? "unknown", origin: origin, destination: destination)
             return (resolvedDestination, turnByTurnCoords)
         } catch {
             GDLogError(.routeGuidance, "Failed to fetch or decode: \(error)")

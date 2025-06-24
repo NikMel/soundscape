@@ -154,12 +154,18 @@ class PolylineDecoder {
         }
     }
 
-    static func orsDecode(from coordinates: [[Double]], routeName: String = "unknown") -> [(Double, Double, Double?, String)] {
+    static func orsDecode(from coordinates: [[Double]], routeName: String = "unknown", origin: String? = nil, destination: String? = nil) -> [(Double, Double, Double?, String)] {
         var result: [(Double, Double, Double?, String)] = []
         
         let cartesianCoords = convertCoordinates(coordinates.map { ($0[1], $0[0], nil) }, toCartesian: true) // lat/lon → lon/lat for conversion
         let simplifiedIndices = simplifyPolyline(convertedCoordinates: cartesianCoords, epsilon: 2.0)
-
+        
+        
+        
+        if let startCoord = makeLabeledCoordinate(from: origin, label: "Start", routeName: routeName) {
+            result.append(startCoord)
+        }
+        
         
         for (index, i) in simplifiedIndices.enumerated() {
             guard i < coordinates.count, coordinates[i].count == 2 else {
@@ -173,13 +179,28 @@ class PolylineDecoder {
             
             let shortName = routeName.count > 13 ? String(routeName.prefix(13)) + "..." : routeName
             let nickname = "\(shortName) point\(index + 1)"
-
+            
             result.append((longitude, latitude, nil, nickname))
+            
         }
-
         
+        if let endCoord = makeLabeledCoordinate(from: destination, label: "End", routeName: routeName) {
+            result.append(endCoord)
+            
+        }
         return result
     }
+    
+    private static func makeLabeledCoordinate(from string: String?, label: String, routeName: String) -> (Double, Double, Double?, String)? {
+        guard let string = string else { return nil }
+        let parts = string.split(separator: ",").compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
+        guard parts.count == 2 else { return nil }
+
+        let shortName = routeName.count > 13 ? String(routeName.prefix(13)) + "..." : routeName
+        let nickname = "\(shortName) \(label)"
+        return (parts[0], parts[1], nil, nickname) // lon, lat
+    }
+
     
     private static func convertCoordinates(_ coordinates: [(Double, Double, Double?)], toCartesian: Bool) -> [(Double, Double, Double?)] {
 
