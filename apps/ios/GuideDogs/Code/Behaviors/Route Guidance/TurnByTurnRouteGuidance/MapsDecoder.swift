@@ -12,6 +12,11 @@ import UIKit
 
 class MapsDecoder {
     private let apiKey: String
+    
+    private enum Constants {
+        static let orsDirectionsURL = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson"
+        static let orsReverseGeocodeBaseURL = "https://api.openrouteservice.org/geocode/reverse"
+    }
 
     init() {
         if let key = Bundle.main.object(forInfoDictionaryKey: "ORSAPIKey") as? String {
@@ -25,12 +30,7 @@ class MapsDecoder {
 
 
     func fetchRoute(origin: String, destination: String) async -> (resolvedDestination: String?, coordinates: [(Double, Double, Double?, String)]?) {
-
-        guard !apiKey.isEmpty else {
-            GDLogError(.routeGuidance, "API key is missing, aborting request")
-            return (nil, nil)
-        }
-
+        
         // 🔄 Fetch the closest address for the given destination coordinates
         let label = await reverseGeocodeORS(latLon: destination)
         let resolvedDestination = label?
@@ -44,29 +44,28 @@ class MapsDecoder {
             print("Failed to resolve destination address, using raw coordinates")
         }
 
-        do {
-            guard let orsResponse = await fetchORSCoordinates(origin: origin, destination: destination) else {
-                GDLogError(.routeGuidance, "Failed to fetch ORS route coordinates")
-                return (resolvedDestination, nil)
-            }
-            
-            print("📦 Received ORS route coordinates: \(orsResponse)")
-            
-            let turnByTurnCoords = try PolylineDecoder.orsDecode(from: orsResponse, routeName: label ?? "unknown", origin: origin, destination: destination)
-            return (resolvedDestination, turnByTurnCoords)
-        } catch {
-            GDLogError(.routeGuidance, "Failed to fetch or decode: \(error)")
+        // 🧭 Get ORS route
+        guard let orsResponse = await fetchORSCoordinates(origin: origin, destination: destination) else {
+            GDLogError(.routeGuidance, "❌ Failed to fetch ORS route coordinates — aborting.")
+            showAlert(message: "Routing not possible at this moment. Try again in a bit.")
+            return (resolvedDestination, nil)
         }
 
-        return (resolvedDestination, nil)
+        print("📦 Received ORS route coordinates: \(orsResponse)")
+
+        // 🧩 Decode route
+        let turnByTurnCoords = PolylineDecoder.orsDecode(
+            from: orsResponse,
+            routeName: label ?? "unknown",
+            origin: origin,
+            destination: destination
+        )
+
+        return (resolvedDestination, turnByTurnCoords)
     }
+
     
     func fetchORSCoordinates(origin: String, destination: String) async -> [[Double]]? {
-        
-        guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "ORSAPIKey") as? String, !apiKey.isEmpty else {
-            GDLogError(.routeGuidance, "API key is missing, aborting request")
-            return nil
-        }
         
         let startComponents = origin.split(separator: ",").compactMap { Double($0) }
         let endComponents = destination.split(separator: ",").compactMap { Double($0) }
@@ -79,8 +78,8 @@ class MapsDecoder {
         let start = [startComponents[1], startComponents[0]]
         let end = [endComponents[1], endComponents[0]]
         
-        let url = URL(string: "https://api.openrouteservice.org/v2/directions/foot-walking/geojson")!
-        
+        let url = URL(string: Constants.orsDirectionsURL)!
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue(apiKey, forHTTPHeaderField: "Authorization")
@@ -119,7 +118,7 @@ class MapsDecoder {
         let parts = latLon.split(separator: ",").compactMap { Double($0) }
         guard parts.count == 2 else { return nil }
 
-        let urlString = "https://api.openrouteservice.org/geocode/reverse?api_key=\(apiKey)&point.lat=\(parts[0])&point.lon=\(parts[1])"
+        let urlString = "\(Constants.orsReverseGeocodeBaseURL)?api_key=\(apiKey)&point.lat=\(parts[0])&point.lon=\(parts[1])"
 
         guard let url = URL(string: urlString) else { return nil }
 
@@ -137,24 +136,6 @@ class MapsDecoder {
 
         return nil
     }
-
-
-    
-    private func filterCoordinates(from response: HereRouteResponse) -> [Int] {
-        print("🔍 Filtering coordinates from route response")
-
-        guard let firstRoute = response.routes.first, let firstSection = firstRoute.sections.first else {
-            return []
-        }
-
-        let spanOffsets = firstSection.getSpanOffsets()
-
-        return spanOffsets
-    }
-
-    
-
-
 
 
 

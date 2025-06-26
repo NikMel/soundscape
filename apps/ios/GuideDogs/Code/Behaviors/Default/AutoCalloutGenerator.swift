@@ -36,9 +36,11 @@ class GlyphEvent: StateChangedEvent {
 /// Event that is generated when a marker is added
 class MarkerAddedEvent: UserInitiatedEvent {
     let markerId: String?
-    
-    init(_ id: String?) {
+    let isRoute: Bool
+
+    init(_ id: String?, isRoute: Bool = false) {
         markerId = id
+        self.isRoute = isRoute
     }
 }
 
@@ -238,19 +240,23 @@ class AutoCalloutGenerator: AutomaticGenerator, ManualGenerator {
             return event.playSound ? .playCallouts(callouts) : nil
             
         case let event as MarkerAddedEvent:
-            GDUseCaseTestInfo(" a marker was added yh")
+            GDUseCaseTestInfo("A marker was added")
+            
             guard let id = event.markerId, let marker = SpatialDataCache.referenceEntityByKey(id) else {
                 return nil
             }
-        
+
             self.cancelCalloutsForEntity(id: marker.getPOI().key)
-            
+
             guard !marker.isTemp else {
                 return nil
             }
-            
-            let callout = StringCallout(.system, GDLocalizedString("markers.marker_created"))
-            return .playCallouts(CalloutGroup([callout], logContext: "marker_added"))
+            // log out the value of event.isRoute first
+            GDLogVerbose(.autoCallout, "in autocalloutgenerator, Marker added with ID: \(id), isRoute: \(event.isRoute)")
+            let calloutKey = event.isRoute ? "routes.route_created" : "markers.marker_created"
+            GDLogVerbose(.autoCallout, "Callout key: \(calloutKey)")
+            let callout = StringCallout(.system, GDLocalizedString(calloutKey))
+            return .playCallouts(CalloutGroup([callout], logContext: "marker_added"))           
             
         default:
             return nil

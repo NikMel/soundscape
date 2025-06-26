@@ -388,7 +388,7 @@ class ReferenceEntity: Object, ObjectKeyIdentifiable {
             }
             
             if notify {
-                notifyEntityAdded(reference.id)
+                notifyEntityAdded(reference.id, isRoute: true)
             }
             
             return reference.id
@@ -547,18 +547,22 @@ class ReferenceEntity: Object, ObjectKeyIdentifiable {
             }
             
             if notify {
-                notifyEntityAdded(reference.id)
+                notifyEntityAdded(reference.id,  isRoute: true)
             }
             
             return reference.id
         }
     }
     
-    private static func notifyEntityAdded(_ id: String) {
+    private static func notifyEntityAdded(_ id: String, isRoute: Bool = false) {
+        GDUseCaseTestInfo("ReferenceEntity.notifyEntityAdded: id = \(id), isRoute = \(isRoute)")   
         DispatchQueue.main.async {
-            AppContext.process(MarkerAddedEvent(id))
+            AppContext.process(MarkerAddedEvent(id, isRoute: isRoute))
             
-            NotificationCenter.default.post(name: Notification.Name.markerAdded, object: self, userInfo: [ReferenceEntity.Keys.entityId: id])
+            NotificationCenter.default.post(name: Notification.Name.markerAdded, object: self, userInfo: [
+                ReferenceEntity.Keys.entityId: id,
+                "isRoute": isRoute
+            ])
         }
     }
     

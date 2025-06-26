@@ -1473,6 +1473,10 @@
 /* Notification, Marker created */
 "markers.marker_created" = "Marker created";
 
+/*  */
+"routes.route_created" = "Route created";
+
+
 /* Marker Information, %@ is the localized date and time, "Marker created on <Feb 29, 2016 at 12:24 PM>" {NumberedPlaceholder="%@"} */
 "markers.marker_created_on" = "Marker created on %@";
 
