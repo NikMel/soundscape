@@ -35,6 +35,7 @@ class AddressRouteCalculator {
         let markerId: String
         let detail = updatedLocation ?? locationDetail
 
+
         // 🔍 Check if marker already exists in Realm
         if let id = locationDetail.markerId ?? SpatialDataCache.referenceEntity(source: locationDetail.source, isTemp: true)?.id {
             markerId = id
@@ -52,7 +53,9 @@ class AddressRouteCalculator {
                 estimatedAddress: detail.estimatedAddress,
                 annotation: detail.annotation,
                 context: nil,
-                notify: notify
+                notify: notify,
+                isRoute: notify ? true : false
+
             )
         } else {
             let loc = GenericLocation(
@@ -66,7 +69,9 @@ class AddressRouteCalculator {
                 annotation: detail.annotation,
                 temporary: false,
                 context: nil,
-                notify: notify
+                notify: notify,
+                isRoute: notify ? true : false
+
             )
         }
     }
@@ -94,6 +99,8 @@ class AddressRouteCalculator {
         let source = LocationDetail.Source.coordinate(at: location)
 
 
+
+
         if let existingMarker = SpatialDataCache.referenceEntity(source: source, isTemp: false) {
             return LocationDetail(marker: existingMarker)
         } else {
@@ -105,7 +112,8 @@ class AddressRouteCalculator {
                 annotation: nil,
                 temporary: false,
                 context: nil,
-                notify: notify
+                notify: notify,
+                isRoute: notify ? true : false
             )
 
             guard let newMarker = SpatialDataCache.referenceEntityByKey(newMarkerId) else {
