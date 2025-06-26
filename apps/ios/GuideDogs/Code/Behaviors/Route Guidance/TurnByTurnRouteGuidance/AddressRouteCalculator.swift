@@ -11,18 +11,12 @@ import CoreLocation
 
 
 class AddressRouteCalculator {
-    
-    /// Parses a Mapbox GeoJSON response and creates a RouteWaypoint
-    /// - Parameters:
-    ///   - geoJSON: The Mapbox GeoJSON response as a dictionary
-    ///   - index: The waypoint's position in the route (default = 0)
-    /// - Returns: A RouteWaypoint if successful, otherwise nil
-    func createWaypoint(from coordinateData: (Double, Double, Double?, String), index: Int = 0) -> RouteWaypoint? {
+    func createWaypoint(from coordinateData: (Double, Double, Double?, String), index: Int = 0, notify: Bool = false) -> RouteWaypoint? {
         let (latitude, longitude, _, nickname) = coordinateData
         
         do {
-            let locationDetail = try createLocationDetailWithMarker(latitude: latitude, longitude: longitude, nickname: nickname)
-            try saveMarker(locationDetail: locationDetail, updatedLocation: nil)
+            let locationDetail = try createLocationDetailWithMarker(latitude: latitude, longitude: longitude, nickname: nickname, notify: notify)
+            try saveMarker(locationDetail: locationDetail, updatedLocation: nil, notify: notify)
             
             guard let waypoint = RouteWaypoint(index: index, locationDetail: locationDetail) else {
                 return nil
@@ -37,7 +31,7 @@ class AddressRouteCalculator {
     }
 
     
-    func saveMarker(locationDetail: LocationDetail, updatedLocation: LocationDetail?) throws {
+    func saveMarker(locationDetail: LocationDetail, updatedLocation: LocationDetail?, notify: Bool = false) throws {
         let markerId: String
         let detail = updatedLocation ?? locationDetail
 
@@ -57,7 +51,8 @@ class AddressRouteCalculator {
                 nickname: detail.nickname,
                 estimatedAddress: detail.estimatedAddress,
                 annotation: detail.annotation,
-                context: nil
+                context: nil,
+                notify: notify
             )
         } else {
             let loc = GenericLocation(
@@ -70,7 +65,8 @@ class AddressRouteCalculator {
                 estimatedAddress: detail.estimatedAddress,
                 annotation: detail.annotation,
                 temporary: false,
-                context: nil
+                context: nil,
+                notify: notify
             )
         }
     }
@@ -93,7 +89,7 @@ class AddressRouteCalculator {
         }
     }
     
-    func createLocationDetailWithMarker(latitude: Double, longitude: Double, nickname: String?) throws -> LocationDetail {
+    func createLocationDetailWithMarker(latitude: Double, longitude: Double, nickname: String?, notify: Bool) throws -> LocationDetail {
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let source = LocationDetail.Source.coordinate(at: location)
 
@@ -108,7 +104,8 @@ class AddressRouteCalculator {
                 estimatedAddress: nil,
                 annotation: nil,
                 temporary: false,
-                context: nil
+                context: nil,
+                notify: notify
             )
 
             guard let newMarker = SpatialDataCache.referenceEntityByKey(newMarkerId) else {
@@ -123,7 +120,9 @@ class AddressRouteCalculator {
     static func testCreateRoute(waypointsData: [(Double, Double, Double?, String)], resolvedDestination: String) -> Route {
 
         let waypoints = waypointsData.enumerated().compactMap { index, data in
-            return AddressRouteCalculator().createWaypoint(from: data, index: index + 1)
+            let isLast = index == waypointsData.count - 1
+            let waypoint = AddressRouteCalculator().createWaypoint(from: data, index: index + 1, notify: isLast)
+            return waypoint
         }
 
         let routeName = "To \(resolvedDestination)"

@@ -327,7 +327,7 @@ class ReferenceEntity: Object, ObjectKeyIdentifiable {
     ///   - temporary: flag indicating if the new reference entity is temporary (an audio beacon) or not
     /// - Returns: ID of the new reference point
     /// - Throws: If the database/cache cannot be accessed or the new reference entity cannot be added
-    static func add(entityKey: String, nickname: String? = nil, estimatedAddress: String? = nil, annotation: String? = nil, temporary: Bool = false, context: String? = nil, notify: Bool = true) throws -> String {
+    static func add(entityKey: String, nickname: String? = nil, estimatedAddress: String? = nil, annotation: String? = nil, temporary: Bool = false, context: String? = nil, notify: Bool = true, isRoute: Bool = false) throws -> String {
         return try autoreleasepool {
             let database = try RealmHelper.getDatabaseRealm()
             let cache = try RealmHelper.getCacheRealm()
@@ -388,9 +388,9 @@ class ReferenceEntity: Object, ObjectKeyIdentifiable {
             }
             
             if notify {
-                notifyEntityAdded(reference.id, isRoute: true)
+                notifyEntityAdded(reference.id, isRoute: isRoute)
             }
-            
+
             return reference.id
         }
     }
@@ -488,7 +488,7 @@ class ReferenceEntity: Object, ObjectKeyIdentifiable {
     ///   - temporary: flag indicating if the new reference entity is temporary (an audio beacon) or not
     /// - Returns: ID of the new reference point
     /// - Throws: If the database/cache cannot be accessed or the new reference entity cannot be added
-    static func add(location: GenericLocation, nickname: String? = nil, estimatedAddress: String? = nil, annotation: String? = nil, temporary: Bool = false, context: String? = nil, notify: Bool = true) throws -> String {
+    static func add(location: GenericLocation, nickname: String? = nil, estimatedAddress: String? = nil, annotation: String? = nil, temporary: Bool = false, context: String? = nil, notify: Bool = true, isRoute: Bool = false) throws -> String {
         return try autoreleasepool {
             let database = try RealmHelper.getDatabaseRealm()
             
@@ -547,15 +547,15 @@ class ReferenceEntity: Object, ObjectKeyIdentifiable {
             }
             
             if notify {
-                notifyEntityAdded(reference.id,  isRoute: true)
+                notifyEntityAdded(reference.id, isRoute: isRoute)
             }
+
             
             return reference.id
         }
     }
     
     private static func notifyEntityAdded(_ id: String, isRoute: Bool = false) {
-        GDUseCaseTestInfo("ReferenceEntity.notifyEntityAdded: id = \(id), isRoute = \(isRoute)")   
         DispatchQueue.main.async {
             AppContext.process(MarkerAddedEvent(id, isRoute: isRoute))
             
