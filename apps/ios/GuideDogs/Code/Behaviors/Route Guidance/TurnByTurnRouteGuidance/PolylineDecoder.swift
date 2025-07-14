@@ -16,20 +16,24 @@ class PolylineDecoder {
     private enum Constants {
         static let defaultRouteName = "unknown"
         static let maxRouteNameLength = 17
-        static let simplificationEpsilon = 3.0
+        static let simplificationEpsilon = 0.37
     }
     
     static func orsDecode(from coordinates: [[Double]], routeName: String = Constants.defaultRouteName, origin: String? = nil, destination: String? = nil) -> [(Double, Double, Double?, String)] {
         var result: [(Double, Double, Double?, String)] = []
         
+        print("First coordinate:", coordinates.first ?? [])
+        print("Last coordinate:", coordinates.last ?? [])
+
+        
         let cartesianCoords = convertCoordinates(coordinates.map { ($0[1], $0[0], nil) }, toCartesian: true)
-        let simplifiedIndices = simplifyPolyline(convertedCoordinates: cartesianCoords, epsilon: Constants.simplificationEpsilon)
+        let simplifiedIndices = simplifyPolyline(convertedCoordinates: cartesianCoords, epsilon: Constants.simplificationEpsilon, skip: false)
         
         
         
-        if let startCoord = makeLabeledCoordinate(from: origin, label: "Start", routeName: routeName) {
-            result.append(startCoord)
-        }
+//        if let startCoord = makeLabeledCoordinate(from: origin, label: "Start", routeName: routeName) {
+//            result.append(startCoord)
+//        }
         
         
         for (index, i) in simplifiedIndices.enumerated() {
@@ -90,7 +94,12 @@ class PolylineDecoder {
         }
     }
     
-    private static func simplifyPolyline(convertedCoordinates: [(Double, Double, Double?)], epsilon: Double) -> [Int] {
+    private static func simplifyPolyline(convertedCoordinates: [(Double, Double, Double?)], epsilon: Double, skip: Bool = false) -> [Int] {
+        if skip {
+            print("Skipping simplification. Returning all indices.")
+            return Array(0..<convertedCoordinates.count)
+        }
+        
         guard convertedCoordinates.count > 2 else { return Array(0..<convertedCoordinates.count) }
         
         var stk: [(Int, Int)] = [(0, convertedCoordinates.count - 1)]  // Stack for segment indices

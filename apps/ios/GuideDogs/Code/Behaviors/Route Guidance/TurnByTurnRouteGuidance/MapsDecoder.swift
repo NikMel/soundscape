@@ -14,8 +14,13 @@ class MapsDecoder {
     private let apiKey: String
     
     private enum Constants {
-        static let orsDirectionsURL = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson"
-        static let orsReverseGeocodeBaseURL = "https://api.openrouteservice.org/geocode/reverse"
+        // gpt: these are the hard coded links that are to be replaced by the proxy
+//        static let orsDirectionsURL = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson"
+//        static let orsReverseGeocodeBaseURL = "https://api.openrouteservice.org/geocode/reverse"
+        // gpt: these are the hard coded links that are to be replaced by the proxy
+        static let orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson"
+        static let orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse"
+
     }
 
     init() {
@@ -82,6 +87,7 @@ class MapsDecoder {
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.setValue("Soundscape/1.0", forHTTPHeaderField: "User-Agent") // gpt: add User-Agent required by proxy
         request.setValue(apiKey, forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -123,7 +129,10 @@ class MapsDecoder {
         guard let url = URL(string: urlString) else { return nil }
 
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            var request = URLRequest(url: url)
+            request.setValue("Soundscape/1.0", forHTTPHeaderField: "User-Agent") // gpt: add User-Agent for reverse geocode via proxy
+            let (data, _) = try await URLSession.shared.data(for: request)
+//            let (data, _) = try await URLSession.shared.data(from: url)
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                let features = json["features"] as? [[String: Any]],
                let props = features.first?["properties"] as? [String: Any],
