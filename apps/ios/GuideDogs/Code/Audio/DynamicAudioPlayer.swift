@@ -234,47 +234,34 @@ class DynamicAudioPlayer<T: DynamicSound>: AudioPlayer {
     }
     
     private func update(_ userLocation: CLLocation) {
-        let previousLocation = self.userLocation
         self.userLocation = userLocation
-
-        // Calculate change in distance if previous location exists
-        let distanceChange = previousLocation != nil ? previousLocation!.distance(from: userLocation) : 0.0
-        GDLogAppInfo("📍 [update] User MOVED: New Location -> Lat: \(userLocation.coordinate.latitude), Lon: \(userLocation.coordinate.longitude), ΔDistance: \(distanceChange)m")
-
+        
         if case .localized(let audioLocation, _) = sound.type {
-            let bearing = userLocation.bearing(to: audioLocation)
-            let distance = userLocation.distance(from: audioLocation)
-            GDLogAppInfo("🔄 [update] Adjusting 3D Audio Position -> Bearing: \(bearing)°, Distance to Audio: \(distance)m, ΔDistance: \(distanceChange)m")
-
+            // If we don't have a heading, then dim the audio
             if isDimmed {
-                layer.position = AVAudio3DPoint(from: bearing, distance: 5.0)
+                layer.position = AVAudio3DPoint(from: userLocation.bearing(to: audioLocation), distance: 5.0)
             } else {
-                layer.position = AVAudio3DPoint(from: bearing, distance: DebugSettingsContext.shared.envRenderingDistance)
+                layer.position = AVAudio3DPoint(from: userLocation.bearing(to: audioLocation), distance: DebugSettingsContext.shared.envRenderingDistance)
             }
         }
-
+        
+        // If this player's sound varies it's asset based on user location, then we need to update the dynamic asset
         guard let sound = sound as? T else {
-            GDLogAppInfo("⚠️ [update] Sound type mismatch, skipping update.")
             return
         }
-
+        
         guard let dynamicAsset = sound.asset(userLocation: userLocation) else {
-            GDLogAppInfo("⚠️ [update] No asset found for current location.")
             return
         }
-
-        GDLogAppInfo("🔊 [update] Adjusting Volume -> New Volume: \(dynamicAsset.volume)")
+        
         volume = dynamicAsset.volume
-
+        
         guard dynamicAsset.asset != currentAsset else {
-            GDLogAppInfo("✅ [update] Same asset, no change needed.")
             return
         }
-
-        GDLogAppInfo("🎵 [update] Scheduling New Asset -> \(String(describing: dynamicAsset.asset))")
+        
         scheduleAsset(dynamicAsset.asset)
     }
-
     
     private func update(_ userHeading: CLLocationDirection?) {
         guard let userLocation = self.userLocation else {

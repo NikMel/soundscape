@@ -7,8 +7,6 @@
 //
 
 import CoreLocation
-import UIKit  // Required for UIActivityViewController (for UseCaseLogger)
-
 
 struct ExplorationModeToggled: UserInitiatedEvent {
     let sender: AnyObject?
@@ -131,8 +129,7 @@ class ExplorationGenerator: ManualGenerator, AutomaticGenerator {
         guard let event = event as? ExplorationModeToggled else {
             return nil
         }
-                
-
+        
         guard event.mode != currentMode else {
             event.completionHandler?(false)
             

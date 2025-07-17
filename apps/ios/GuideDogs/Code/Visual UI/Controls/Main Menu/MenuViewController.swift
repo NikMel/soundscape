@@ -10,8 +10,7 @@ import UIKit
 import SafariServices
 
 enum MenuItem {
-    // gpt: add an exportlogs button(following the pattern practice used in the code) to the this file and what should happen when it is cllicked is (UseCaseLogger.shareLogs(latest: true))
-    case home, recreation, devices, help, settings, status, feedback, rate, share, donate, exportLogs
+    case home, donate,  recreation, devices, help, settings, status, feedback, rate, share
     
     var localizedString: String {
         switch self {
@@ -25,8 +24,6 @@ enum MenuItem {
         case .feedback:   return GDLocalizedString("menu.send_feedback")
         case .rate:       return GDLocalizedString("menu.rate")
         case .share:      return GDLocalizedString("share.title")
-        case .exportLogs: return GDLocalizedString("menu.export_logs")
-
         }
     }
     
@@ -42,8 +39,6 @@ enum MenuItem {
         case .feedback:   return GDLocalizedString("menu.send_feedback")
         case .rate:       return GDLocalizedString("menu.rate")
         case .share:      return GDLocalizedString("share.title")
-        case .exportLogs: return GDLocalizedString("menu.export_logs")
-
         }
     }
     
@@ -59,8 +54,6 @@ enum MenuItem {
         case .feedback:   return UIImage(named: "ic_email_28px")
         case .rate:       return UIImage(named: "ic_star_rate_28px")
         case .share:      return UIImage(systemName: "square.and.arrow.up")
-        case .exportLogs: return UIImage(named: "ic_export_logs_28px")
-
         }
     }
 }
@@ -81,8 +74,6 @@ class MenuViewController: UIViewController {
         menuView.addMenuItem(.feedback)
         menuView.addMenuItem(.rate)
         menuView.addMenuItem(.share)
-        menuView.addMenuItem(.exportLogs)  // <-- New Button Added
-
         
         // Attach a listener for button taps on each menu item
         for item in menuView.items {
@@ -151,31 +142,6 @@ class MenuViewController: UIViewController {
             closeMenu {
                 AppShareHelper.share()
             }
-        case .exportLogs:
-            GDLogAppInfo("Export Logs button tapped")
-            Task {
-                let mapsDecoder = MapsDecoder()
-                let (resolvedDestination, coordinates) = await mapsDecoder.fetchRoute(
-                    origin: "57.74993829511632,11.980720950898132",
-                    destination: "57.72831170542338,11.970618483367133"
-                )
-                
-
-                guard let coordinates = coordinates else {
-                    return
-                }
-
-                if let resolvedDestination = resolvedDestination {
-                    print("📍 Using resolved destination: \(resolvedDestination)")
-                } else {
-                    print("⚠️ Using raw destination coordinates")
-                }
-
-                let route = AddressRouteCalculator.testCreateRoute(waypointsData: coordinates, resolvedDestination: resolvedDestination ?? "Unknown Destination")
-                closeMenu()
-            }
-            //UseCaseLogger.shareLogs(latest: true)
-            closeMenu()
         default:
             select(item)
         }

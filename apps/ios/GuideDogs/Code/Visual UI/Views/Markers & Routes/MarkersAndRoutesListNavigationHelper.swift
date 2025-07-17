@@ -66,7 +66,7 @@ class MarkersAndRoutesListNavigationHelper: ViewNavigationHelper, LocationAccess
                     }
                     
                 case .route:
-                                print("[LocationAction] Route action selected")
+                    GDLogIRouteGuidance("Route action selected")
                                 // Simple placeholder action: show alert
                                 let alert = UIAlertController(title: "Route", message: "Create Route button tapped!", preferredStyle: .alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: .default))

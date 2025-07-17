@@ -331,7 +331,7 @@ extension SearchTableViewController: LocationActionDelegate {
                     if let originLocation = AppContext.shared.geolocationManager.location {
                         AddressRouteCalculator.createRouteTask(originLocation: originLocation, destinationDetail: detail)
                     } else {
-                        print("[LocationAction] ❌ Failed to get origin location from geolocationManager")
+                        GDLogIRouteGuidance("Failed to get origin location from geolocationManager")
                     }
                     
                 case .share:
