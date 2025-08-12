@@ -16,18 +16,23 @@ class PolylineDecoder {
     private enum Constants {
         static let defaultRouteName = "unknown"
         static let maxRouteNameLength = 17
-        static let simplificationEpsilon = 0.37
+        static let simplificationEpsilon = 0.036  // 0.036 is best for now
     }
     
     static func orsDecode(from coordinates: [[Double]], routeName: String = Constants.defaultRouteName, origin: String? = nil, destination: String? = nil) -> [(Double, Double, Double?, String)] {
         var result: [(Double, Double, Double?, String)] = []
         
-        print("First coordinate:", coordinates.first ?? [])
-        print("Last coordinate:", coordinates.last ?? [])
-
+        print("🔍 Raw coordinate list (total \(coordinates.count)):")
+        for (i, coord) in coordinates.enumerated() {
+            print("   [\(i)] \(coord)")
+        }
         
         let cartesianCoords = convertCoordinates(coordinates.map { ($0[1], $0[0], nil) }, toCartesian: true)
         let simplifiedIndices = simplifyPolyline(convertedCoordinates: cartesianCoords, epsilon: Constants.simplificationEpsilon, skip: false)
+        
+        print("🔍 Simplified indices (total \(simplifiedIndices.count)):")
+        print(simplifiedIndices)
+        
         
         
         

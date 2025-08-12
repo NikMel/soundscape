@@ -14,10 +14,8 @@ class MapsDecoder {
     private let apiKey: String
     
     private enum Constants {
-        // gpt: these are the hard coded links that are to be replaced by the proxy
 //        static let orsDirectionsURL = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson"
 //        static let orsReverseGeocodeBaseURL = "https://api.openrouteservice.org/geocode/reverse"
-        // gpt: these are the hard coded links that are to be replaced by the proxy
         static let orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson"
         static let orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse"
 
@@ -87,8 +85,8 @@ class MapsDecoder {
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("Soundscape/1.0", forHTTPHeaderField: "User-Agent") // gpt: add User-Agent required by proxy
-        request.setValue(apiKey, forHTTPHeaderField: "Authorization")
+        request.setValue("Soundscape/1.0", forHTTPHeaderField: "User-Agent")
+//      request.setValue(apiKey, forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let body: [String: Any] = [
@@ -124,13 +122,13 @@ class MapsDecoder {
         let parts = latLon.split(separator: ",").compactMap { Double($0) }
         guard parts.count == 2 else { return nil }
 
-        let urlString = "\(Constants.orsReverseGeocodeBaseURL)?api_key=\(apiKey)&point.lat=\(parts[0])&point.lon=\(parts[1])"
+        let urlString = "\(Constants.orsReverseGeocodeBaseURL)?point.lat=\(parts[0])&point.lon=\(parts[1])"
 
         guard let url = URL(string: urlString) else { return nil }
 
         do {
             var request = URLRequest(url: url)
-            request.setValue("Soundscape/1.0", forHTTPHeaderField: "User-Agent") // gpt: add User-Agent for reverse geocode via proxy
+            request.setValue("Soundscape/1.0", forHTTPHeaderField: "User-Agent")
             let (data, _) = try await URLSession.shared.data(for: request)
 //            let (data, _) = try await URLSession.shared.data(from: url)
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
