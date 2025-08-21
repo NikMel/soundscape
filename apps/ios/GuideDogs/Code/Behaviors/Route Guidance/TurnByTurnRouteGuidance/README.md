@@ -45,7 +45,6 @@ A compact routing component that turns an origin/destination into a persisted `R
 - Converts to 3D (ECEF) and simplifies via Ramer–Douglas–Peucker (ε ≈ `0.04`) to reduce point count.  
 - Produces nicknames like `~<route-name> pointN` and appends a labeled **End** point when available.  
 
-> ⚠️ **Coordinate ordering note:** ORS uses `[lon, lat]`. `orsDecode` returns `(lon, lat, …)` in its tuples.  
 
 ---
 
@@ -64,7 +63,6 @@ A compact routing component that turns an origin/destination into a persisted `R
 - Deconstructs the tuple **as `(latitude, longitude, _, nickname)`** and creates a `LocationDetail` marker via `createLocationDetailWithMarker(latitude:longitude:nickname:notify:)`.  
 - Persists or updates the marker (`saveMarker(...)`), then wraps it in a `RouteWaypoint`.  
 
-> ⚠️ **Boundary contract:** `AddressRouteCalculator` expects `(lat, lon, …)` ordering when creating markers. If you feed it `PolylineDecoder` output directly, be aware of the `(lon, lat)` vs `(lat, lon)` difference. Swap components if needed.  
 
 ---
 
