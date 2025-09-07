@@ -168,6 +168,7 @@ class AddressRouteCalculator {
             
             if let resolvedDestination = resolvedDestination {
             } else {
+                
                 GDLogError(.routeGuidance," Using raw destination coordinates")
             }
             
