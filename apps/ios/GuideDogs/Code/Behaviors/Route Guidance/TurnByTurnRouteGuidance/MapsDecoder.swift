@@ -10,24 +10,42 @@
 import Foundation
 import UIKit
 
-class MapsDecoder {
-    private let apiKey: String
-    
-    private enum Constants {
-//        static let orsDirectionsURL = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson"
-//        static let orsReverseGeocodeBaseURL = "https://api.openrouteservice.org/geocode/reverse"
-        static let orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson"
-        static let orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse"
-
-    }
-
-    init() {
-        if let key = Bundle.main.object(forInfoDictionaryKey: "ORSAPIKey") as? String {
-            apiKey = key
-        } else {
-            apiKey = ""
-            GDLogError(.routeGuidance, "Failed to load ORS API key")
+// MARK: - ORSRouteResponse Model
+struct ORSRouteResponse: Codable {
+    struct Feature: Codable {
+        struct Geometry: Codable {
+            let coordinates: [[Double]]
         }
+        let geometry: Geometry
+    }
+    let features: [Feature]
+
+    var routeCoordinates: [[Double]] { features.first?.geometry.coordinates ?? [] }
+}
+
+class MapsDecoder {
+    
+
+    private enum Constants {
+
+        static let orsDirectionsURL: String = {
+                    if let url = Bundle.main.object(forInfoDictionaryKey: "orsDirectionsURL") as? String, !url.isEmpty {
+                        return url
+                    } else {
+                        GDLogError(.routeGuidance, "ORSDirectionsURL missing in Info.plist; defaulting to official ORS endpoint.")
+                        return "https://api.openrouteservice.org/v2/directions/foot-walking/geojson"
+                    }
+                }()
+        
+        static let orsReverseGeocodeBaseURL: String = {
+                    if let url = Bundle.main.object(forInfoDictionaryKey: "orsReverseGeocodeBaseURL") as? String, !url.isEmpty {
+                        return url
+                    } else {
+                        GDLogError(.routeGuidance, "ORSReverseGeocodeBaseURL missing in Info.plist; defaulting to official ORS endpoint.")
+                        return "https://api.openrouteservice.org/geocode/reverse"
+                    }
+                }()
+
     }
     
 
@@ -42,9 +60,8 @@ class MapsDecoder {
             .joined(separator: ", ")
 
         if let resolved = resolvedDestination {
-            print("Resolved Destination Address: \(resolved)")
         } else {
-            print("Failed to resolve destination address, using raw coordinates")
+            GDLogError(.routeGuidance, "Failed to resolve destination address, using raw coordinates")
         }
 
         // 🧭 Get ORS route
@@ -54,9 +71,7 @@ class MapsDecoder {
             return (resolvedDestination, nil)
         }
 
-        print("📦 Received ORS route coordinates: \(orsResponse)")
 
-        // 🧩 Decode route
         let turnByTurnCoords = PolylineDecoder.orsDecode(
             from: orsResponse,
             routeName: label ?? "unknown",
@@ -74,7 +89,7 @@ class MapsDecoder {
         let endComponents = destination.split(separator: ",").compactMap { Double($0) }
 
         guard startComponents.count == 2, endComponents.count == 2 else {
-            print("❌ Invalid coordinate strings: origin=\(origin), destination=\(destination)")
+            GDLogError(.routeGuidance, " Invalid coordinate strings: origin=\(origin), destination=\(destination)")
             return nil
         }
 
@@ -89,25 +104,19 @@ class MapsDecoder {
 //      request.setValue(apiKey, forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let body: [String: Any] = [
-            "coordinates": [start, end]
-        ]
-        
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            
-            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-               let features = json["features"] as? [[String: Any]],
-               let geometry = features.first?["geometry"] as? [String: Any],
-               let coordinates = geometry["coordinates"] as? [[Double]] {
-                
-                return coordinates
+        let body: [String: Any] = ["coordinates": [start, end]]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+
+
+            do {
+                let (data, _) = try await URLSession.shared.data(for: request)
+
+                let decoded = try JSONDecoder().decode(ORSRouteResponse.self, from: data)
+
+                return decoded.routeCoordinates
+            } catch {
+                GDLogError(.routeGuidance, "ORS fetch/parse error: \(error)")
             }
-        } catch {
-            print("❌ Error fetching or parsing route:", error)
-        }
         
         return nil
     }
@@ -157,30 +166,5 @@ class MapsDecoder {
         
     }
     
-    private func getAddressLabel(for destination: String) async -> String? {
-        let urlString = "https://revgeocode.search.hereapi.com/v1/revgeocode?at=\(destination)&lang=en-US&apiKey=\(apiKey)"
-        
-        guard let url = URL(string: urlString) else {
-            GDLogError(.routeGuidance, "Invalid URL for reverse geocoding: \(urlString)")
-            return nil
-        }
-        
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-
-            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            if let items = json?["items"] as? [[String: Any]], let firstItem = items.first,
-               let address = firstItem["address"] as? [String: Any], let street = address["street"] as? String {
-                return street
-            } else {
-                print("No street found in response")
-            }
-        } catch {
-            GDLogError(.routeGuidance, "Failed to fetch or decode reverse geocoding response: \(error)")
-        }
-        
-        return nil
-    }
 
 }

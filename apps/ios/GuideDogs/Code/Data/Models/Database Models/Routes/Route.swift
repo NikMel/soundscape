@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 import CoreLocation
-// gpt: add debug prints so i can see which init is being used when and also how the way points are being loaded
 extension Notification.Name {
     static let routeAdded = Notification.Name("GDARouteAdded")
     static let routeUpdated = Notification.Name("GDARouteUpdated")

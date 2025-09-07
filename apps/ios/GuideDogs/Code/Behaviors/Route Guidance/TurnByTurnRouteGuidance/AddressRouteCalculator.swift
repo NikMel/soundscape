@@ -36,7 +36,7 @@ class AddressRouteCalculator {
         let detail = updatedLocation ?? locationDetail
 
 
-        // 🔍 Check if marker already exists in Realm
+        // Check if marker already exists in Realm
         if let id = locationDetail.markerId ?? SpatialDataCache.referenceEntity(source: locationDetail.source, isTemp: true)?.id {
             markerId = id
             try updateExisting(
@@ -107,7 +107,7 @@ class AddressRouteCalculator {
             let genericLocation = GenericLocation(lat: latitude, lon: longitude)
             let newMarkerId = try ReferenceEntity.add(
                 location: genericLocation,
-                nickname: nickname, // Now setting nickname
+                nickname: nickname,
                 estimatedAddress: nil,
                 annotation: nil,
                 temporary: false,
@@ -149,11 +149,10 @@ class AddressRouteCalculator {
         return route
     }
     
-    // MARK: - Static Method: Create Route as Task (per GPT suggestion)
+    // MARK: - Static Method: Create Route as Task ()
 
     static func createRouteTask(origin: String, destination: String) {
         // Debug: Start
-        print("🛣️ Starting route creation task from: \(origin) to: \(destination)")
         
         Task {
             let mapsDecoder = MapsDecoder()
@@ -163,14 +162,13 @@ class AddressRouteCalculator {
             )
             
             guard let coordinates = coordinates else {
-                print("❌ Failed to fetch coordinates for route")
+                GDLogError(.routeGuidance," Failed to fetch coordinates for route")
                 return
             }
             
             if let resolvedDestination = resolvedDestination {
-                print("📍 Using resolved destination: \(resolvedDestination)")
             } else {
-                print("⚠️ Using raw destination coordinates")
+                GDLogError(.routeGuidance," Using raw destination coordinates")
             }
             
             let route = AddressRouteCalculator.testCreateRoute(
@@ -185,14 +183,11 @@ class AddressRouteCalculator {
         let originLat = originLocation.coordinate.latitude
         let originLon = originLocation.coordinate.longitude
         let origin = "\(originLat),\(originLon)"
-        print("🟢 Formatted Origin: \(origin)")
 
         let destLat = destinationDetail.location.coordinate.latitude
         let destLon = destinationDetail.location.coordinate.longitude
         let destination = "\(destLat),\(destLon)"
-        print("🟢 Formatted Destination: \(destination)")
 
-        // Call existing method
         createRouteTask(origin: origin, destination: destination)
     }
 

@@ -16,30 +16,20 @@ class PolylineDecoder {
     private enum Constants {
         static let defaultRouteName = "unknown"
         static let maxRouteNameLength = 17
-        static let simplificationEpsilon = 0.036  // 0.036 is best for now
+        static let simplificationEpsilon = 0.03999999  // 0.036 is best for now
     }
     
     static func orsDecode(from coordinates: [[Double]], routeName: String = Constants.defaultRouteName, origin: String? = nil, destination: String? = nil) -> [(Double, Double, Double?, String)] {
         var result: [(Double, Double, Double?, String)] = []
         
-        print("🔍 Raw coordinate list (total \(coordinates.count)):")
-        for (i, coord) in coordinates.enumerated() {
-            print("   [\(i)] \(coord)")
-        }
         
         let cartesianCoords = convertCoordinates(coordinates.map { ($0[1], $0[0], nil) }, toCartesian: true)
         let simplifiedIndices = simplifyPolyline(convertedCoordinates: cartesianCoords, epsilon: Constants.simplificationEpsilon, skip: false)
         
-        print("🔍 Simplified indices (total \(simplifiedIndices.count)):")
-        print(simplifiedIndices)
         
         
         
-        
-//        if let startCoord = makeLabeledCoordinate(from: origin, label: "Start", routeName: routeName) {
-//            result.append(startCoord)
-//        }
-        
+
         
         for (index, i) in simplifiedIndices.enumerated() {
             guard i < coordinates.count, coordinates[i].count == 2 else {
@@ -101,7 +91,6 @@ class PolylineDecoder {
     
     private static func simplifyPolyline(convertedCoordinates: [(Double, Double, Double?)], epsilon: Double, skip: Bool = false) -> [Int] {
         if skip {
-            print("Skipping simplification. Returning all indices.")
             return Array(0..<convertedCoordinates.count)
         }
         

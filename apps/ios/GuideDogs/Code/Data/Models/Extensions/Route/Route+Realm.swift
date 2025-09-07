@@ -110,6 +110,8 @@ extension Route {
             
             AppContext.shared.cloudKeyValueStore.remove(route: route)
             
+            try removeAllWaypoints(fromRouteId: id, alsoDeleteMarkers: true)
+
             try database.write {
                 database.delete(route)
             }
@@ -204,6 +206,41 @@ extension Route {
     }
     
     // MARK: Add, Delete or Update Route Waypoints
+    
+    static func waypointMarkerIds(forRouteId id: String) -> [String] {
+            return autoreleasepool {
+                guard
+                    let db = try? RealmHelper.getDatabaseRealm(),
+                    let route = db.object(ofType: Route.self, forPrimaryKey: id)
+                else { return [] }
+
+                // Use your `.ordered` accessor if present; else sort by index.
+                let ordered = route.waypoints.sorted(by: { $0.index < $1.index })
+                return ordered.compactMap { $0.markerId }
+            }
+        }
+
+        /// Removes all waypoints from the route using `removeWaypoint(from:markerId:)`.
+        /// If `alsoDeleteMarkers` is true, it will also delete each marker with `ReferenceEntity.remove(id:)`.
+        static func removeAllWaypoints(fromRouteId id: String, alsoDeleteMarkers: Bool = false) throws {
+            try autoreleasepool {
+                guard
+                    let db = try? RealmHelper.getDatabaseRealm(),
+                    let route = db.object(ofType: Route.self, forPrimaryKey: id)
+                else { return }
+
+                // Take a stable snapshot of marker IDs before we start mutating the route.
+                let ids = waypointMarkerIds(forRouteId: id)
+
+                // Remove each waypoint by marker id; method reindexes for us.
+                for mid in ids {
+                    try removeWaypoint(from: route, markerId: mid)
+                    if alsoDeleteMarkers {
+                        try ReferenceEntity.remove(id: mid)
+                    }
+                }
+            }
+        }
     
     static func removeWaypoint(from route: Route, markerId: String) throws {
         // Currently, a marker cannot be added to a route more than once, so `firstIndex`

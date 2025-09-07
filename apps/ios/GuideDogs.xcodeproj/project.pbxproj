@@ -599,6 +599,7 @@
 		91C82AAD2A5DCF040086D126 /*  GeolocationManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C82AAC2A5DCF040086D126 /*  GeolocationManagerTest.swift */; };
 		91C82ABE2A6B08500086D126 /* RouteGuidanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C82ABD2A6B08500086D126 /* RouteGuidanceTest.swift */; };
 		91DC0CF92A46134600244CC8 /* GeometryUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914DEBDC2A3CE901007B161C /* GeometryUtilsTest.swift */; };
+		9A11DDE82E4BD1F400F9FDAC /* diagrams.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A11DDE72E4BD1ED00F9FDAC /* diagrams.txt */; };
 		9A6990712D5BDB8900D37B7D /* BoseSensorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69906F2D5BDB8900D37B7D /* BoseSensorConfiguration.swift */; };
 		9A6990722D5BDB8900D37B7D /* BoseSensorDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6990702D5BDB8900D37B7D /* BoseSensorDataProcessor.swift */; };
 		9A6990732D5BDB8900D37B7D /* BoseFramesBLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69906E2D5BDB8900D37B7D /* BoseFramesBLEDevice.swift */; };
@@ -1463,6 +1464,7 @@
 		915FF9F42ADE3F91002B3690 /* AuthoredActivityContentTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthoredActivityContentTest.swift; sourceTree = "<group>"; };
 		91C82AAC2A5DCF040086D126 /*  GeolocationManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = " GeolocationManagerTest.swift"; path = "UnitTests/Sensors/Geolocation/Geolocation Manager/ GeolocationManagerTest.swift"; sourceTree = SOURCE_ROOT; };
 		91C82ABD2A6B08500086D126 /* RouteGuidanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RouteGuidanceTest.swift; path = "UnitTests/Behaviors/Route Guidance/RouteGuidanceTest.swift"; sourceTree = SOURCE_ROOT; };
+		9A11DDE72E4BD1ED00F9FDAC /* diagrams.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = diagrams.txt; sourceTree = "<group>"; };
 		9A69906E2D5BDB8900D37B7D /* BoseFramesBLEDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseFramesBLEDevice.swift; path = Code/Devices/BLE/BoseFramesBLEDevice.swift; sourceTree = "<group>"; };
 		9A69906F2D5BDB8900D37B7D /* BoseSensorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseSensorConfiguration.swift; path = Code/Devices/BLE/BoseSensorConfiguration.swift; sourceTree = "<group>"; };
 		9A6990702D5BDB8900D37B7D /* BoseSensorDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoseSensorDataProcessor.swift; path = Code/Devices/BLE/BoseSensorDataProcessor.swift; sourceTree = "<group>"; };
@@ -3738,6 +3740,7 @@
 		9A8FC7EC2D79EDAB001CF3F5 /* TurnByTurnRouteGuidance */ = {
 			isa = PBXGroup;
 			children = (
+				9A11DDE72E4BD1ED00F9FDAC /* diagrams.txt */,
 				9A8FC7ED2D7A57B2001CF3F5 /* PolylineDecoder.swift */,
 				9AB52AFE2D771FF300C1EB72 /* AddressRouteCalculator.swift */,
 				9A8FC7EA2D79ED85001CF3F5 /* HereMapsModels.swift */,
@@ -4880,6 +4883,7 @@
 				280AFCD62295C77000012BEA /* offline.wav in Resources */,
 				2872D12E26D80B6C000BE465 /* Signal_Slow_A+.wav in Resources */,
 				C378BE8422458E2F007489B2 /* OfflineSearchBanner.xib in Resources */,
+				9A11DDE82E4BD1F400F9FDAC /* diagrams.txt in Resources */,
 				2872D15826D978F9000BE465 /* Classic_OnAxis.wav in Resources */,
 				2896376826D6E354001694C0 /* Flare_A+.wav in Resources */,
 				6238E177250846C300124167 /* Welcome1.gif in Resources */,
@@ -5772,6 +5776,7 @@
 					GDFutureLocalizationRequired,
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				NEW_SETTING = "";
 				ORS_API_KEY = 5b3ce3597851110001cf6248175d2013255a49ec99282f9c3d15374b;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -5779,6 +5784,8 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson";
+				orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse";
 			};
 			name = AdHoc;
 		};
@@ -6001,11 +6008,14 @@
 					GDFutureLocalizationRequired,
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				ORS_API_KEY = 5b3ce3597851110001cf6248175d2013255a49ec99282f9c3d15374b;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson";
+				orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse";
 			};
 			name = "Debug-Niklas";
 		};
@@ -6159,6 +6169,7 @@
 					GDFutureLocalizationRequired,
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				NEW_SETTING = "";
 				ORS_API_KEY = 5b3ce3597851110001cf6248175d2013255a49ec99282f9c3d15374b;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -6166,6 +6177,8 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson";
+				orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse";
 			};
 			name = "Release-NIklas";
 		};
@@ -6214,10 +6227,10 @@
 				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited) -DRELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-release-routing";
-				PRODUCT_NAME = SoundscapeRouting;
+				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-release-proxyRouting";
+				PRODUCT_NAME = SoundscapeTBT;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = earsRouting;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = earsProxyRouting;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "GuideDogs/Code/App/Soundscape-Bridging-Header.h";
@@ -6322,11 +6335,14 @@
 					GDFutureLocalizationRequired,
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				ORS_API_KEY = 5b3ce3597851110001cf6248175d2013255a49ec99282f9c3d15374b;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson";
+				orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse";
 			};
 			name = Debug;
 		};
@@ -6384,6 +6400,7 @@
 					GDFutureLocalizationRequired,
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				NEW_SETTING = "";
 				ORS_API_KEY = 5b3ce3597851110001cf6248175d2013255a49ec99282f9c3d15374b;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -6391,6 +6408,8 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				orsDirectionsURL = "https://ors-api.mur.org.uk/v2/directions/foot-walking/geojson";
+				orsReverseGeocodeBaseURL = "https://ors-api.mur.org.uk/geocode/reverse";
 			};
 			name = Release;
 		};
@@ -6497,7 +6516,7 @@
 				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited) -DRELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-release-1";
+				PRODUCT_BUNDLE_IDENTIFIER = "services.soundscape-release-communityTestTBT";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
